@@ -1,6 +1,6 @@
 // 하단 DB 설정 부분은 Sub PJT II에서 데이터베이스를 구성한 이후에 주석을 해제하여 사용.
 
-package com.web.curation.model.user;
+package com.web.curation.model.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,5 +33,20 @@ public class User {
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime createDate;
+    
 
+	public User(String uid, String password, String email, LocalDateTime createDate) {
+		super();
+		this.uid = uid;
+		this.password = password;
+		this.email = email;
+		this.createDate = createDate;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "User [uid=" + uid + ", password=" + password + ", email=" + email + ", createDate=" + createDate + "]";
+	}
 }
