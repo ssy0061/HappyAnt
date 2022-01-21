@@ -1,0 +1,18 @@
+{
+  "plugins": ["prettier"],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "airbnb"],
+  "rules": {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
+    "linebreak-style": 0,
+    "import/no-unresolved": ["off", { "caseSensitive": false }],
+    "comma-dangle": "off",
+    "react/jsx-wrap-multilines": "off",
+    "jsx-a11y/label-has-associated-control": 0,
+    "react/prop-types": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}
