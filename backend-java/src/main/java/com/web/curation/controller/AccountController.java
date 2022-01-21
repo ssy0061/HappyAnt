@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,5 +81,9 @@ public class AccountController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+//    @PatchMapping("/account/modify")
+//    @ApiOperation(value = "수정하기")
+//    public Object modify(@Valid @RequestBody Sign)
     
 }

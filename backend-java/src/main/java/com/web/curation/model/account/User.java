@@ -25,28 +25,42 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String uid;
+    private String id;
 
     @JsonIgnore
+    private String userid;
     private String password;
     private String email;
+    private String name;
+    private Integer age;
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime createDate;
     
 
-	public User(String uid, String password, String email, LocalDateTime createDate) {
+    public User() {
+    	super();
+    }
+    
+	public User(String id, String userid, String password, String email, String name, int age, LocalDateTime createDate) {
 		super();
-		this.uid = uid;
+		this.id = id;
+		this.userid = userid;
 		this.password = password;
 		this.email = email;
+		this.name = name;
+		this.age = age;
 		this.createDate = createDate;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "User [uid=" + uid + ", password=" + password + ", email=" + email + ", createDate=" + createDate + "]";
+		return "User [id=" + id + ", userid=" + userid + ", password=" + password + ", email=" + email + ", name="
+				+ name + ", age=" + age + ", createDate=" + createDate + "]";
 	}
+
+
+
+
+
 }
