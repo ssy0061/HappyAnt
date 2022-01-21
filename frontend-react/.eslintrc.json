@@ -6,6 +6,7 @@
     "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
     "linebreak-style": 0,
     "import/no-unresolved":["off",{"caseSensitive":false}],
+    "react/jsx-wrap-multilines": "off",
     "comma-dangle":"off"
     
   },

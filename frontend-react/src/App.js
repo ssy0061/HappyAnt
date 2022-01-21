@@ -1,10 +1,10 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-// import logo from './logo.svg';
 import './App.css';
 import Join from './views/Join';
 import Login from './views/Login';
 import Profile from './views/Profile';
+import WriteProfile from './views/WriteProfile';
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
         <Route path="/join" element={<Join />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="profile/WriteProfile" element={<WriteProfile />} />
       </Routes>
     </div>
   );
