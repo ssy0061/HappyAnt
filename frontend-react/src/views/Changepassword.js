@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -14,17 +12,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Google from '../components/Google';
-import Kakao from '../components/Kakao';
 
 const theme = createTheme();
 function Join() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+
   const [pwd, setPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
-  const [checkBox, setCheckBox] = useState(false);
+
   const onSubmit = (event) => {
     event.preventDefault();
     if (pwd !== confirmPwd) {
@@ -36,8 +31,6 @@ function Join() {
         method: 'post',
         url: 'http://127.0.0.1:8000/accounts/signup',
         data: {
-          useremail: email,
-          username: name,
           password: pwd,
         },
       })
@@ -48,18 +41,9 @@ function Join() {
         .catch((error) => {
           console.log(error);
           // 일단 여기에 작성해놓자.
-          navigate('/login');
+          navigate('/profile');
         });
     }
-  };
-
-  const onEmailHandler = (event) => {
-    setEmail(event.target.value);
-    console.log(event.target.value);
-  };
-  const onNameHandler = (event) => {
-    setName(event.target.value);
-    console.log(event.target.value);
   };
 
   const onPwdHandler = (event) => {
@@ -70,11 +54,6 @@ function Join() {
   const onConfirmPwdHandler = (event) => {
     setConfirmPwd(event.target.value);
     console.log(event.target.value);
-  };
-
-  const onCheckBox = (event) => {
-    setCheckBox(event.target.checked);
-    console.log(event.target.checked);
   };
 
   return (
@@ -93,30 +72,10 @@ function Join() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            회원 가입
+            비밀번호 변경
           </Typography>
           <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="이메일"
-                  value={email}
-                  onChange={onEmailHandler}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="이름"
-                  value={name}
-                  onChange={onNameHandler}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -139,31 +98,15 @@ function Join() {
                   onChange={onConfirmPwdHandler}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value={checkBox}
-                      onChange={onCheckBox}
-                      color="primary"
-                    />
-                  }
-                  label="개인정보 수집 동의"
-                />
-              </Grid>
             </Grid>
-            {checkBox === true &&
-            email !== '' &&
-            name !== '' &&
-            pwd !== '' &&
-            confirmPwd !== '' ? (
+            {pwd !== '' && confirmPwd !== '' ? (
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                가입하기
+                변경하기
               </Button>
             ) : (
               <Button
@@ -173,17 +116,9 @@ function Join() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                가입하기
+                변경하기
               </Button>
             )}
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Google />
-              </Grid>
-              <Grid item xs={6}>
-                <Kakao />
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
