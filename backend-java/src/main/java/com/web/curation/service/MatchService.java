@@ -2,6 +2,9 @@ package com.web.curation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,24 @@ public class MatchService {
     	Mat_Article saved = article.toEntity();
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
     	articleRepository.save(saved);
+    }
+    
+    @Transactional // 변경된 데이터를 DB에 저장
+    public void updateArticle(
+    		Long articleId,
+    		String title,
+    		String content) {
+    	Mat_Article article = articleRepository.findById(articleId)
+    			.orElseThrow(() -> new IllegalStateException(
+    					"article with id " + articleId + " does not exist"));
+    	
+    	if (title != null && title.length() > 0 && !Objects.equals(article.getTitle(), title)) {
+    		article.setTitle(title);
+    	}
+    	
+    	if (content != null && content.length() > 0 && !Objects.equals(article.getContent(), content)) {
+    		article.setContent(content);
+    	}
     }
     
     public void deleteArticle(Long articleId) {
