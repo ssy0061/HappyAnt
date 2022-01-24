@@ -1,14 +1,23 @@
 package com.web.curation.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.dto.match.Mat_ArticleForm;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.match.Mat_Article;
-import com.web.curation.repository.match.Mat_ArticleRepository;
+import com.web.curation.service.MatchService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -20,24 +29,43 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
 @CrossOrigin(origins = { "http://localhost:3000" })
-@RestController
+@RestController // Json 형태로 객체 데이터를 반환
+@RequestMapping("match")
 public class MatchController {
 	
-    @Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결함
-    private Mat_ArticleRepository articleRepository;
+    private final MatchService matchService;
     
-    @PostMapping("match/article")
-    @ApiOperation(value = "게시글 작성")
-    public String createArticle(Mat_ArticleForm form) {
-    	System.out.println(form.toString());
-
-    	// 1. dto를 Entity로 변경
-    	Mat_Article article = form.toEntity();
-    	System.out.println(article.toString());
-    	// 2. Repository에게 Entity를 DB에 저장하게 함
-    	Mat_Article saved = articleRepository.save(article);
-    	System.out.println(saved.toString());
+    @Autowired
+    public MatchController(MatchService matchService) {
+    	this.matchService = matchService;
+    }
+    
+    
+    @GetMapping
+    @ApiOperation(value = "모집글 목록 조회")
+    public List<Mat_Article> getArticle() {
+    	List<Mat_Article> articles = matchService.getArticle();
+		System.out.println(articles);
+    	return articles;
+    }
+//    @GetMapping("article")
+//    @ApiOperation(value = "매칭 게시글 전체 조회")
+//    public List<Mat_Article> getArticle() {
+//    	List<Mat_Article> test = matchService.getArticle();
+//    	System.out.println(test);
+//    	return matchService.getArticle();
+//    }
+    
+    @PostMapping
+    @ApiOperation(value = "모집글 작성")
+    public void createArticle(@RequestBody Mat_ArticleForm article) {
     	
-    	return "";
+    	matchService.addNewArticle(article);
+    }
+    
+    @DeleteMapping("{articleId}")
+    @ApiOperation(value = "모집글 삭제")
+    public void deleteArticle(@PathVariable("articleId") Long id) {
+    	matchService.deleteArticle(id);
     }
 }
