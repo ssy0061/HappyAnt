@@ -34,10 +34,10 @@ function Join() {
     } else {
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/accounts/signup',
+        url: '/account/signup',
         data: {
-          useremail: email,
-          username: name,
+          email,
+          Nickname: name,
           password: pwd,
         },
       })
