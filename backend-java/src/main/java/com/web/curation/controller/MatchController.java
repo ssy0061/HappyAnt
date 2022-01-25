@@ -43,24 +43,25 @@ public class MatchController {
     
     @GetMapping
     @ApiOperation(value = "모집글 목록 조회")
-    public List<Mat_Article> getArticle() {
-    	List<Mat_Article> articles = matchService.getArticle();
-		System.out.println(articles);
-    	return articles;
+    public List<Mat_Article> getArticleList() {
+//    	List<Mat_Article> articles = matchService.getArticleList();
+//		System.out.println(articles);
+//    	return articles;
+    	return matchService.getArticleList();
     }
-//    @GetMapping("article")
-//    @ApiOperation(value = "매칭 게시글 전체 조회")
-//    public List<Mat_Article> getArticle() {
-//    	List<Mat_Article> test = matchService.getArticle();
-//    	System.out.println(test);
-//    	return matchService.getArticle();
-//    }
+    
+    @GetMapping("{articleId}")
+    @ApiOperation(value = "모집글 상세 조회")
+    public Mat_Article getArticle(
+    		@PathVariable("articleId") Long articleId) {
+    	return matchService.getArticle(articleId);
+    }
     
     @PostMapping
     @ApiOperation(value = "모집글 작성")
-    public void createArticle(@RequestBody Mat_ArticleForm article) {
+    public void createArticle(@RequestBody Mat_ArticleForm articleForm) {
     	
-    	matchService.addNewArticle(article);
+    	matchService.addNewArticle(articleForm);
     }
     
     @PutMapping("{articleId}")
@@ -68,8 +69,10 @@ public class MatchController {
     public void updateArticle(
     		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = false) String title,
-    		@RequestParam(required = false) String content) {
-    	matchService.updateArticle(articleId, title, content);
+    		@RequestParam(required = false) String category,
+    		@RequestParam(required = false) String content,
+    		@RequestParam(required = false) Boolean state) {
+    	matchService.updateArticle(articleId, title, category, content, state);
     }
     
     

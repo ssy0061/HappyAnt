@@ -1,5 +1,6 @@
 package com.web.curation.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,7 @@ import com.web.curation.dao.user.UserDao;
 import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
+import com.web.curation.model.match.Mat_Article;
 import com.web.curation.repository.account.SignupRepository;
 
 import io.swagger.annotations.ApiOperation;
@@ -66,13 +69,14 @@ public class AccountController {
     public Object signup(@Valid @RequestBody SignupRequest request) {
         // 이메일, 닉네임 중복처리 필수
         // 회원가입단을 생성해 보세요.
-    	System.out.println(request.toString());
+//    	System.out.println(request.toString());
     	
     	User user = request.toEntity();
-    	System.out.println(user.toString());
+//    	System.out.println(user.toString());
     	
-    	User saved = signupRepository.save(user);
-    	System.out.println(saved.toString());
+    	signupRepository.save(user);
+//    	User saved = signupRepository.save(user);
+//    	System.out.println(saved.toString());
     	
         final BasicResponse result = new BasicResponse();
         result.status = true;
@@ -81,4 +85,11 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
+    @GetMapping("/account/{user_id}")
+    @ApiOperation(value = "(TEST) 작성한 모집글 보기")
+    public List<Mat_Article> articles(
+    				@PathVariable("user_id") Long user_id) {
+    	User user = signupRepository.findById(user_id).get();
+    	return user.getMat_articles();
+    }
 }
