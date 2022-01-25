@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import axios from 'axios';
+import React from 'react';
 
 const { Kakao } = window;
-// const id = process.env.REACT_APP_KAKAO_KEY;
-const id = '6b08a8ba7e847bc546a918fe4d2b37c4';
 
 const loginWithKakao = () => {
   Kakao.Auth.loginForm({
@@ -11,7 +10,23 @@ const loginWithKakao = () => {
       Kakao.API.request({
         url: '/v2/user/me',
         success(response) {
-          console.log(response);
+          axios({
+            method: 'post',
+            url: '/account/signup',
+            data: {
+              email: response.kakao_account.email,
+              nickname: response.kakao_account.profile.nickname,
+              password: `${response.id}Zz`,
+            },
+          })
+            .then((res) => {
+              console.log(res);
+              // 회원가입 성공
+            })
+            .catch((error) => {
+              console.log(error);
+              alert('로그인에 실패했습니다.');
+            });
         },
       });
     },
@@ -23,9 +38,6 @@ const loginWithKakao = () => {
 };
 
 function KakaoLogin() {
-  useEffect(() => {
-    Kakao.init(id);
-  }, []);
   return (
     <div>
       {/* eslint-disable jsx-a11y/anchor-is-valid */}

@@ -1,13 +1,29 @@
+import axios from 'axios';
 import React from 'react';
 import GoogleLogin from 'react-google-login';
 
-// const clientId = process.env.REACT_APP_GOOGLE_KEY;
-const clientId =
-  '222055822877-ilvcje5q9g974vnoj78hq5n4o6jm757a.apps.googleusercontent.com';
+const clientId = process.env.REACT_APP_GOOGLE_KEY;
 
 function GoogleLoginBtn() {
   const responseGoogle = (response) => {
     console.log(response);
+    axios({
+      method: 'post',
+      url: '/account/signup',
+      data: {
+        email: response.yu.nv,
+        nickname: response.yu.nf,
+        password: `${response.yu.DW}Zz`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        // 회원가입 성공
+      })
+      .catch((error) => {
+        console.log(error);
+        alert('로그인에 실패했습니다.');
+      });
   };
 
   return (

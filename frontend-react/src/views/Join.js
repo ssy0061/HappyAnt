@@ -14,8 +14,18 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+import {
+  Modal,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@mui/material';
 import Google from '../components/Google';
 import Kakao from '../components/Kakao';
+
+import Guideline from '../components/Guideline';
 
 const theme = createTheme();
 function Join() {
@@ -25,6 +35,7 @@ function Join() {
   const [pwd, setPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [checkBox, setCheckBox] = useState(false);
+  const [open, setOpen] = useState(false);
   const onSubmit = (event) => {
     event.preventDefault();
     if (pwd !== confirmPwd) {
@@ -37,13 +48,15 @@ function Join() {
         url: '/account/signup',
         data: {
           email,
-          Nickname: name,
+          nickname: name,
           password: pwd,
         },
       })
         .then((response) => {
           console.log(response);
-          // 회원가입 하고 나면 프로필로 이동하기, 자동 로그인
+          // 회원가입 버튼 누르고 정상 응답이 반환되면 모달창(가이드라인) 오픈
+          // 모달창에서 프로필 작성하러 가기 누르면 로그인처리 됨과 동시에 프로필로 이동
+          setOpen(true);
         })
         .catch((error) => {
           console.log(error);
@@ -53,141 +66,218 @@ function Join() {
     }
   };
 
+  // 이메일
   const onEmailHandler = (event) => {
     setEmail(event.target.value);
     console.log(event.target.value);
   };
+
+  // 이름
   const onNameHandler = (event) => {
     setName(event.target.value);
     console.log(event.target.value);
   };
 
+  // 비밀번호
   const onPwdHandler = (event) => {
     setPwd(event.target.value);
     console.log(event.target.value);
   };
 
+  // 비밀번호 확인
   const onConfirmPwdHandler = (event) => {
     setConfirmPwd(event.target.value);
     console.log(event.target.value);
   };
 
+  // 개인정보 수집동의 박스
   const onCheckBox = (event) => {
     setCheckBox(event.target.checked);
     console.log(event.target.checked);
   };
 
+  // 비밀번호 찾기
+  const [hint, setHint] = useState('');
+  const handleChange = (event) => {
+    setHint(event.target.value);
+    console.log(event.target.value);
+  };
+
+  // 비밀번호 찾기 힌트답변
+  const [hintAnswer, setHintAnswer] = useState('');
+  const onhintAnswer = (event) => {
+    setHintAnswer(event.target.value);
+    console.log(event.target.value);
+  };
+
+  // 모달
+
+  const style = {
+    position: 'absolute',
+    // 배치(가운데 정렬)
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    // 크기
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            회원 가입
-          </Typography>
-          <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
+    <div>
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              회원 가입
+            </Typography>
+            <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="이메일"
+                    value={email}
+                    onChange={onEmailHandler}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="name"
+                    label="이름"
+                    value={name}
+                    onChange={onNameHandler}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="비밀번호"
+                    type="password"
+                    id="pwd"
+                    value={pwd}
+                    onChange={onPwdHandler}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="비밀번호 확인"
+                    type="password"
+                    id="confirmPwd"
+                    value={confirmPwd}
+                    onChange={onConfirmPwdHandler}
+                  />
+                </Grid>
+                {/* 비밀번호찾기 */}
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      비밀번호 찾기 힌트
+                    </InputLabel>
+                    <Select
+                      value={hint}
+                      label="비밀번호 찾기 힌트"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={1}>가장 기억에 남는 말은?</MenuItem>
+                      <MenuItem value={2}>졸업한 초등학교 이름은?</MenuItem>
+                      <MenuItem value={3}>고향 이름은?</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="hintAnswer"
+                    label="힌트 답변"
+                    value={hintAnswer}
+                    onChange={onhintAnswer}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value={checkBox}
+                        onChange={onCheckBox}
+                        color="primary"
+                      />
+                    }
+                    label="개인정보 수집 동의"
+                  />
+                </Grid>
+              </Grid>
+              {checkBox === true &&
+              email !== '' &&
+              name !== '' &&
+              pwd !== '' &&
+              confirmPwd !== '' &&
+              hint !== '' &&
+              hintAnswer !== '' ? (
+                <Button
+                  type="submit"
                   fullWidth
-                  id="email"
-                  label="이메일"
-                  value={email}
-                  onChange={onEmailHandler}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  가입하기
+                </Button>
+              ) : (
+                <Button
+                  disabled
+                  type="submit"
                   fullWidth
-                  id="name"
-                  label="이름"
-                  value={name}
-                  onChange={onNameHandler}
-                />
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  가입하기
+                </Button>
+              )}
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Google />
+                </Grid>
+                <Grid item xs={6}>
+                  <Kakao />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="비밀번호"
-                  type="password"
-                  id="pwd"
-                  value={pwd}
-                  onChange={onPwdHandler}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="비밀번호 확인"
-                  type="password"
-                  id="confirmPwd"
-                  value={confirmPwd}
-                  onChange={onConfirmPwdHandler}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value={checkBox}
-                      onChange={onCheckBox}
-                      color="primary"
-                    />
-                  }
-                  label="개인정보 수집 동의"
-                />
-              </Grid>
-            </Grid>
-            {checkBox === true &&
-            email !== '' &&
-            name !== '' &&
-            pwd !== '' &&
-            confirmPwd !== '' ? (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                가입하기
-              </Button>
-            ) : (
-              <Button
-                disabled
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                가입하기
-              </Button>
-            )}
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Google />
-              </Grid>
-              <Grid item xs={6}>
-                <Kakao />
-              </Grid>
-            </Grid>
+            </Box>
           </Box>
+        </Container>
+      </ThemeProvider>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Guideline />
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Modal>
+    </div>
   );
 }
 
