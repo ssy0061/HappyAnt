@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-
-import com.web.curation.model.user.User;
-import com.web.curation.repository.user.UserRepository;
+import com.web.curation.model.account.User;
+import com.web.curation.repository.account.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

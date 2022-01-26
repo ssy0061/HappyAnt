@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.user.User;
-import com.web.curation.repository.user.UserRepository;
+import com.web.curation.model.account.User;
+import com.web.curation.repository.account.UserRepository;
 import com.web.curation.service.AccountService;
 
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +54,16 @@ public class AccountController {
     public ResponseEntity<List<User>> getAllusers(){
     	List<User> users = userRepository.findAll();	
     	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
-    } 
+    }
+    
+    @GetMapping("/account/{id}")
+    @ApiOperation(value = "회원정보 조회")
+    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") Long id ){
+    	Optional<User> user = userRepository.findById(id);
+    	
+    	System.out.println(user.toString());
+    	return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
+    }    
    
     
     @PostMapping("/account/signUp")
@@ -65,19 +74,19 @@ public class AccountController {
     }
     
 
-//    @PostMapping("/account/{email}")
-//    @ApiOperation(value = "로그인")
-//    public ResponseEntity<User> getUser(@PathVariable("email") String email, @PathVariable("password") String password){
-//    	User user = userRepository.findByEmail(email);
-//    	if(user.getPassword()!=password) {
-//    		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-//    	}
-//    	
-//    	else return new ResponseEntity<User>(user,HttpStatus.OK); 	
-//    	
-//    }
+    @PostMapping("/account/{email}")
+    @ApiOperation(value = "로그인")
+    public ResponseEntity<User> getUser(@PathVariable("email") String email, @PathVariable("password") String password){
+    	User user = userRepository.findByEmail(email);
+    	if(user.getPassword()!=password) {
+    		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    	}
+    	
+    	else return new ResponseEntity<User>(user,HttpStatus.OK); 	
+    	
+    }
     
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "삭제")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
     	userRepository.deleteById(id);
@@ -95,6 +104,25 @@ public class AccountController {
 //        return new ResponseEntity<User>(user, HttpStatus.OK);
 //    }
 
-
+//    // 회원가입
+//    @PostMapping("/join")
+//    public Long join(@RequestBody Map<String, String> user) {
+//        return userRepository.save(User.builder()
+//                .email(user.get("email"))
+//                .password(passwordEncoder.encode(user.get("password")))
+//                .roles(Collections.singletonList("ROLE_ADMIN")) // 최초 가입시 USER 로 설정
+//                .build()).getId();
+//    }
+//    
+// // 로그인
+//    @PostMapping("/login")
+//    public String login(@RequestBody Map<String, String> user) {
+//        User member = userRepository.findByEmail(user.get("email"))
+//                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+//        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
+//            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+//        }
+//        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+//    }
     
 }

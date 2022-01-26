@@ -1,10 +1,10 @@
-package com.web.curation.repository.user;
+package com.web.curation.repository.account;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.web.curation.model.user.User;
+import com.web.curation.model.account.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
