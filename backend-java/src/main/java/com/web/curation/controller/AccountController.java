@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +25,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.repository.account.UserRepository;
 import com.web.curation.service.AccountService;
+import com.web.curation.model.match.Mat_Article;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -125,4 +125,12 @@ public class AccountController {
 //        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
 //    }
     
+    
+    @GetMapping("/account/{user_id}")
+    @ApiOperation(value = "(TEST) 작성한 모집글 보기")
+    public List<Mat_Article> articles(
+    				@PathVariable("user_id") Long user_id) {
+    	User user = userRepository.findById(user_id).get();
+    	return user.getMat_articles();
+    }
 }

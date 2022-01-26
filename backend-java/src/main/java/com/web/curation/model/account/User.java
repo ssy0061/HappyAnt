@@ -3,13 +3,30 @@
 package com.web.curation.model.account;
 
 import lombok.Getter;
-
-
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.AllArgsConstructor;
+//import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.web.curation.model.match.Mat_Article;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +42,7 @@ import javax.validation.constraints.Pattern;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class User {
 
@@ -58,9 +76,14 @@ public class User {
     @Column
     private String answer;
 
-    @Column(insertable = false, updatable = false)
+    @CreatedDate
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
+    		insertable = false, 
+    		updatable = false)
     private LocalDateTime createDate;
 
+    @OneToMany(mappedBy="writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Mat_Article> mat_articles = new ArrayList<Mat_Article>();
 
 //    @Enumerated(EnumType.STRING)
 //    private Role role;
@@ -76,9 +99,4 @@ public class User {
 //        password = passwordEncoder.encode(password);
 //    }
 
-
-
-    
-    
-    
 }
