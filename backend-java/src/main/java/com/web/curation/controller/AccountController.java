@@ -1,5 +1,8 @@
 package com.web.curation.controller;
 
+import java.util.List;
+
+
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -7,23 +10,30 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.dao.user.UserDao;
-import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.account.User;
-import com.web.curation.repository.account.SignupRepository;
+import com.web.curation.model.user.User;
+import com.web.curation.repository.user.UserRepository;
+import com.web.curation.service.AccountService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+
+import lombok.RequiredArgsConstructor;
+
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
         @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
@@ -32,58 +42,59 @@ import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
+@RequiredArgsConstructor
 public class AccountController {
-
-    @Autowired
-    UserDao userDao;
     
     
-    @Autowired
-    private SignupRepository signupRepository;
-
-    @GetMapping("/account/login")
-    @ApiOperation(value = "로그인")
-    public Object login(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String password) {
-
-        Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
-
-        ResponseEntity response = null;
-
-        if (userOpt.isPresent()) {
-            final BasicResponse result = new BasicResponse();
-            result.status = true;
-            result.data = "success";
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-
-        return response;
-    }
-
-    @PostMapping("/account/signup")
-    @ApiOperation(value = "가입하기")
-    public Object signup(@Valid @RequestBody SignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
-        // 회원가입단을 생성해 보세요.
-    	System.out.println(request.toString());
-    	
-    	User user = request.toEntity();
-    	System.out.println(user.toString());
-    	
-    	User saved = signupRepository.save(user);
-    	System.out.println(saved.toString());
-    	
-        final BasicResponse result = new BasicResponse();
-        result.status = true;
-        result.data = "success";
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+	@Autowired
+	private UserRepository userRepository;
+    
+    @GetMapping("/account/getAllUser")
+    @ApiOperation(value = "모든 회원 정보 조회")
+    public ResponseEntity<List<User>> getAllusers(){
+    	List<User> users = userRepository.findAll();	
+    	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
+    } 
+   
+    
+    @PostMapping("/account/signUp")
+    @ApiOperation(value = "회원가입")
+    public ResponseEntity<User> signUp(@RequestBody User userInfo) {
+        User user = userRepository.save(userInfo);
+    	return new ResponseEntity<User>(user, HttpStatus.OK);
     }
     
-//    @PatchMapping("/account/modify")
-//    @ApiOperation(value = "수정하기")
-//    public Object modify(@Valid @RequestBody Sign)
+
+//    @PostMapping("/account/{email}")
+//    @ApiOperation(value = "로그인")
+//    public ResponseEntity<User> getUser(@PathVariable("email") String email, @PathVariable("password") String password){
+//    	User user = userRepository.findByEmail(email);
+//    	if(user.getPassword()!=password) {
+//    		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+//    	}
+//    	
+//    	else return new ResponseEntity<User>(user,HttpStatus.OK); 	
+//    	
+//    }
+    
+    @DeleteMapping("/delete")
+    @ApiOperation(value = "삭제")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+    	userRepository.deleteById(id);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
+    
+    
+//    @PutMapping("/account/{id}")
+//    @ApiOperation(value = "수정")
+//    public ResponseEntity<User> updateMember(@PathVariable("id") Long id, @RequestBody User userInfo) {
+//    	
+//    	userInfo.setId(id);
+//    	User user = userRepository.save(userInfo);
+//    	
+//        return new ResponseEntity<User>(user, HttpStatus.OK);
+//    }
+
+
     
 }
