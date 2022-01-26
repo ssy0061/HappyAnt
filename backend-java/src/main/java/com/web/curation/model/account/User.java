@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.AllArgsConstructor;
 //import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,20 +19,12 @@ import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.web.curation.model.match.Mat_Article;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -42,8 +33,6 @@ import javax.validation.constraints.Pattern;
 @Setter
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
 public class User {
 
     @Id
@@ -85,6 +74,37 @@ public class User {
     @OneToMany(mappedBy="writer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mat_Article> mat_articles = new ArrayList<Mat_Article>();
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", age=" + age
+				+ ", score=" + score + ", question=" + question + ", answer=" + answer + ", createDate=" + createDate
+				+ ", mat_articles=" + mat_articles + "]";
+	}
+
+		
+	public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
+			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password,
+			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, int age, String question, String answer) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.age = age;
+		this.question = question;
+		this.answer = answer;
+	}
+
+//    private String email;
+//    private String password;
+//    private String name;
+//    private int age;
+//    private String question;
+//    private String answer;
+	
+	
+	
+	
+	
 //    @Enumerated(EnumType.STRING)
 //    private Role role;
 
@@ -99,4 +119,5 @@ public class User {
 //        password = passwordEncoder.encode(password);
 //    }
 
+    
 }

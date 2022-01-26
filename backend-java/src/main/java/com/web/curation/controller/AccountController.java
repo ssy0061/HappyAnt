@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.repository.account.UserRepository;
@@ -48,10 +49,11 @@ public class AccountController {
     
 	@Autowired
 	private UserRepository userRepository;
+	
     
     @GetMapping("/account/getAllUser")
     @ApiOperation(value = "모든 회원 정보 조회")
-    public ResponseEntity<List<User>> getAllusers(){
+    public ResponseEntity<List<User>> getAllUsers(){
     	List<User> users = userRepository.findAll();	
     	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
@@ -63,28 +65,29 @@ public class AccountController {
     	
     	System.out.println(user.toString());
     	return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
-    }    
+    }    	
    
     
     @PostMapping("/account/signUp")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<User> signUp(@RequestBody User userInfo) {
-        User user = userRepository.save(userInfo);
-    	return new ResponseEntity<User>(user, HttpStatus.OK);
+    public ResponseEntity<SignupRequest> signUp(@RequestBody SignupRequest userInfo) {
+    	User user = userInfo.toEntity();
+    	userRepository.save( user);
+    	return new ResponseEntity<>( HttpStatus.OK);
     }
     
-
-    @PostMapping("/account/{email}")
-    @ApiOperation(value = "로그인")
-    public ResponseEntity<User> getUser(@PathVariable("email") String email, @PathVariable("password") String password){
-    	User user = userRepository.findByEmail(email);
-    	if(user.getPassword()!=password) {
-    		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-    	}
-    	
-    	else return new ResponseEntity<User>(user,HttpStatus.OK); 	
-    	
-    }
+//
+//    @PostMapping("/account/{email}")
+//    @ApiOperation(value = "로그인")
+//    public ResponseEntity<User> getUser(@PathVariable("email") String email, @PathVariable("password") String password){
+//    	User user = userRepository.findByEmail(email);
+//    	if(user.getPassword()!=password) {
+//    		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+//    	}
+//    	
+//    	else return new ResponseEntity<User>(user,HttpStatus.OK); 	
+//    	
+//    }
     
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "삭제")
@@ -126,7 +129,7 @@ public class AccountController {
 //    }
     
     
-    @GetMapping("/account/{user_id}")
+    @GetMapping("/account/test/{user_id}")
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")
     public List<Mat_Article> articles(
     				@PathVariable("user_id") Long user_id) {
