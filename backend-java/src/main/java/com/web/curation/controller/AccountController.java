@@ -1,8 +1,7 @@
 package com.web.curation.controller;
 
 import java.util.List;
-
-
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -47,21 +46,20 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
     
     
-	@Autowired
-	private UserRepository userRepository;
-	
+	@Autowired	
+	AccountService accountService;
     
     @GetMapping("/account/getAllUser")
     @ApiOperation(value = "모든 회원 정보 조회")
     public ResponseEntity<List<User>> getAllUsers(){
-    	List<User> users = userRepository.findAll();	
+    	List<User> users = accountService.findAll();	
     	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
     
     @GetMapping("/account/{id}")
     @ApiOperation(value = "회원정보 조회")
     public ResponseEntity<Optional<User>> getUser(@PathVariable("id") Long id ){
-    	Optional<User> user = userRepository.findById(id);
+    	Optional<User> user = accountService.findById(id);
     	
     	System.out.println(user.toString());
     	return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
@@ -72,40 +70,45 @@ public class AccountController {
     @ApiOperation(value = "회원가입")
     public ResponseEntity<SignupRequest> signUp(@RequestBody SignupRequest userInfo) {
     	User user = userInfo.toEntity();
-    	userRepository.save( user);
+    	accountService.save( user);
     	return new ResponseEntity<>( HttpStatus.OK);
     }
+   
     
-//
-//    @PostMapping("/account/{email}")
-//    @ApiOperation(value = "로그인")
-//    public ResponseEntity<User> getUser(@PathVariable("email") String email, @PathVariable("password") String password){
-//    	User user = userRepository.findByEmail(email);
-//    	if(user.getPassword()!=password) {
-//    		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-//    	}
-//    	
-//    	else return new ResponseEntity<User>(user,HttpStatus.OK); 	
-//    	
-//    }
+    @PutMapping("/account/{id}")
+    @ApiOperation(value = "회원 정보 수정")
+    public void updateUser(
+    		@PathVariable("id") Long id,
+    		@RequestParam(required = false) String password,    		
+    		@RequestParam(required = false) String question,
+    		@RequestParam(required = false) String answer) {
+    	accountService.updateUser(id, password, question, answer);
+    }
+    
+
+    @PostMapping("/account/login")
+    @ApiOperation(value = "로그인")
+    public ResponseEntity<User> getUser(@RequestParam String email, @RequestParam String password){
+    	User user = accountService.findByEmail(email);
+    	if(user.getPassword().equals(password)) {
+    		System.out.println("OK");
+    		return new ResponseEntity<User>(user,HttpStatus.OK);
+    		
+    	}
+    	System.out.println("fail");
+    	return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    	
+    }
     
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "삭제")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-    	userRepository.deleteById(id);
+    	accountService.deleteById(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
     
     
-//    @PutMapping("/account/{id}")
-//    @ApiOperation(value = "수정")
-//    public ResponseEntity<User> updateMember(@PathVariable("id") Long id, @RequestBody User userInfo) {
-//    	
-//    	userInfo.setId(id);
-//    	User user = userRepository.save(userInfo);
-//    	
-//        return new ResponseEntity<User>(user, HttpStatus.OK);
-//    }
+
 
 //    // 회원가입
 //    @PostMapping("/join")
@@ -133,7 +136,7 @@ public class AccountController {
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")
     public List<Mat_Article> articles(
     				@PathVariable("user_id") Long user_id) {
-    	User user = userRepository.findById(user_id).get();
+    	User user = accountService.findById(user_id).get();
     	return user.getMat_articles();
     }
 }
