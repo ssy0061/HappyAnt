@@ -58,11 +58,11 @@ public class AccountController {
     	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
     
-    @GetMapping("/account/{email}")
+    @GetMapping("/account/{id}")
     @ApiOperation(value = "회원정보 조회")
-    public ResponseEntity<User> getUser(@RequestBody String email ){
+    public ResponseEntity<User> getUser(@RequestParam String email ){
     	User user = accountService.findByEmail(email);
-    	
+    	Long id = user.getId();
     	System.out.println(user.toString());
     	return new ResponseEntity<User>(user, HttpStatus.OK);
     }    
