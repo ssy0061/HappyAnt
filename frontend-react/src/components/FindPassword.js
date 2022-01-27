@@ -7,7 +7,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
-// import axios from 'axios';
 
 // 1단계 : email 기입 -> email 존재 확인후 존재하면 setLevel+1 || 버튼 : next버튼 닫기버튼
 // 2단계 : 질문 리스트에서 선택 후 답변 기입 -> 해당 이메일에 기입된 정보가 맞으면 수정페이지로 이동 || 버튼 : prev / next / close
@@ -15,7 +14,22 @@ import axios from 'axios';
 export default function FindPassword(props) {
   // const open = true;
   const [level, setLevel] = useState(0);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const { handleClickClose } = props;
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handlePasswordConfirm = (e) => {
+    setPasswordConfirm(e.target.value);
+  };
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
 
   const handlePrev = () => {
     if (level >= 1) {
@@ -24,8 +38,20 @@ export default function FindPassword(props) {
   };
 
   const emailCheck = () => {
-    axios.post(URL, '');
-    setLevel(level + 1);
+    if (email === '') {
+      console.log('빈 값 금지');
+    } else {
+      axios
+        // DB에 이메일 존재하는지 확인하는 기능(백엔드) 필요
+        .post(URL, '')
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      setLevel(level + 1);
+    }
   };
 
   const questionCheck = () => {
@@ -33,9 +59,36 @@ export default function FindPassword(props) {
     setLevel(level + 1);
   };
 
+  // axios
+  //   .get('/test?name=veneas')
+  //   .then(function (response) {
+  //     // 성공한 경우 실행
+  //     console.log(response);
+  //   })
+  //   .catch(function (error) {
+  //     // 에러인 경우 실행
+  //     console.log(error);
+  //   })
+  //   .then(function () {
+  //     // 항상 실행
+  //   });
   const submitNewPassword = () => {
-    axios.post(URL, '');
-    handleClickClose();
+    if (password !== passwordConfirm) {
+      console.log('비번 안 맞음');
+    } else {
+      axios
+        .put(URL, '데이터')
+        .then((response) => {
+          // 비번 변경 성공 메시지
+          console.log(response);
+        })
+        .catch((error) => {
+          // 비번 변경 실패 메시지
+          console.log(error);
+        });
+
+      handleClickClose();
+    }
   };
 
   // const submit = (res) => {
@@ -44,7 +97,7 @@ export default function FindPassword(props) {
 
   return (
     <div>
-      <Dialog open="true">
+      <Dialog open>
         <DialogTitle>
           비밀번호 찾기[
           {level + 1}
@@ -64,6 +117,7 @@ export default function FindPassword(props) {
                 type="email"
                 fullWidth
                 variant="standard"
+                onChange={handleEmail}
               />
             </div>
           )}
@@ -116,6 +170,7 @@ export default function FindPassword(props) {
                 type="email"
                 fullWidth
                 variant="standard"
+                onChange={handlePassword}
               />
               <TextField
                 autoFocus
@@ -125,6 +180,7 @@ export default function FindPassword(props) {
                 type="email"
                 fullWidth
                 variant="standard"
+                onChange={handlePasswordConfirm}
               />
             </div>
           )}
