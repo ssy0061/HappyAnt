@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.Mat_Article;
-import com.web.curation.repository.account.UserRepository;
+import com.web.curation.repository.account.UserRepo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepo userRepository;
 	
 	public void signUp(User userInfo){
 		User user = new User();
 		user.setEmail(userInfo.getEmail());
 		user.setName(userInfo.getName());
 		user.setPassword(userInfo.getPassword());
-		user.setQuestion(userInfo.getQuestion());
-		user.setAge(userInfo.getAge());
+		user.setQuestion(userInfo.getQuestion());		
 		user.setAnswer(userInfo.getAnswer());	
 		
 		userRepository.save(user);
@@ -99,6 +99,22 @@ public class AccountService {
 		User user = userRepository.findByEmail(email);
 		return user;
 	}
+	
+	public boolean checkDupliByEmail(String email) {
+		List<String> emails = new ArrayList<>();
+		userRepository.findAll().forEach(u -> emails.add(u.getEmail()));
+		
+		boolean isDupli = false;
+		for (String e : emails) {
+			if(e.equals(email)) {
+				isDupli = true;
+				break;
+			}			
+		}
+		
+		return isDupli;
+	}
+	
 
 
 

@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.dto.account.LoginRequest;
+import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
-import com.web.curation.repository.account.UserRepository;
+
 import com.web.curation.service.AccountService;
 import com.web.curation.model.match.Mat_Article;
 
@@ -56,25 +58,48 @@ public class AccountController {
     	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
     
-    @GetMapping("/account/{id}")
+    @GetMapping("/account/{email}")
     @ApiOperation(value = "회원정보 조회")
-    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") Long id ){
-    	Optional<User> user = accountService.findById(id);
+    public ResponseEntity<User> getUser(@RequestBody String email ){
+    	User user = accountService.findByEmail(email);
     	
     	System.out.println(user.toString());
-    	return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
-    }    	
+    	return new ResponseEntity<User>(user, HttpStatus.OK);
+    }    
    
     
     @PostMapping("/account/signUp")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<SignupRequest> signUp(@RequestBody SignupRequest userInfo) {
-    	User user = userInfo.toEntity();
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignupRequest userInfo) {
+    	User user = userInfo.toEntity();    	
+    	
+    	
+    	String emailPattern = "\\w+@\\w+\\.\\w+(\\.\\w+)?";
+    	String pwPattern = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}";
+    	
+    	boolean isEmail= userInfo.getEmail().matches(emailPattern);
+    	boolean isPw= userInfo.getPassword().matches(pwPattern);
+    	
+//    	이메일 패턴 검사
+    	if(!isEmail) {
+    		return new ResponseEntity<String>("Not valid email", HttpStatus.BAD_REQUEST);
+    	}
+    	
+//    	이메일 중복 검사
+    	if(accountService.checkDupliByEmail(userInfo.getEmail())) {
+    		return new ResponseEntity<String>("Duplicate email", HttpStatus.CONFLICT);
+    	}    	
+    	
+//    	비밀번호 패턴 검사
+    	if(!isPw) {
+    		return new ResponseEntity<String>("Not valid password", HttpStatus.FORBIDDEN);
+    	}
+    	
     	accountService.save( user);
-    	return new ResponseEntity<>( HttpStatus.OK);
+    	return new ResponseEntity<String>("Accept", HttpStatus.OK);
     }
-   
-    
+
+
     @PutMapping("/account/{id}")
     @ApiOperation(value = "회원 정보 수정")
     public void updateUser(
@@ -88,11 +113,18 @@ public class AccountController {
 
     @PostMapping("/account/login")
     @ApiOperation(value = "로그인")
-    public ResponseEntity<User> getUser(@RequestParam String email, @RequestParam String password){
-    	User user = accountService.findByEmail(email);
-    	if(user.getPassword().equals(password)) {
+    public ResponseEntity<LoginResponse> getUser(@RequestBody LoginRequest userInfo){
+    	User user = accountService.findByEmail(userInfo.getEmail());    	
+    	
+    	if(user.getPassword().equals(userInfo.getPassword())) {
     		System.out.println("OK");
-    		return new ResponseEntity<User>(user,HttpStatus.OK);
+    		LoginResponse loginUser = new LoginResponse();
+        	loginUser.setId(user.getId());
+        	loginUser.setEmail(user.getEmail());
+        	loginUser.setName(user.getName());
+        	loginUser.setQuestion(user.getQuestion());
+        	loginUser.setScore(user.getScore());
+    		return new ResponseEntity<LoginResponse>(loginUser,HttpStatus.OK);
     		
     	}
     	System.out.println("fail");
