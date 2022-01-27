@@ -5,8 +5,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Grid from '@mui/material/Grid';
 import DialogTitle from '@mui/material/DialogTitle';
+// eslint-disable-next-line object-curly-newline
+import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 // 1단계 : email 기입 -> email 존재 확인후 존재하면 setLevel+1 || 버튼 : next버튼 닫기버튼
 // 2단계 : 질문 리스트에서 선택 후 답변 기입 -> 해당 이메일에 기입된 정보가 맞으면 수정페이지로 이동 || 버튼 : prev / next / close
@@ -17,77 +21,96 @@ export default function FindPassword(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [pwAnswer, setAnswer] = useState('');
+  const [pwQuestion, setPwQuestion] = useState(1);
   const { handleClickClose } = props;
 
+  // 인풋 입력
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
-
   const handlePasswordConfirm = (e) => {
     setPasswordConfirm(e.target.value);
   };
-
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
+  const handleQuestion = (e) => {
+    setPwQuestion(e.target.value);
+  };
+  const handlePwAnswer = (e) => {
+    setAnswer(e.target.value);
+  };
 
+  // 돌아가기 버튼
   const handlePrev = () => {
     if (level >= 1) {
       setLevel(level - 1);
     }
   };
 
+  // 인풋 검사
   const emailCheck = () => {
     if (email === '') {
-      console.log('빈 값 금지');
+      alert('email을 입력해주세요');
     } else {
       axios
-        // DB에 이메일 존재하는지 확인하는 기능(백엔드) 필요
-        .post(URL, '')
-        .then((response) => {
-          console.log(response);
+        .get(`account/{id}?email=${email}`)
+        .then(() => {
+          console.log('email 조회 완료');
+          setLevel(level + 1);
         })
         .catch((error) => {
           console.log(error);
+          alert('email을 다시 확인해주세요.');
         });
-      setLevel(level + 1);
     }
   };
-
   const questionCheck = () => {
-    axios.post(URL, '');
-    setLevel(level + 1);
+    const body = {
+      email,
+      question: pwQuestion,
+      answer: pwAnswer,
+    };
+
+    axios
+      .post('/account/find_pw', body)
+      .then((res) => {
+        console.log(res);
+        setLevel(level + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  // axios
-  //   .get('/test?name=veneas')
-  //   .then(function (response) {
-  //     // 성공한 경우 실행
-  //     console.log(response);
-  //   })
-  //   .catch(function (error) {
-  //     // 에러인 경우 실행
-  //     console.log(error);
-  //   })
-  //   .then(function () {
-  //     // 항상 실행
-  //   });
+  // 비번 제출
   const submitNewPassword = () => {
     if (password !== passwordConfirm) {
+      alert('비밀번호가 맞지 않습니다.');
       console.log('비번 안 맞음');
     } else {
+      const body = {
+        password,
+      };
+      // test용
+      console.log(body);
       axios
-        .put(URL, '데이터')
-        .then((response) => {
+        .put('/account/find_pw', body)
+        .then((res) => {
           // 비번 변경 성공 메시지
-          console.log(response);
+          alert('비밀번호 변경이 완료되었습니다.');
+          console.log(res);
+          Navigate('/login');
         })
         .catch((error) => {
           // 비번 변경 실패 메시지
           console.log(error);
+          alert('비밀번호 변경에 실패했습니다.');
         });
 
       handleClickClose();
+      Navigate('/login');
     }
   };
 
@@ -104,7 +127,7 @@ export default function FindPassword(props) {
           /3]
         </DialogTitle>
         <DialogContent>
-          {level < 2 && (
+          {level === 0 && (
             <div>
               <DialogContentText>
                 비밀번호를 찾기 위해서 가입 이메일을 입력해주세요.
@@ -127,33 +150,33 @@ export default function FindPassword(props) {
               <br />
               <br />
               <br />
-              <DialogContentText>
-                비밀번호 찾기 질문을 입력해주세요.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Question"
-                type="email"
-                fullWidth
-                variant="standard"
-              />
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    비밀번호 찾기 힌트
+                  </InputLabel>
+                  <Select
+                    value={pwQuestion}
+                    label="비밀번호 찾기 힌트"
+                    onChange={handleQuestion}
+                  >
+                    <MenuItem value={1}>가장 기억에 남는 말은?</MenuItem>
+                    <MenuItem value={2}>졸업한 초등학교 이름은?</MenuItem>
+                    <MenuItem value={3}>고향 이름은?</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
               <br />
-              <br />
-              <br />
-              <DialogContentText>
-                질문에 대한 답을 적어주세요.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Answer"
-                type="email"
-                fullWidth
-                variant="standard"
-              />
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="hintAnswer"
+                  label="힌트 답변"
+                  value={pwAnswer}
+                  onChange={handlePwAnswer}
+                />
+              </Grid>
             </div>
           )}
 
@@ -167,7 +190,7 @@ export default function FindPassword(props) {
                 margin="dense"
                 id="name"
                 label="Password"
-                type="email"
+                type="password"
                 fullWidth
                 variant="standard"
                 onChange={handlePassword}
@@ -177,7 +200,7 @@ export default function FindPassword(props) {
                 margin="dense"
                 id="name"
                 label="Password Confirmation"
-                type="email"
+                type="password"
                 fullWidth
                 variant="standard"
                 onChange={handlePasswordConfirm}

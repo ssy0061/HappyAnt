@@ -1,20 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout, login } from '../redux/userSlice';
+import { logout } from '../redux/userSlice';
 
 function nav() {
   // 로그인 상태 체크
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const loginPage = useSelector((state) => state.user.isLogin);
+  const yourName = useSelector((state) => state.user.userInfo.name);
+
+  const clickLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
   // const userName = useSelector((state) => state.user.username);
 
-  const clickLogin = () => {
-    const data = {
-      username: 'user1',
-    };
-    dispatch(login(data));
-  };
   return (
     <div>
       <h1>Navbar</h1>
@@ -35,8 +36,7 @@ function nav() {
       {/* 로그인 상태일때 보이는 navbar */}
       {loginPage && (
         <div>
-          {/* <h3>{userName}</h3> */}
-          {/* <p>{userName} 님 안녕하세요</p> */}
+          <h3>{yourName}</h3>
           <ul>
             <li>
               <Link to="/profile">프로필</Link>
@@ -45,22 +45,13 @@ function nav() {
               <Link to="/Match">매칭 게시판</Link>
             </li>
             <li>
-              <button type="submit" onClick={() => dispatch(logout())}>
+              <button type="submit" onClick={clickLogout}>
                 로그아웃
               </button>
             </li>
           </ul>
         </div>
       )}
-      {/* 임시 버튼 */}
-      <div>
-        <button type="submit" onClick={clickLogin}>
-          임시 로그인 버튼
-        </button>
-        <button type="submit" onClick={() => dispatch(logout())}>
-          임시 로그아웃 버튼
-        </button>
-      </div>
     </div>
   );
 }

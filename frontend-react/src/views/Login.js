@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FindPassword from '../components/FindPassword';
 import { login } from '../redux/userSlice';
 
@@ -11,6 +11,7 @@ export default function Login() {
   const [inputPw, setInputPw] = useState('');
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // 이벤트 관리
   const handleInputId = (e) => {
@@ -19,14 +20,18 @@ export default function Login() {
   const handleInputPw = (e) => {
     setInputPw(e.target.value);
   };
-
+  // 비밀번호찾기 모달창 open / close
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClickClose = () => {
     setOpen(false);
   };
-
+  // 회원가입 버튼
+  const clickJoin = () => {
+    navigate('/join');
+  };
+  // 로그인 버튼
   const onClickLogin = (e) => {
     e.preventDefault();
 
@@ -34,15 +39,25 @@ export default function Login() {
       email: inputId,
       password: inputPw,
     };
-    // axios -> dispatch로 login부름 && set로컬스토리지jwt저장 && response가 성공하면 console로 확인
+
     axios
-      .post('/login', body)
+      .post('/account/login', body)
       .then((res) => {
-        dispatch(login(inputId));
-        localStorage.setItem('jwt', res.data.token);
-        console.log('login success');
+        dispatch(login(res.data));
+        alert('안녕하세요!');
+        navigate('/profile');
+        console.log(res.data);
+        // localStorage.setItem('jwt', res.data.token);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        alert('로그인 정보를 확인하세요');
+      });
+  };
+  const onCheckEnter = (e) => {
+    if (e.key === 'Enter') {
+      onClickLogin(e);
+    }
   };
 
   // ---------------------------- render--------------------------------
@@ -67,6 +82,7 @@ export default function Login() {
           value={inputPw}
           placeholder="비밀번호를 입력해주세요"
           onChange={handleInputPw}
+          onKeyPress={onCheckEnter}
         />
       </div>
       <div>
@@ -77,11 +93,9 @@ export default function Login() {
       </div>
       <br />
       <div>
-        <Link to="/join">
-          <Button type="button" variant="outlined">
-            회원가입
-          </Button>
-        </Link>
+        <Button type="button" variant="outlined" onClick={clickJoin}>
+          회원가입
+        </Button>
         <Button type="button" variant="outlined" onClick={handleClickOpen}>
           비밀번호 찾기
         </Button>
