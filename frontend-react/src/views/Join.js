@@ -13,7 +13,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 import {
   Modal,
@@ -29,13 +28,16 @@ import Guideline from '../components/Guideline';
 
 const theme = createTheme();
 function Join() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [pwd, setPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [checkBox, setCheckBox] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hint, setHint] = useState('');
+  const [hintAnswer, setHintAnswer] = useState('');
+
+  // 가입하기 버튼 눌렀을때
   const onSubmit = (event) => {
     event.preventDefault();
     if (pwd !== confirmPwd) {
@@ -45,11 +47,13 @@ function Join() {
     } else {
       axios({
         method: 'post',
-        url: '/account/signup',
+        url: '/account/signUp',
         data: {
+          answer: hintAnswer,
           email,
-          nickname: name,
+          name,
           password: pwd,
+          question: hint,
         },
       })
         .then((response) => {
@@ -60,8 +64,8 @@ function Join() {
         })
         .catch((error) => {
           console.log(error);
-          // 일단 여기에 작성해놓자.
-          navigate('/login');
+          console.log(error.response.status);
+          alert('이미 존재하는 회원이거나 비밀번호 양식이 맞지 않습니다.');
         });
     }
   };
@@ -97,14 +101,14 @@ function Join() {
   };
 
   // 비밀번호 찾기
-  const [hint, setHint] = useState('');
+
   const handleChange = (event) => {
     setHint(event.target.value);
     console.log(event.target.value);
   };
 
   // 비밀번호 찾기 힌트답변
-  const [hintAnswer, setHintAnswer] = useState('');
+
   const onhintAnswer = (event) => {
     setHintAnswer(event.target.value);
     console.log(event.target.value);
@@ -171,7 +175,7 @@ function Join() {
                   <TextField
                     required
                     fullWidth
-                    label="비밀번호"
+                    label="비밀번호 (8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.)"
                     type="password"
                     id="pwd"
                     value={pwd}
