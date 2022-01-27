@@ -83,7 +83,7 @@ public class AccountService {
 			user.setQuestion(question);
 		}
 		
-		if(password !=null && !Objects.equals(user.getAnswer(), answer)) {
+		if(answer !=null && !Objects.equals(user.getAnswer(), answer)) {
 			user.setAnswer(answer);
 		}
 	}
