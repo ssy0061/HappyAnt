@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.web.curation.model.account.User;
-import com.web.curation.model.match.Mat_Article;
+import com.web.curation.model.match.MatchArticle;
 
 @Repository
-public interface Mat_ArticleRepository extends JpaRepository<Mat_Article, Long>{
+public interface MatchArticleRepository extends JpaRepository<MatchArticle, Long>{
 	
-	List<Mat_Article> findByWriterId(User writer);
+	List<MatchArticle> findByWriterId(User writer);
 }
