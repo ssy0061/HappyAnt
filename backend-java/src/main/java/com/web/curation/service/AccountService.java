@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.model.account.User;
-import com.web.curation.model.match.Mat_Article;
 import com.web.curation.repository.account.UserRepo;
 
 import lombok.RequiredArgsConstructor;
