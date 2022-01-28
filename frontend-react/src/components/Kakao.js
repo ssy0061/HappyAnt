@@ -2,11 +2,17 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Modal, Box } from '@mui/material';
 
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Guideline from './Guideline';
+
+import { login } from '../redux/userSlice';
 
 const { Kakao } = window;
 
 function KakaoLogin() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const loginWithKakao = () => {
     Kakao.Auth.loginForm({
@@ -16,6 +22,7 @@ function KakaoLogin() {
           url: '/v2/user/me',
           success(response) {
             console.log(response);
+            // 회원가입
             axios({
               method: 'post',
               url: '/account/signUp',
@@ -28,17 +35,53 @@ function KakaoLogin() {
               .then((res) => {
                 console.log(res);
                 // 회원가입 성공
+                // 자동 로그인
+
                 setOpen(true);
+                axios({
+                  method: 'post',
+                  url: '/account/login',
+                  data: {
+                    email: response.kakao_account.email,
+                    password: `${response.id}Zz!`,
+                  },
+                })
+                  .then((ress) => {
+                    console.log(ress);
+                    dispatch(login(ress.data));
+                    // localStorage.setItem('jwt', res.data.token);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
               })
               .catch((error) => {
                 console.log(error);
-                alert('로그인에 실패했습니다.');
-                // 회원가입에 실패했다면 로그인을 시도해보자
-                // 그럼 회원가입과 로그인 둘다 가능한 컴포넌트??
+                // 회원가입 실패
+
+                // 이미 존재하는 회원이라면 로그인 시도
+                axios({
+                  method: 'post',
+                  url: '/account/login',
+                  data: {
+                    email: response.kakao_account.email,
+                    password: `${response.id}Zz!`,
+                  },
+                })
+                  .then((ress) => {
+                    console.log(ress);
+                    dispatch(login(ress.data));
+                    // localStorage.setItem('jwt', res.data.token);
+                    navigate('/profile');
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
               });
           },
         });
       },
+      // 회원가입 실패
       fail(err) {
         console.log(err);
         alert('로그인에 실패했습니다.');

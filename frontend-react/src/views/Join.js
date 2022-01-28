@@ -21,10 +21,12 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import Google from '../components/Google';
 import Kakao from '../components/Kakao';
 
 import Guideline from '../components/Guideline';
+import { login } from '../redux/userSlice';
 
 const theme = createTheme();
 function Join() {
@@ -36,12 +38,13 @@ function Join() {
   const [open, setOpen] = useState(false);
   const [hint, setHint] = useState('');
   const [hintAnswer, setHintAnswer] = useState('');
+  const dispatch = useDispatch();
 
   // 가입하기 버튼 눌렀을때
   const onSubmit = (event) => {
     event.preventDefault();
     if (pwd !== confirmPwd) {
-      alert('비밀번호가 맞지 않습니다.');
+      alert('비밀번호가 일치하지 않습니다.');
       setPwd('');
       setConfirmPwd('');
     } else {
@@ -58,14 +61,43 @@ function Join() {
       })
         .then((response) => {
           console.log(response);
+          dispatch(login(response.data));
           // 회원가입 버튼 누르고 정상 응답이 반환되면 모달창(가이드라인) 오픈
           // 모달창에서 프로필 작성하러 가기 누르면 로그인처리 됨과 동시에 프로필로 이동
           setOpen(true);
+          // 로그인
+          axios({
+            method: 'post',
+            url: '/account/login',
+            data: {
+              email,
+              password: pwd,
+            },
+          })
+            .then((ress) => {
+              console.log(ress);
+              dispatch(login(ress.data));
+              // localStorage.setItem('jwt', res.data.token);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
+        // 회원가입 에러
         .catch((error) => {
           console.log(error);
           console.log(error.response.status);
-          alert('이미 존재하는 회원이거나 비밀번호 양식이 맞지 않습니다.');
+
+          if (error.response.status === 409) {
+            alert('이미 존재하는 회원 입니다.');
+            setEmail('');
+          } else if (error.response.status === 403) {
+            alert('비밀번호 양식이 맞지 않습니다.');
+            setPwd('');
+            setConfirmPwd('');
+          } else {
+            alert('이메일 양식이 맞지 않습니다.');
+          }
         });
     }
   };

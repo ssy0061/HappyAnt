@@ -3,38 +3,77 @@ import React, { useState } from 'react';
 import GoogleLogin from 'react-google-login';
 
 import { Modal, Box } from '@mui/material';
-
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Guideline from './Guideline';
+import { login } from '../redux/userSlice';
 
 const clientId = process.env.REACT_APP_GOOGLE_KEY;
 
 function GoogleLoginBtn() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const responseGoogle = (response) => {
     console.log(response);
-    const pass = response.yu.DW.substr(0, 8);
-    console.log(pass);
 
+    const pass = response.profileObj.googleId.substr(0, 8);
+    console.log(pass);
+    // 회원가입
     axios({
       method: 'post',
       url: '/account/signUp',
       data: {
-        email: response.yu.nv,
-        name: response.yu.nf,
+        email: response.profileObj.email,
+        name: response.profileObj.name,
         password: `${pass}Zz!`,
       },
     })
       .then((res) => {
         console.log(res);
         // 회원가입 성공
+
         setOpen(true);
+        // 로그인
+        axios({
+          method: 'post',
+          url: '/account/login',
+          data: {
+            email: response.profileObj.email,
+            password: `${pass}Zz!`,
+          },
+        })
+          .then((ress) => {
+            console.log(ress);
+            dispatch(login(ress.data));
+            // localStorage.setItem('jwt', res.data.token);
+            navigate('/profile');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((error) => {
         console.log(error);
 
-        alert('로그인에 실패했습니다.');
-        // 회원가입에 실패했다면 로그인을 시도해보자
-        // 그럼 회원가입과 로그인 둘다 가능한 컴포넌트??
+        // 이미 존재하는 회원이라면 로그인 시도
+        axios({
+          method: 'post',
+          url: '/account/login',
+          data: {
+            email: response.profileObj.email,
+            password: `${pass}Zz!`,
+          },
+        })
+          .then((ress) => {
+            console.log(ress);
+            dispatch(login(ress.data));
+            // localStorage.setItem('jwt', res.data.token);
+            navigate('/profile');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
   };
   // 모달 스타일
