@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
@@ -9,8 +10,6 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-// import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import logo from '../image/pang.png';
 
 // import logo from '.image/pang.png를 통해 밑의 imgPath: logo를 써서 이미지를 띄울 수 있다.
@@ -38,7 +37,6 @@ const images = [
 ];
 
 function Guideline() {
-  const navigate = useNavigate();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = images.length;
@@ -53,9 +51,6 @@ function Guideline() {
 
   const handleStepChange = (step) => {
     setActiveStep(step);
-  };
-  const handleClick = () => {
-    navigate('/profile');
   };
 
   return (
@@ -127,11 +122,9 @@ function Guideline() {
           </Button>
         }
       />
-      {/* <Link to="./writeprofile"> */}
-      <Button variant="contained" onClick={handleClick}>
-        프로필 작성하기
+      <Button>
+        <Link to="/profile">시작하기</Link>
       </Button>
-      {/* </Link> */}
     </Box>
   );
 }
