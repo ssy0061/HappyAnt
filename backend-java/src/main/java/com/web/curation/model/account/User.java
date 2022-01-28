@@ -19,7 +19,7 @@ import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import com.web.curation.model.match.Mat_Article;
+import com.web.curation.model.match.MatchArticle;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -72,13 +72,13 @@ public class User {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy="writer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Mat_Article> mat_articles = new ArrayList<Mat_Article>();
+    private List<MatchArticle> matchArticles = new ArrayList<MatchArticle>();
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", age=" + age
 				+ ", score=" + score + ", question=" + question + ", answer=" + answer + ", createDate=" + createDate
-				+ ", mat_articles=" + mat_articles + "]";
+				+ ", matchArticles=" + matchArticles + "]";
 	}
 
 		
@@ -93,6 +93,7 @@ public class User {
 		this.question = question;
 		this.answer = answer;
 	}
+
 
 //    private String email;
 //    private String password;

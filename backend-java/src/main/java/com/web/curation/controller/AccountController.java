@@ -26,7 +26,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.repository.account.UserRepository;
 import com.web.curation.service.AccountService;
-import com.web.curation.model.match.Mat_Article;
+import com.web.curation.model.match.MatchArticle;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -131,9 +131,9 @@ public class AccountController {
     
     @GetMapping("/account/test/{user_id}")
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")
-    public List<Mat_Article> articles(
+    public List<MatchArticle> articles(
     				@PathVariable("user_id") Long user_id) {
     	User user = userRepository.findById(user_id).get();
-    	return user.getMat_articles();
+    	return user.getMatchArticles();
     }
 }
