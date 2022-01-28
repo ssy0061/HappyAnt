@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.curation.model.account.User;
 
 @Entity // DB가 해당 객체를 인식 가능!
-public class Mat_Article {
+public class MatchArticle {
 	
 	@Id // 대푯값 지정
 	@GeneratedValue // 1, 2, 3, ... 자동 생성
@@ -34,12 +34,12 @@ public class Mat_Article {
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
     		insertable = false, 
     		updatable = false)
-	private LocalDateTime create_date;
+	private LocalDateTime createDate;
 	
 //	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
 //			insertable = false, 
 //    		updatable = false)
-//	private LocalDateTime update_date;
+//	private LocalDateTime updateDate;
 	
 	@Column
 	private Boolean state;
@@ -50,9 +50,6 @@ public class Mat_Article {
 				updatable = false) // 외래키로 조인
 	@JsonIgnore
 	private User writer;
-	
-	@Column(insertable = false, updatable = false)
-	private Long writer_id;
 
 	
 	public Long getId() {
@@ -83,12 +80,12 @@ public class Mat_Article {
 		this.content = content;
 	}
 
-	public LocalDateTime getCreate_date() {
-		return create_date;
+	public LocalDateTime getCreateDate() {
+		return createDate;
 	}
 
-	public void setCreate_date(LocalDateTime create_date) {
-		this.create_date = create_date;
+	public void setCreate_date(LocalDateTime createDate) {
+		this.createDate = createDate;
 	}
 
 	public Boolean getState() {
@@ -109,20 +106,12 @@ public class Mat_Article {
 	}
 
 	
-	
-	public Long getWriter_id() {
-		return writer_id;
-	}
 
-	public void setWriter_id(Long writer_id) {
-		this.writer_id = writer.getId();
-	}
-
-	public Mat_Article() {
+	public MatchArticle() {
 		
 	}
 
-	public Mat_Article(String title, String category, String content, Boolean state, User writer) {
+	public MatchArticle(String title, String category, String content, Boolean state, User writer) {
 		super();
 		this.title = title;
 		this.category = category;
@@ -131,14 +120,14 @@ public class Mat_Article {
 		this.writer = writer;
 	}
 
-	public Mat_Article toEntity() {
-		return new Mat_Article(title, category, content, state, writer);
+	public MatchArticle toEntity() {
+		return new MatchArticle(title, category, content, state, writer);
 	}
 
 	@Override
 	public String toString() {
 		return "Mat_Article [id=" + id + ", title=" + title + ", category=" + category + ", content=" + content
-				+ ", create_date=" + create_date + ", state=" + state + ", writer=" + writer + "]";
+				+ ", createDate=" + createDate + ", state=" + state + ", writer=" + writer + "]";
 	}
 	
 }
