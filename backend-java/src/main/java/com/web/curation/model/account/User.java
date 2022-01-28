@@ -12,9 +12,11 @@ import lombok.AllArgsConstructor;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -23,8 +25,10 @@ import com.web.curation.model.match.Mat_Article;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -33,14 +37,16 @@ import javax.validation.constraints.Pattern;
 @Setter
 @Entity
 @NoArgsConstructor
+@ToString
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-    @Column
+    @Column    
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
+    @Email(message = "이메일 형식에 맞지 않습니다.")
     private String email;
 
     @Column
@@ -52,18 +58,13 @@ public class User {
     @Column
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
-    
-    @Column
-    private int age;
-    
-    @Column
+
     private int score;
-    
-    @Column
-    private String question;
-    
-    @Column
+    private String question;    
     private String answer;
+    
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    private Collection<Role> roles = new ArrayList<>();
 
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -73,26 +74,43 @@ public class User {
 
     @OneToMany(mappedBy="writer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mat_Article> mat_articles = new ArrayList<Mat_Article>();
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", age=" + age
-				+ ", score=" + score + ", question=" + question + ", answer=" + answer + ", createDate=" + createDate
-				+ ", mat_articles=" + mat_articles + "]";
-	}
+    
+    
+    public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
+			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password) {
+    	super();
+    	this.email = email;
+    	this.password = password;
+    }
 
 		
 	public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
 			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password,
-			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, int age, String question, String answer) {
+			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, String question, String answer) {
 		super();
 		this.email = email;
 		this.password = password;
-		this.name = name;
-		this.age = age;
+		this.name = name;		
 		this.question = question;
 		this.answer = answer;
 	}
+	
+	public User(Long id, String email, String name, int score, String question, String answer) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.score = score;
+		this.question = question;
+		this.answer = answer;
+	}
+
+
+
+
+
+
+
 
 //    private String email;
 //    private String password;
