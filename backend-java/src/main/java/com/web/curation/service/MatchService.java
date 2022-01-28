@@ -9,20 +9,20 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.web.curation.dto.match.MatchArticleForm;
+import com.web.curation.dto.match.Mat_ArticleForm;
 import com.web.curation.model.account.User;
-import com.web.curation.model.match.MatchArticle;
+import com.web.curation.model.match.Mat_Article;
 import com.web.curation.repository.account.UserRepo;
-import com.web.curation.repository.match.MatchArticleRepository;
+import com.web.curation.repository.match.Mat_ArticleRepository;
 
 @Service
 public class MatchService {
 	
-    private final MatchArticleRepository articleRepository;
+    private final Mat_ArticleRepository articleRepository;
     private final UserRepo userRepository;
     
     @Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결함
-	public MatchService(MatchArticleRepository articleRepository,
+	public MatchService(Mat_ArticleRepository articleRepository,
 			UserRepo userRepository) {
     	this.articleRepository = articleRepository;
     	this.userRepository = userRepository;
@@ -35,22 +35,23 @@ public class MatchService {
 //    }
     
     
-    public List<MatchArticle> getArticleList() {
+    public List<Mat_Article> getArticleList() {
     	return articleRepository.findAll();
     }
     
-    public MatchArticle getArticle(Long articleId) {
+    public Mat_Article getArticle(Long articleId) {
     	return articleRepository.findById(articleId)
     			.orElseThrow(() -> new IllegalStateException(
     					"article with id " + articleId + " does not exist"));
     }
     
-    public void addNewArticle(MatchArticleForm articleForm) {
-    	Long writerId = articleForm.getWriterId();
+    public void addNewArticle(Mat_ArticleForm articleForm) {
+    	Long writer_id = articleForm.getWriter_id();
     	// 1. dto를 Entity로 변경
-    	MatchArticle article = articleForm.toEntity();
-    	User writer = userRepository.findById(writerId).get();
+    	Mat_Article article = articleForm.toEntity();
+    	User writer = userRepository.findById(writer_id).get();
     	article.setWriter(writer);
+    	writer.getMat_articles().add(article);
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
     	articleRepository.save(article);
     }
@@ -62,7 +63,7 @@ public class MatchService {
     		String category,
     		String content,
     		Boolean state) {
-    	MatchArticle article = articleRepository.findById(articleId)
+    	Mat_Article article = articleRepository.findById(articleId)
     			.orElseThrow(() -> new IllegalStateException(
     					"article with id " + articleId + " does not exist"));
     	
