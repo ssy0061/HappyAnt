@@ -1,40 +1,91 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import {
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+} from '@mui/material';
 
 export default function MatchingUpdate(props) {
   const { pk } = props;
 
-  const [inputId, setInputId] = useState('');
-  const [inputPw, setInputPw] = useState('');
-  const handleInputId = (e) => {
-    setInputId(e.target.value);
+  const [inputTitle, setInputTitle] = useState('');
+  const [inputContent, setInputContent] = useState('');
+  const [memberNum, setMemeberNum] = useState(2);
+
+  const handleInputTitle = (e) => {
+    setInputTitle(e.target.value);
   };
-  const handleInputPw = (e) => {
-    setInputPw(e.target.value);
+  const handleInputContent = (e) => {
+    setInputContent(e.target.value);
+  };
+  const handleMemberNum = (e) => {
+    setMemeberNum(e.target.value);
+  };
+
+  const clickSubmit = () => {
+    const body = {
+      title: inputTitle,
+      content: inputContent,
+      memberNum,
+    };
+    axios
+      .post(URL, body)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return (
     <div>
       <h1>update1 {pk}</h1>
-      <div>
-        <label htmlFor="input_id">ID : </label>
-        <input
-          type="text"
-          name="input_id"
-          value={inputId}
-          placeholder="E-mail을 입력해주세요"
-          onChange={handleInputId}
-        />
-      </div>
-      <div>
-        <label htmlFor="input_pw">PW : </label>
-        <input
-          type="password"
-          name="input_pw"
-          value={inputPw}
-          placeholder="비밀번호를 입력해주세요"
-          onChange={handleInputPw}
-        />
-      </div>
+      <DialogTitle>글 작성 폼</DialogTitle>
+      <DialogContent>
+        <div>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="제목"
+            type="title"
+            fullWidth
+            variant="standard"
+            onChange={handleInputTitle}
+          />
+        </div>
+
+        <div>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="내용"
+            type="text"
+            fullWidth
+            variant="outlined"
+            multiline
+            rows={15}
+            maxRows={20}
+            onChange={handleInputContent}
+          />
+          <br />
+          <br />
+          <InputLabel>스터디원 수</InputLabel>
+          <Select value={memberNum} label="멤버수" onChange={handleMemberNum}>
+            <MenuItem value={2}>2명</MenuItem>
+            <MenuItem value={3}>3명</MenuItem>
+            <MenuItem value={4}>4명</MenuItem>
+            <MenuItem value={5}>5명</MenuItem>
+            <MenuItem value={6}>6명</MenuItem>
+          </Select>
+        </div>
+        <DialogActions>
+          <Button onClick={clickSubmit}>작성</Button>
+        </DialogActions>
+      </DialogContent>
     </div>
   );
 }

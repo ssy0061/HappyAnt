@@ -29,7 +29,7 @@ function Match() {
         디테일 임시
       </button>
       {open && <MatchingCreate handleClickClose={handleClickCreateClose} />}
-      {open2 && <MatchingModal pk="2" handleClickClose={handleClickClose2} />}
+      {open2 && <MatchingModal pk={1} handleClickClose={handleClickClose2} />}
     </div>
   );
 }

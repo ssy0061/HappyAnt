@@ -1,18 +1,17 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
 
 function nav() {
   // 로그인 상태 체크
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const loginPage = useSelector((state) => state.user.isLogin);
   const yourName = useSelector((state) => state.user.userInfo.name);
 
   const clickLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    Navigate('/login');
   };
   // const userName = useSelector((state) => state.user.username);
 

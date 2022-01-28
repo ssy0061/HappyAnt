@@ -14,7 +14,8 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.isLogin = false;
-      state.userInfo = '';
+      state.userInfo = {};
+      // check용
       console.log(state.userInfo);
     },
   },
