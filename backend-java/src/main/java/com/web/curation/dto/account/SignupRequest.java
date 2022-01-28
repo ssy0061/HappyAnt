@@ -15,15 +15,14 @@ public class SignupRequest {
 	
     private String email;
     private String password;
-    private String name;
-    private int age;
+    private String name;   
     private String question;
     private String answer;
     
     public User toEntity() {    	
     	
 //    	id, email, password, name, age, score, question, answer, createDates
-    	return new User( email, password, name, age, question, answer);
+    	return new User( email, password, name, question, answer);
     }
     
 }

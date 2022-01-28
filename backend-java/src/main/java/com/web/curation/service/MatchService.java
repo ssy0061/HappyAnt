@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 import com.web.curation.dto.match.Mat_ArticleForm;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.Mat_Article;
-import com.web.curation.repository.account.UserRepository;
+import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.Mat_ArticleRepository;
 
 @Service
 public class MatchService {
 	
     private final Mat_ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final UserRepo userRepository;
     
     @Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결함
 	public MatchService(Mat_ArticleRepository articleRepository,
-			UserRepository userRepository) {
+			UserRepo userRepository) {
     	this.articleRepository = articleRepository;
     	this.userRepository = userRepository;
     }
