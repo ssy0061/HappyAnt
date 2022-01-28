@@ -1,5 +1,6 @@
 package com.web.curation.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Objects;
@@ -8,25 +9,28 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
+import com.web.curation.model.match.MatchJoin;
 import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
+import com.web.curation.repository.match.MatchJoinRepo;
+
+import io.swagger.annotations.ApiOperation;
 
 @Service
 public class MatchService {
 	
-    private final MatchArticleRepo articleRepo;
-    private final UserRepo userRepo;
-    
-    @Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결함
-	public MatchService(MatchArticleRepo articleRepository,
-			UserRepo userRepository) {
-    	this.articleRepo = articleRepository;
-    	this.userRepo = userRepository;
-    }
+	@Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결함
+    private MatchArticleRepo articleRepo;
+	@Autowired
+    private UserRepo userRepo;
+    @Autowired 
+    private MatchJoinRepo joinRepo;
     
     public List<MatchArticle> getArticleList() {
     	return articleRepo.findAll();
@@ -44,7 +48,7 @@ public class MatchService {
     	MatchArticle article = articleForm.toEntity();
     	User writer = userRepo.findById(writerId).get();
     	article.setWriter(writer);
-    	writer.getMatchArticles().add(article);
+//    	writer.getMatchArticles().add(article);
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
     	articleRepo.save(article);
     }
@@ -79,5 +83,21 @@ public class MatchService {
     
     public void deleteArticle(Long articleId) {
     	articleRepo.deleteById(articleId);
+    }
+    
+//    public List<MatchArticle> getJoinArticle(Long userId) {
+//
+//    }
+    
+    public void joinStudy(Long id, Long joinUserId, String content) {
+    	MatchArticle article = articleRepo.findById(id).get();
+    	User user = userRepo.findById(joinUserId).get();
+    	
+    	MatchJoin join = new MatchJoin();
+    	join.setJoinArticle(article);
+    	join.setJoinUser(user);
+    	join.setContent(content);
+    	
+    	joinRepo.save(join);
     }
 }

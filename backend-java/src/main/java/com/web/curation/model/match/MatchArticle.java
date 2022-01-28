@@ -1,13 +1,17 @@
 package com.web.curation.model.match;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
@@ -51,6 +55,8 @@ public class MatchArticle {
 	@JsonIgnore
 	private User writer;
 
+	@OneToMany(mappedBy="joinArticle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MatchJoin> matchJoinUsers = new ArrayList<MatchJoin>();
 	
 	public Long getId() {
 		return id;

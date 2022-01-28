@@ -74,4 +74,19 @@ public class MatchController {
     public void deleteArticle(@PathVariable("articleId") Long id) {
     	matchService.deleteArticle(id);
     }
+    
+//    @GetMapping("join")
+//    @ApiOperation(value = "신청한 모집글 목록 조회")
+//    public List<MatchArticle> getJoinArticle(@RequestParam(required = true) Long userId) {
+//    	return matchService.getJoinArticle(userId);
+//    }
+    
+    @PostMapping("join/{articleId}")
+    @ApiOperation(value = "스터디 신청")
+    public void joinStudy(
+    		@PathVariable("articleId") Long id,
+    		@RequestParam(required = true) Long joinUserId,
+    		@RequestParam(required = false) String content) {
+    	matchService.joinStudy(id, joinUserId, content);
+    }
 }
