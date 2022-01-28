@@ -1,0 +1,23 @@
+import axios from 'axios';
+
+export const LOGIN_USER = 'LOGIN_USER';
+export const LOGOUT_USER = 'LOGOUT_USER';
+
+export function loginUser(data) {
+  const request = axios
+    .post('account/login', data)
+    .then((response) => {
+      localStorage.setItem('jwt', response.data.token);
+      // 어느 페이지로 갈지 지정해주기
+    })
+    .catch((err) => console.log(err));
+
+  return {
+    type: LOGIN_USER,
+    payload: request,
+  };
+}
+
+export function logoutUser() {
+  return { type: LOGOUT_USER };
+}
