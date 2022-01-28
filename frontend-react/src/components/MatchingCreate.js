@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
+// 이부분 프리티어랑 eslint 충돌나는듯..
+
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+} from '@mui/material';
 
 export default function MatchingCreate(props) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [memberNum, setMemeberNum] = useState(1);
+  const [memberNum, setMemeberNum] = useState(2);
   const { handleClickClose } = props;
 
   const handleTitle = (e) => {
@@ -48,7 +55,7 @@ export default function MatchingCreate(props) {
 
   return (
     <div>
-      <Dialog open>
+      <Dialog open fullWidth maxWidth="md">
         <DialogTitle>글 작성 폼</DialogTitle>
         <DialogContent>
           <div>
@@ -65,32 +72,28 @@ export default function MatchingCreate(props) {
           </div>
 
           <div>
-            <br />
-            <br />
-            <br />
             <TextField
               autoFocus
               margin="dense"
-              id="name"
               label="내용"
-              type="content"
+              type="text"
               fullWidth
-              variant="standard"
+              variant="outlined"
+              multiline
+              rows={15}
+              maxRows={20}
               onChange={handleContent}
             />
             <br />
             <br />
-            <br />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="멤버 수"
-              type="content"
-              fullWidth
-              variant="standard"
-              onChange={handleMemberNum}
-            />
+            <InputLabel>스터디원 수</InputLabel>
+            <Select value={memberNum} label="멤버수" onChange={handleMemberNum}>
+              <MenuItem value={2}>2명</MenuItem>
+              <MenuItem value={3}>3명</MenuItem>
+              <MenuItem value={4}>4명</MenuItem>
+              <MenuItem value={5}>5명</MenuItem>
+              <MenuItem value={6}>6명</MenuItem>
+            </Select>
           </div>
         </DialogContent>
         <DialogActions>

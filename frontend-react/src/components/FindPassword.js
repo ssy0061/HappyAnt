@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import Grid from '@mui/material/Grid';
-import DialogTitle from '@mui/material/DialogTitle';
-// eslint-disable-next-line object-curly-newline
-import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  Button,
+  DialogTitle,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@mui/material';
 
 // 1단계 : email 기입 -> email 존재 확인후 존재하면 setLevel+1 || 버튼 : next버튼 닫기버튼
 // 2단계 : 질문 리스트에서 선택 후 답변 기입 -> 해당 이메일에 기입된 정보가 맞으면 수정페이지로 이동 || 버튼 : prev / next / close
@@ -150,33 +153,29 @@ export default function FindPassword(props) {
               <br />
               <br />
               <br />
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    비밀번호 찾기 힌트
-                  </InputLabel>
-                  <Select
-                    value={pwQuestion}
-                    label="비밀번호 찾기 힌트"
-                    onChange={handleQuestion}
-                  >
-                    <MenuItem value={1}>가장 기억에 남는 말은?</MenuItem>
-                    <MenuItem value={2}>졸업한 초등학교 이름은?</MenuItem>
-                    <MenuItem value={3}>고향 이름은?</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  비밀번호 찾기 힌트
+                </InputLabel>
+                <Select
+                  value={pwQuestion}
+                  label="비밀번호 찾기 힌트"
+                  onChange={handleQuestion}
+                >
+                  <MenuItem value={1}>가장 기억에 남는 말은?</MenuItem>
+                  <MenuItem value={2}>졸업한 초등학교 이름은?</MenuItem>
+                  <MenuItem value={3}>고향 이름은?</MenuItem>
+                </Select>
+              </FormControl>
               <br />
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="hintAnswer"
-                  label="힌트 답변"
-                  value={pwAnswer}
-                  onChange={handlePwAnswer}
-                />
-              </Grid>
+              <TextField
+                required
+                fullWidth
+                id="hintAnswer"
+                label="힌트 답변"
+                value={pwAnswer}
+                onChange={handlePwAnswer}
+              />
             </div>
           )}
 
@@ -196,7 +195,6 @@ export default function FindPassword(props) {
                 onChange={handlePassword}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="name"
                 label="Password Confirmation"

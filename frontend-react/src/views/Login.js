@@ -89,7 +89,6 @@ export default function Login() {
         <Button type="button" variant="contained" onClick={onClickLogin}>
           Login
         </Button>
-        {/* 로그인 완료 시 마이페이지(메인) 으로 이동 */}
       </div>
       <br />
       <div>
