@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
-import com.web.curation.repository.account.UserRepository;
+import com.web.curation.repository.account.UserRepo;
 import com.web.curation.service.AccountService;
 import com.web.curation.model.match.MatchArticle;
 
@@ -48,7 +48,7 @@ public class AccountController {
     
     
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepo userRepository;
 	
     
     @GetMapping("/account/getAllUser")
