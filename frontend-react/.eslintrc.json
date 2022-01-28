@@ -2,7 +2,7 @@
   "plugins": ["prettier"],
   "extends": ["eslint:recommended", "plugin:prettier/recommended", "airbnb","prettier"],
   "rules": {
-    "prettier/prettier": ["error",{"endOfLine": "auto"}],
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
     "linebreak-style": 0,
     "import/no-unresolved":["off",{"caseSensitive":false}],
@@ -20,5 +20,4 @@
     "browser": true,
     "node": true
       
-}
 }
