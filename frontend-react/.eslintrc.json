@@ -1,20 +1,23 @@
 {
   "plugins": ["prettier"],
-  "extends": ["eslint:recommended", "plugin:prettier/recommended", "airbnb"],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "airbnb","prettier"],
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
     "linebreak-style": 0,
-    "import/no-unresolved": ["off", { "caseSensitive": false }],
-    "comma-dangle": "off",
+    "import/no-unresolved":["off",{"caseSensitive":false}],
+    "comma-dangle":"off",
+
+    "no-console":"off",
+    "no-alert":"off",
     "react/jsx-wrap-multilines": "off",
-    "jsx-a11y/label-has-associated-control": 0,
-    "react/prop-types": "off",
-    "no-console": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "operator-linebreak":"off",
+    "object-curly-newline":"off"
+    
+    
   },
   "env": {
     "browser": true,
     "node": true
-  }
+      
 }
