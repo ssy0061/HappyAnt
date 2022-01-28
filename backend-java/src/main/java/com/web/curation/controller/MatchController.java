@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.dto.match.Mat_ArticleForm;
+import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.match.Mat_Article;
+import com.web.curation.model.match.MatchArticle;
 import com.web.curation.service.MatchService;
 
 import io.swagger.annotations.ApiOperation;
@@ -33,33 +33,26 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("match")
 public class MatchController {
 	
-    private final MatchService matchService;
-    
-    @Autowired
-    public MatchController(MatchService matchService) {
-    	this.matchService = matchService;
-    }
+	@Autowired
+    private MatchService matchService;
     
     
     @GetMapping
     @ApiOperation(value = "모집글 목록 조회")
-    public List<Mat_Article> getArticleList() {
-//    	List<Mat_Article> articles = matchService.getArticleList();
-//		System.out.println(articles);
-//    	return articles;
+    public List<MatchArticle> getArticleList() {
     	return matchService.getArticleList();
     }
     
     @GetMapping("{articleId}")
     @ApiOperation(value = "모집글 상세 조회")
-    public Mat_Article getArticle(
+    public MatchArticle getArticle(
     		@PathVariable("articleId") Long articleId) {
     	return matchService.getArticle(articleId);
     }
     
     @PostMapping
     @ApiOperation(value = "모집글 작성")
-    public void createArticle(@RequestBody Mat_ArticleForm articleForm) {
+    public void createArticle(@RequestBody MatchArticleRequest articleForm) {
     	
     	matchService.addNewArticle(articleForm);
     }
