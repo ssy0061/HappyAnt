@@ -1,5 +1,6 @@
 package com.web.curation.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.curation.dto.account.LoginRequest;
 import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.dto.account.SignupRequest;
+import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.User;
 
@@ -166,9 +168,17 @@ public class AccountController {
     
     @GetMapping("/account/test/{user_id}")
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")
-    public List<MatchArticle> articles(
+    public List<MatchArticleResponse> getMatchrticles(
     				@PathVariable("user_id") Long user_id) {
     	User user = accountService.findById(user_id).get();
-    	return user.getMatchArticles();
+    	List<MatchArticleResponse> articleList = new ArrayList<>();
+    	user.getMatchArticles().forEach(article -> {
+    		MatchArticleResponse response = article.toResponse();
+    		response.setArticleId(article.getId());
+    		response.setWriterId(user.getId());
+    		response.setWriterName(user.getName());
+    		articleList.add(response);
+    	});
+    	return articleList;
     }
 }
