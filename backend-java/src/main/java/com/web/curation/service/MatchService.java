@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.curation.dto.match.MatchArticleRequest;
+import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
@@ -32,14 +33,30 @@ public class MatchService {
     @Autowired 
     private MatchJoinRepo joinRepo;
     
-    public List<MatchArticle> getArticleList() {
-    	return articleRepo.findAll();
+    public List<MatchArticleResponse> getArticleList() {
+    	List<MatchArticleResponse> articleList = new ArrayList<>();
+    	
+    	articleRepo.findAll().forEach(article -> {
+    		User writer = article.getWriter();
+    		MatchArticleResponse response = article.toResponse();
+    		response.setArticleId(article.getId());
+    		response.setWriterId(writer.getId());
+    		response.setWriterName(writer.getName());
+    		articleList.add(response);
+    	});
+    	return articleList;
     }
     
-    public MatchArticle getArticle(Long articleId) {
-    	return articleRepo.findById(articleId)
+    public MatchArticleResponse getArticle(Long articleId) {
+    	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new IllegalStateException(
     					"article with id " + articleId + " does not exist"));
+    	User writer = article.getWriter();
+    	MatchArticleResponse response = article.toResponse();
+    	response.setArticleId(articleId);
+    	response.setWriterId(writer.getId());
+		response.setWriterName(writer.getName());
+    	return response;
     }
     
     public void addNewArticle(MatchArticleRequest articleForm) {

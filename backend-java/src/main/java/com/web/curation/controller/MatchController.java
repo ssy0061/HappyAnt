@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.dto.match.MatchArticleRequest;
+import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.service.MatchService;
@@ -39,13 +40,13 @@ public class MatchController {
     
     @GetMapping
     @ApiOperation(value = "모집글 목록 조회")
-    public List<MatchArticle> getArticleList() {
+    public List<MatchArticleResponse> getArticleList() {
     	return matchService.getArticleList();
     }
     
     @GetMapping("{articleId}")
     @ApiOperation(value = "모집글 상세 조회")
-    public MatchArticle getArticle(
+    public MatchArticleResponse getArticle(
     		@PathVariable("articleId") Long articleId) {
     	return matchService.getArticle(articleId);
     }

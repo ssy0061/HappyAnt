@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.account.User;
 
 @Entity // DB가 해당 객체를 인식 가능!
@@ -129,7 +130,11 @@ public class MatchArticle {
 	public MatchArticle toEntity() {
 		return new MatchArticle(title, category, content, state, writer);
 	}
-
+	
+	public MatchArticleResponse toResponse() {
+		return new MatchArticleResponse(null, category, title, content, null, null, createDate, state);
+	}
+	
 	@Override
 	public String toString() {
 		return "Mat_Article [id=" + id + ", title=" + title + ", category=" + category + ", content=" + content
