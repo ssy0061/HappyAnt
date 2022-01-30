@@ -68,7 +68,6 @@ export default function MatchingUpdate(props) {
             variant="outlined"
             multiline
             rows={15}
-            maxRows={20}
             onChange={handleInputContent}
           />
           <br />
