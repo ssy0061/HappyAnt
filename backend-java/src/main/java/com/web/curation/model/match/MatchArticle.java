@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -49,7 +50,7 @@ public class MatchArticle {
 	@Column
 	private Boolean state;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id",
 				referencedColumnName = "id",
 				updatable = false) // 외래키로 조인
@@ -57,6 +58,7 @@ public class MatchArticle {
 	private User writer;
 
 	@OneToMany(mappedBy="joinArticle", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
     private List<MatchJoin> matchJoinUsers = new ArrayList<MatchJoin>();
 	
 	public Long getId() {
@@ -111,9 +113,16 @@ public class MatchArticle {
 	public void setWriter(User writer) {
 		this.writer = writer;
 	}
+	
+	public List<MatchJoin> getMatchJoinUsers() {
+		return matchJoinUsers;
+	}
+
+	public void setMatchJoinUsers(List<MatchJoin> matchJoinUsers) {
+		this.matchJoinUsers = matchJoinUsers;
+	}
 
 	
-
 	public MatchArticle() {
 		
 	}
@@ -132,7 +141,7 @@ public class MatchArticle {
 	}
 	
 	public MatchArticleResponse toResponse() {
-		return new MatchArticleResponse(null, category, title, content, null, null, createDate, state);
+		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, state);
 	}
 	
 	@Override

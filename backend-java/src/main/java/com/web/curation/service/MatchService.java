@@ -1,13 +1,15 @@
 package com.web.curation.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import java.util.Objects;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,8 @@ import com.web.curation.model.match.MatchJoin;
 import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
 import com.web.curation.repository.match.MatchJoinRepo;
+import com.web.curation.specification.match.MatchArticleSpec;
+import com.web.curation.specification.match.MatchArticleSpec.SearchKey;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -37,11 +41,7 @@ public class MatchService {
     	List<MatchArticleResponse> articleList = new ArrayList<>();
     	
     	articleRepo.findAll().forEach(article -> {
-    		User writer = article.getWriter();
     		MatchArticleResponse response = article.toResponse();
-    		response.setArticleId(article.getId());
-    		response.setWriterId(writer.getId());
-    		response.setWriterName(writer.getName());
     		articleList.add(response);
     	});
     	return articleList;
@@ -51,11 +51,7 @@ public class MatchService {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new IllegalStateException(
     					"article with id " + articleId + " does not exist"));
-    	User writer = article.getWriter();
     	MatchArticleResponse response = article.toResponse();
-    	response.setArticleId(articleId);
-    	response.setWriterId(writer.getId());
-		response.setWriterName(writer.getName());
     	return response;
     }
     
@@ -101,6 +97,41 @@ public class MatchService {
     public void deleteArticle(Long articleId) {
     	articleRepo.deleteById(articleId);
     }
+    
+    
+    // 검색 키워드 하나로 제목 & 내용 검색하기
+    public List<MatchArticle> searchArticle(String keyWord) {
+    	Map<String, Object> searchKeyword = new HashMap<>();
+    	searchKeyword.put("title", keyWord);
+    	searchKeyword.put("content", keyWord);
+    	Map<SearchKey, Object> searchKeys = new HashMap<>();
+    	for (String key : searchKeyword.keySet()) {
+    		searchKeys.put(SearchKey.valueOf(key.toUpperCase()), searchKeyword.get(key));
+    	}
+//    	List<MatchArticleResponse> articleList = new ArrayList<>();
+//    	if (searchKeys.isEmpty()) {
+//    		articleRepo.findAll().forEach(article -> {
+//				MatchArticleResponse response = article.toResponse();
+//	    		articleList.add(response);
+//			});
+//    	} else {
+//    		articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys)).forEach(article -> {
+//    			MatchArticleResponse response = article.toResponse();
+//	    		articleList.add(response);
+//    		});
+//    	}
+    	List<MatchArticle> articleList = new ArrayList<>();
+    	// 빈값을 입력하면 전체 조회로 하려고 했으나 실패함
+    	if (searchKeys.isEmpty()) {
+    		articleList = articleRepo.findAll();
+   
+    	} else {
+    		articleList = articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys));
+    	}
+    	// MatchArticleResponse 객체로 바꾸려고 했으나 에러발생함
+    	return articleList;
+    }
+    
     
 //    public List<MatchArticle> getJoinArticle(Long userId) {
 //

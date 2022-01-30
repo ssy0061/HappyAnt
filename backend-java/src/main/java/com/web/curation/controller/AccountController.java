@@ -30,6 +30,7 @@ import com.web.curation.model.account.User;
 
 import com.web.curation.service.AccountService;
 import com.web.curation.model.match.MatchArticle;
+import com.web.curation.repository.match.MatchArticleRepo;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -49,6 +50,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountController {
     
+	@Autowired
+	MatchArticleRepo articleRepo;
     
 	@Autowired	
 	AccountService accountService;
@@ -166,19 +169,25 @@ public class AccountController {
 //    }
     
     
+//    @GetMapping("/account/test/{user_id}")
+//    @ApiOperation(value = "(TEST) 작성한 모집글 보기")
+//    public List<MatchArticleResponse> getMatchrticles(
+//    				@PathVariable("user_id") Long user_id) {
+//    	User user = accountService.findById(user_id).get();
+//    	List<MatchArticleResponse> articleList = new ArrayList<>();
+//    	user.getMatchArticles().forEach(article -> {
+//    		MatchArticleResponse response = article.toResponse();
+//    		response.setArticleId(article.getId());
+//    		response.setWriterId(user.getId());
+//    		response.setWriterName(user.getName());
+//    		articleList.add(response);
+//    	});
+//    	return articleList;
+//    }
     @GetMapping("/account/test/{user_id}")
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")
-    public List<MatchArticleResponse> getMatchrticles(
+    public List<MatchArticle> getMatchrticles(
     				@PathVariable("user_id") Long user_id) {
-    	User user = accountService.findById(user_id).get();
-    	List<MatchArticleResponse> articleList = new ArrayList<>();
-    	user.getMatchArticles().forEach(article -> {
-    		MatchArticleResponse response = article.toResponse();
-    		response.setArticleId(article.getId());
-    		response.setWriterId(user.getId());
-    		response.setWriterName(user.getName());
-    		articleList.add(response);
-    	});
-    	return articleList;
-    }
+    	return articleRepo.findByWriterId(user_id);
+    }    
 }

@@ -1,6 +1,7 @@
 package com.web.curation.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -74,6 +75,13 @@ public class MatchController {
     @ApiOperation(value = "모집글 삭제")
     public void deleteArticle(@PathVariable("articleId") Long id) {
     	matchService.deleteArticle(id);
+    }
+
+    // 검색 키워드 하나로 제목 or 내용 검색하기
+    @GetMapping("search")
+    @ApiOperation(value = "모집글 검색")
+    public List<MatchArticle> SerachArticle(@RequestParam(required = true) String Keyword) {
+    	return matchService.searchArticle(Keyword);
     }
     
 //    @GetMapping("join")
