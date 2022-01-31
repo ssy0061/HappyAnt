@@ -24,6 +24,9 @@ import org.springframework.data.annotation.CreatedDate;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
+import com.web.curation.model.study.StudyArticle;
+import com.web.curation.model.study.StudyComment;
+import com.web.curation.model.study.StudyJoin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -81,6 +84,18 @@ public class User {
     @OneToMany(mappedBy="joinUser", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<MatchJoin> matchJoinArticles = new ArrayList<MatchJoin>();
+    
+    @OneToMany(mappedBy="joinMember", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<StudyJoin> joinStudy = new ArrayList<StudyJoin>();
+    
+    @OneToMany(mappedBy="studyWriter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<StudyArticle> studyArticles = new ArrayList<StudyArticle>();
+    
+    @OneToMany(mappedBy="studyCommenter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<StudyComment> studyComments = new ArrayList<StudyComment>();
     
     public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
 			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password) {
