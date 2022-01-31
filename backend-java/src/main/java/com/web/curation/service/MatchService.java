@@ -25,8 +25,8 @@ import com.web.curation.model.match.MatchJoin;
 import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
 import com.web.curation.repository.match.MatchJoinRepo;
-import com.web.curation.specification.match.MatchArticleSpec;
-import com.web.curation.specification.match.MatchArticleSpec.SearchKey;
+import com.web.curation.specification.MatchArticleSpec;
+import com.web.curation.specification.MatchArticleSpec.SearchKey;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -62,7 +62,11 @@ public class MatchService {
     	Long writerId = articleForm.getWriterId();
     	// 1. dto를 Entity로 변경
     	MatchArticle article = articleForm.toEntity();
-    	User writer = userRepo.findById(writerId).get();
+    	User writer = userRepo.findById(writerId)
+    			.orElseThrow(() -> new ResponseStatusException(
+							HttpStatus.BAD_REQUEST,
+							"존재하지 않는 유저 id입니다.",
+							new IllegalArgumentException()));
     	article.setWriter(writer);
 //    	writer.getMatchArticles().add(article);
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
@@ -77,8 +81,10 @@ public class MatchService {
     		String content,
     		Boolean state) {
     	MatchArticle article = articleRepo.findById(articleId)
-    			.orElseThrow(() -> new IllegalStateException(
-    					"article with id " + articleId + " does not exist"));
+    			.orElseThrow(() -> new ResponseStatusException(
+						HttpStatus.BAD_REQUEST,
+						"존재하지 않는 게시글 id입니다.",
+						new IllegalArgumentException()));
     	
     	if (title != null && title.length() > 0 && !Objects.equals(article.getTitle(), title)) {
     		article.setTitle(title);
@@ -123,15 +129,6 @@ public class MatchService {
 	    		articleList.add(response);
     		});
     	}
-//    	List<MatchArticle> articleList = new ArrayList<>();
-//    	// 빈값을 입력하면 전체 조회로 하려고 했으나 실패함
-//    	if (searchKeys.isEmpty()) {
-//    		articleList = articleRepo.findAll();
-//   
-//    	} else {
-//    		articleList = articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys));
-//    	}
-    	// MatchArticleResponse 객체로 바꾸려고 했으나 에러발생함
     	return articleList;
     }
     

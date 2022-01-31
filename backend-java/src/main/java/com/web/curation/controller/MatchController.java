@@ -87,11 +87,6 @@ public class MatchController {
     	return matchService.searchArticle(Keyword);
     }
     
-//    @GetMapping("join")
-//    @ApiOperation(value = "신청한 모집글 목록 조회")
-//    public List<MatchArticle> getJoinArticle(@RequestParam(required = true) Long userId) {
-//    	return matchService.getJoinArticle(userId);
-//    }
     
     @PostMapping("join/{articleId}")
     @ApiOperation(value = "스터디 신청")

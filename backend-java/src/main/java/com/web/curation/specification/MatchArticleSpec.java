@@ -1,4 +1,4 @@
-package com.web.curation.specification.match;
+package com.web.curation.specification;
 
 import java.util.ArrayList;
 import java.util.List;
