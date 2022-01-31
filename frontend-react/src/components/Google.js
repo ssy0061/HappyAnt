@@ -47,7 +47,7 @@ function GoogleLoginBtn() {
             console.log(ress);
             dispatch(login(ress.data));
             // localStorage.setItem('jwt', res.data.token);
-            navigate('/profile');
+            
           })
           .catch((err) => {
             console.log(err);
