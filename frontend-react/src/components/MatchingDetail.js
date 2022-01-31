@@ -1,20 +1,14 @@
 import React from 'react';
-import axios from 'axios';
 
 export default function MatchingDetail(props) {
-  const { pk } = props;
-  let matchItem = [];
-  axios
-    .get(`/match/${pk}`)
-    .then((res) => {
-      matchItem = res.data;
-      console.log(matchItem);
-    })
-    .catch((err) => console.log(err));
+  const { item } = props;
 
   return (
     <div>
-      <h1>{pk}번 글 detail</h1>
+      <h1>{item.title}</h1>
+      <p>{item.category}</p>
+      <p>{item.content}</p>
+      {item.state ? <p>마감되었습니다.</p> : <p>모집중입니다.</p>}
     </div>
   );
 }
