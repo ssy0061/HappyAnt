@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 
@@ -74,9 +75,11 @@ public class User {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy="writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<MatchArticle> matchArticles = new ArrayList<MatchArticle>();
     
     @OneToMany(mappedBy="joinUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<MatchJoin> matchJoinArticles = new ArrayList<MatchJoin>();
     
     public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,

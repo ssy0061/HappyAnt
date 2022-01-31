@@ -1,12 +1,18 @@
 package com.web.curation.model.match;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.model.account.User;
 
 import lombok.Getter;
@@ -25,14 +31,20 @@ public class MatchJoin {
 	@GeneratedValue
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "joinUser_id")
+	@JsonBackReference
 	private User joinUser;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "joinArticle_id")
+	@JsonBackReference
 	private MatchArticle joinArticle;
 	
 	@Column
 	private String content;
+	
+	public MatchJoinUserResponse toJoinUserResponse() {
+		return new MatchJoinUserResponse(joinArticle.getId(), joinUser.getId(), joinUser.getName(), content);
+	}
 }

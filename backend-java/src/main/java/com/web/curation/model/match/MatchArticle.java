@@ -16,7 +16,9 @@ import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.account.User;
 
@@ -54,11 +56,11 @@ public class MatchArticle {
 	@JoinColumn(name = "writer_id",
 				referencedColumnName = "id",
 				updatable = false) // 외래키로 조인
-	@JsonIgnore
+	@JsonBackReference
 	private User writer;
 
 	@OneToMany(mappedBy="joinArticle", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
+	@JsonManagedReference
     private List<MatchJoin> matchJoinUsers = new ArrayList<MatchJoin>();
 	
 	public Long getId() {
@@ -143,6 +145,7 @@ public class MatchArticle {
 	public MatchArticleResponse toResponse() {
 		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, state);
 	}
+	
 	
 	@Override
 	public String toString() {

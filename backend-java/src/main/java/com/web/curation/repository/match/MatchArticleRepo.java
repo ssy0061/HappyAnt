@@ -13,5 +13,6 @@ import com.web.curation.model.match.MatchArticle;
 @Repository
 public interface MatchArticleRepo extends JpaRepository<MatchArticle, Long>, JpaSpecificationExecutor<MatchArticle> {
 	
+	// 작성한 모집글 보기
 	List<MatchArticle> findByWriterId(Long writerId);
 }

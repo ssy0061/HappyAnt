@@ -10,12 +10,15 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
+import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
@@ -100,7 +103,7 @@ public class MatchService {
     
     
     // 검색 키워드 하나로 제목 & 내용 검색하기
-    public List<MatchArticle> searchArticle(String keyWord) {
+    public List<MatchArticleResponse> searchArticle(String keyWord) {
     	Map<String, Object> searchKeyword = new HashMap<>();
     	searchKeyword.put("title", keyWord);
     	searchKeyword.put("content", keyWord);
@@ -108,44 +111,62 @@ public class MatchService {
     	for (String key : searchKeyword.keySet()) {
     		searchKeys.put(SearchKey.valueOf(key.toUpperCase()), searchKeyword.get(key));
     	}
-//    	List<MatchArticleResponse> articleList = new ArrayList<>();
-//    	if (searchKeys.isEmpty()) {
-//    		articleRepo.findAll().forEach(article -> {
-//				MatchArticleResponse response = article.toResponse();
-//	    		articleList.add(response);
-//			});
-//    	} else {
-//    		articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys)).forEach(article -> {
-//    			MatchArticleResponse response = article.toResponse();
-//	    		articleList.add(response);
-//    		});
-//    	}
-    	List<MatchArticle> articleList = new ArrayList<>();
-    	// 빈값을 입력하면 전체 조회로 하려고 했으나 실패함
+    	List<MatchArticleResponse> articleList = new ArrayList<>();
     	if (searchKeys.isEmpty()) {
-    		articleList = articleRepo.findAll();
-   
+    		articleRepo.findAll().forEach(article -> {
+				MatchArticleResponse response = article.toResponse();
+	    		articleList.add(response);
+			});
     	} else {
-    		articleList = articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys));
+    		articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys)).forEach(article -> {
+    			MatchArticleResponse response = article.toResponse();
+	    		articleList.add(response);
+    		});
     	}
+//    	List<MatchArticle> articleList = new ArrayList<>();
+//    	// 빈값을 입력하면 전체 조회로 하려고 했으나 실패함
+//    	if (searchKeys.isEmpty()) {
+//    		articleList = articleRepo.findAll();
+//   
+//    	} else {
+//    		articleList = articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys));
+//    	}
     	// MatchArticleResponse 객체로 바꾸려고 했으나 에러발생함
     	return articleList;
     }
     
-    
-//    public List<MatchArticle> getJoinArticle(Long userId) {
-//
-//    }
-    
     public void joinStudy(Long id, Long joinUserId, String content) {
     	MatchArticle article = articleRepo.findById(id).get();
-    	User user = userRepo.findById(joinUserId).get();
-    	
-    	MatchJoin join = new MatchJoin();
-    	join.setJoinArticle(article);
-    	join.setJoinUser(user);
-    	join.setContent(content);
-    	
-    	joinRepo.save(join);
+    	if (article.getWriter().getId() == joinUserId) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"작성한 모집글에 신청할 수 없습니다.",
+    				new IllegalArgumentException());
+    	} else {
+    		User user = userRepo.findById(joinUserId).get();
+        	
+        	MatchJoin join = new MatchJoin();
+        	join.setJoinArticle(article);
+        	join.setJoinUser(user);
+        	join.setContent(content);
+        	
+        	joinRepo.save(join);
+    	}
+    }
+    
+    public List<MatchArticleResponse> getJoinArticle(Long userId) {
+    	List<MatchArticleResponse> response = new ArrayList<>();
+    	joinRepo.findByJoinUserId(userId).forEach(join -> {
+    		response.add(join.getJoinArticle().toResponse());
+    	});
+    	return response;
+    }
+    
+    public List<MatchJoinUserResponse> getJoinUser(Long articleId) {
+    	List<MatchJoinUserResponse> response = new ArrayList<>();
+    	joinRepo.findByJoinArticleId(articleId).forEach(join -> {
+    		response.add(join.toJoinUserResponse());
+    	});
+    	return response;
     }
 }

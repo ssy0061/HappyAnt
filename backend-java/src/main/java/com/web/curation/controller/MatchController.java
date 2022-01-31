@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
+import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
+import com.web.curation.model.match.MatchJoin;
 import com.web.curation.service.MatchService;
 
 import io.swagger.annotations.ApiOperation;
@@ -80,7 +83,7 @@ public class MatchController {
     // 검색 키워드 하나로 제목 or 내용 검색하기
     @GetMapping("search")
     @ApiOperation(value = "모집글 검색")
-    public List<MatchArticle> SerachArticle(@RequestParam(required = true) String Keyword) {
+    public List<MatchArticleResponse> SerachArticle(@RequestParam(required = true) String Keyword) {
     	return matchService.searchArticle(Keyword);
     }
     
@@ -97,5 +100,17 @@ public class MatchController {
     		@RequestParam(required = true) Long joinUserId,
     		@RequestParam(required = false) String content) {
     	matchService.joinStudy(id, joinUserId, content);
+    }
+    
+    @GetMapping("join")
+    @ApiOperation(value = "신청한 모집글 목록 조회")
+    public List<MatchArticleResponse> getJoinArticle(@RequestParam(required = true) Long userId) {
+    	return matchService.getJoinArticle(userId);
+    }
+    
+    @GetMapping("join/{articleId}")
+    @ApiOperation(value = "모집글의 신청자 목록 조회")
+    public List<MatchJoinUserResponse> getJoinUser(@RequestParam(required = true) Long articleId) {
+    	return matchService.getJoinUser(articleId);
     }
 }
