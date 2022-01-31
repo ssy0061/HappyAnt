@@ -1,17 +1,25 @@
 package com.web.curation.model.match;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.account.User;
 
 @Entity // DB가 해당 객체를 인식 가능!
@@ -44,13 +52,16 @@ public class MatchArticle {
 	@Column
 	private Boolean state;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id",
 				referencedColumnName = "id",
 				updatable = false) // 외래키로 조인
-	@JsonIgnore
+	@JsonBackReference
 	private User writer;
 
+	@OneToMany(mappedBy="joinArticle", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+    private List<MatchJoin> matchJoinUsers = new ArrayList<MatchJoin>();
 	
 	public Long getId() {
 		return id;
@@ -104,9 +115,16 @@ public class MatchArticle {
 	public void setWriter(User writer) {
 		this.writer = writer;
 	}
+	
+	public List<MatchJoin> getMatchJoinUsers() {
+		return matchJoinUsers;
+	}
+
+	public void setMatchJoinUsers(List<MatchJoin> matchJoinUsers) {
+		this.matchJoinUsers = matchJoinUsers;
+	}
 
 	
-
 	public MatchArticle() {
 		
 	}
@@ -123,7 +141,12 @@ public class MatchArticle {
 	public MatchArticle toEntity() {
 		return new MatchArticle(title, category, content, state, writer);
 	}
-
+	
+	public MatchArticleResponse toResponse() {
+		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, state);
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "Mat_Article [id=" + id + ", title=" + title + ", category=" + category + ", content=" + content
