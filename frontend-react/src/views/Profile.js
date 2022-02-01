@@ -5,6 +5,8 @@ import Checkstudy from '../components/Checkstudy';
 function Profile() {
   const loginPage = useSelector((state) => state.user.isLogin);
   const yourName = useSelector((state) => state.user.userInfo.name);
+  const Info = useSelector((state) => state.user.userInfo);
+  console.log(Info);
   // 추후 스터디로 바뀔 예정
   const weekArr = ['공모주', '가나다라', '삼성전자 10만가자 제발'];
 
