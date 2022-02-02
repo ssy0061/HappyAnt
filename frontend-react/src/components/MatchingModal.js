@@ -11,7 +11,7 @@ import MatchingDetail from './MatchingDetail';
 export default function MatchingModal({ pk, handleClickClose }) {
   const [item, setItem] = useState([]);
   const [mode, setMode] = useState(1);
-  const handleMode = () => {
+  const goUpdate = () => {
     setMode(2);
   };
 
@@ -28,13 +28,38 @@ export default function MatchingModal({ pk, handleClickClose }) {
     getItem();
   }, []);
 
+  const goDetail = () => {
+    setMode(1);
+    // item을 다시 가져옴
+    getItem();
+  };
+  const setStateTrue = () => {
+    axios
+      .put(`/match/${item.id}?state=${1}`)
+      .then(getItem())
+      .catch((err) => console.log(err));
+  };
+  const setStateFalse = () => {
+    axios
+      .put(`/match/${item.id}?state=${0}`)
+      .then(getItem())
+      .catch((err) => console.log(err));
+  };
+  const deleteItem = () => {
+    axios.delete(`/match/${item.id}`);
+    handleClickClose();
+  };
+
   return (
     <div>
       <Dialog fullWidth maxWidth="md" open>
         {mode === 1 && <MatchingDetail item={item} />}
-        {mode === 2 && <MatchingUpdate pk={pk} />}
+        {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
-          <Button onClick={handleMode}>수정</Button>
+          {item.state === false && <Button onClick={setStateTrue}>마감</Button>}
+          {item.state === true && <Button onClick={setStateFalse}>모집</Button>}
+          <Button onClick={goUpdate}>수정</Button>
+          <Button onClick={deleteItem}>삭제</Button>
           <Button onClick={handleClickClose}>취소</Button>
         </DialogActions>
       </Dialog>
