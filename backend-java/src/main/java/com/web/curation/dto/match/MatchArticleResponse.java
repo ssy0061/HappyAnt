@@ -22,4 +22,5 @@ public class MatchArticleResponse {
 	private String writerName;
 	private LocalDateTime createDate;
 	private Boolean state;
+	private Long studyId;
 }

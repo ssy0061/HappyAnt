@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,11 +20,11 @@ public class StudyController {
 	@Autowired
     private StudyService studyService;
 	
-	@PostMapping
-	@ApiOperation(value = "스터디 생성")
-	public void AddNewStudy(@RequestParam(required = true) Long leaderId,
-							@RequestParam(required = true) Long joinUserId) {
-		studyService.addNewStudy(leaderId, joinUserId);
+	@PostMapping("{sutdyId}/{userId}")
+	@ApiOperation(value = "스터디원 추가")
+	public void addNewStudyMember(@PathVariable("sutdyId") Long studyId,
+									@PathVariable("userId") Long joinUserId) {
+		studyService.addNewStudyMember(studyId, joinUserId);
 	}
 	
 	

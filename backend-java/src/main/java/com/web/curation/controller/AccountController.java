@@ -63,7 +63,7 @@ public class AccountController {
     	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
     
-    @GetMapping("/account/{id}")
+    @GetMapping("/account/{email}")
     @ApiOperation(value = "회원정보 조회")
     public ResponseEntity<User> getUser(@RequestParam String email ){
     	User user = accountService.findByEmail(email);

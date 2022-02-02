@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class StudyJoin {
 	
@@ -39,5 +41,5 @@ public class StudyJoin {
 	private Study joinStudy;
 	
 	@Column
-	private Boolean leader;
+	private Boolean leader;	
 }

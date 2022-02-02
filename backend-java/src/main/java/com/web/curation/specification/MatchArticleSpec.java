@@ -1,6 +1,7 @@
 package com.web.curation.specification;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +18,13 @@ import com.web.curation.model.match.MatchArticle;
 
 public class MatchArticleSpec {
 	
-	public enum SearchKey {
+	public enum MartchArticleSearchKey {
 		TITLE("title"),
 		CONTENT("content");
 		
 		private final String value;
 		
-		SearchKey(String value) {
+		MartchArticleSearchKey(String value) {
 			this.value = value;
 		}
 		
@@ -43,15 +44,26 @@ public class MatchArticleSpec {
 	}
 	
 	// 제목, 내용 동시 검색
-	public static Specification<MatchArticle> searchWith(Map<SearchKey, Object> searchKeyword) {
+	public static Specification<MatchArticle> searchWith(String keyword) {
+		Map<MartchArticleSearchKey, Object> searchKeyword = toMartchArticleSearchKey(keyword);
 	    return (Specification<MatchArticle>) ((root, query, builder) -> {
-	        List<Predicate> predicate = getPredicateWithKeyword(searchKeyword, root, builder);
+	        List<Predicate> predicate = getPredicateMatchArticle(searchKeyword, root, builder);
 	        return builder.or(predicate.toArray(new Predicate[0]));
 	    });
 	}
-	private static List<Predicate> getPredicateWithKeyword(Map<SearchKey, Object> searchKeyword, Root<MatchArticle> root, CriteriaBuilder builder) {
+	private static Map<MartchArticleSearchKey, Object> toMartchArticleSearchKey(String keyword) {
+    	Map<String, Object> searchKeyword = new HashMap<>();
+    	searchKeyword.put("title", keyword);
+    	searchKeyword.put("content", keyword);
+    	Map<MartchArticleSearchKey, Object> searchKeys = new HashMap<>();
+    	for (String key : searchKeyword.keySet()) {
+    		searchKeys.put(MartchArticleSearchKey.valueOf(key.toUpperCase()), searchKeyword.get(key));
+    	}
+    	return searchKeys;
+	}
+	private static List<Predicate> getPredicateMatchArticle(Map<MartchArticleSearchKey, Object> searchKeyword, Root<MatchArticle> root, CriteriaBuilder builder) {
 	    List<Predicate> predicate = new ArrayList<>();
-	    for (SearchKey key : searchKeyword.keySet()) {
+	    for (MartchArticleSearchKey key : searchKeyword.keySet()) {
 	        switch (key) {
 	            case TITLE:
 	            case CONTENT:
