@@ -12,19 +12,17 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.web.curation.model.match.MatchArticle;
+import com.web.curation.model.study.StudyArticle;
+import com.web.curation.specification.StudyArticleSpec.StudyArticleSearchKey;
 
-
-
-public class MatchArticleSpec {
-	
-	public enum MartchArticleSearchKey {
+public class StudyArticleSpec {
+	public enum StudyArticleSearchKey {
 		TITLE("title"),
 		CONTENT("content");
 		
 		private final String value;
 		
-		MartchArticleSearchKey(String value) {
+		StudyArticleSearchKey(String value) {
 			this.value = value;
 		}
 		
@@ -34,36 +32,36 @@ public class MatchArticleSpec {
 	}
 	
 	// 제목만 검색하기
-	public static Specification<MatchArticle> likeTitle(String title) {
-		return new Specification<MatchArticle>() {
+	public static Specification<StudyArticle> likeTitle(String title) {
+		return new Specification<StudyArticle>() {
 			@Override
-			public Predicate toPredicate(Root<MatchArticle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+			public Predicate toPredicate(Root<StudyArticle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				return criteriaBuilder.like(root.get("title"), "%" + title + "%");
 			}
 		};
 	}
 	
 	// 제목, 내용 동시 검색
-	public static Specification<MatchArticle> searchWith(String keyword) {
-		Map<MartchArticleSearchKey, Object> searchKeyword = toMartchArticleSearchKey(keyword);
-	    return (Specification<MatchArticle>) ((root, query, builder) -> {
-	        List<Predicate> predicate = getPredicateMatchArticle(searchKeyword, root, builder);
+	public static Specification<StudyArticle> searchWith(String keyword) {
+		Map<StudyArticleSearchKey, Object> searchKeyword = toStudyArticleSearchKey(keyword);
+	    return (Specification<StudyArticle>) ((root, query, builder) -> {
+	        List<Predicate> predicate = getPredicateStudyArticle(searchKeyword, root, builder);
 	        return builder.or(predicate.toArray(new Predicate[0]));
 	    });
 	}
-	private static Map<MartchArticleSearchKey, Object> toMartchArticleSearchKey(String keyword) {
+	private static Map<StudyArticleSearchKey, Object> toStudyArticleSearchKey(String keyword) {
     	Map<String, Object> searchKeyword = new HashMap<>();
     	searchKeyword.put("title", keyword);
     	searchKeyword.put("content", keyword);
-    	Map<MartchArticleSearchKey, Object> searchKeys = new HashMap<>();
+    	Map<StudyArticleSearchKey, Object> searchKeys = new HashMap<>();
     	for (String key : searchKeyword.keySet()) {
-    		searchKeys.put(MartchArticleSearchKey.valueOf(key.toUpperCase()), searchKeyword.get(key));
+    		searchKeys.put(StudyArticleSearchKey.valueOf(key.toUpperCase()), searchKeyword.get(key));
     	}
     	return searchKeys;
 	}
-	private static List<Predicate> getPredicateMatchArticle(Map<MartchArticleSearchKey, Object> searchKeyword, Root<MatchArticle> root, CriteriaBuilder builder) {
+	private static List<Predicate> getPredicateStudyArticle(Map<StudyArticleSearchKey, Object> searchKeyword, Root<StudyArticle> root, CriteriaBuilder builder) {
 	    List<Predicate> predicate = new ArrayList<>();
-	    for (MartchArticleSearchKey key : searchKeyword.keySet()) {
+	    for (StudyArticleSearchKey key : searchKeyword.keySet()) {
 	        switch (key) {
 	            case TITLE:
 	            case CONTENT:
