@@ -6,12 +6,14 @@ export default function MatchingDetail(props) {
   const { pk } = props;
   const [matchItem, setMatchItem] = useState('');
   const [writer, setWriter] = useState('');
-  console.log(pk);
+
+  // detail 정보 받아오기
   axios
     .get(`/match/${pk}`)
     .then((res) => {
       setMatchItem(res.data);
       setWriter(matchItem.writerId);
+      console.log('detail 정보 받아오기');
     })
     .catch((err) => console.log(err));
 
