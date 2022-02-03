@@ -18,6 +18,8 @@ import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
+import com.web.curation.dto.study.StudyCommentRequest;
+import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.service.StudyService;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +32,7 @@ public class StudyController {
 	@Autowired
     private StudyService studyService;
 	
-	@PostMapping("{userId}")
+	@PostMapping("member/{userId}")
 	@ApiOperation(value = "스터디원 추가")
 	public void addNewStudyMember(@PathVariable("sutdyId") Long studyId,
 									@PathVariable("userId") Long joinUserId) {
@@ -83,5 +85,40 @@ public class StudyController {
     public List<StudyArticleResponse> SerachArticle(@PathVariable("sutdyId") Long studyId,
     												@RequestParam(required = true) String Keyword) {
     	return studyService.searchArticle(Keyword);
+    }
+    
+    @GetMapping("{articleId}/comment")
+    @ApiOperation(value = "댓글 목록 조회")
+    public List<StudyCommentResponse> getCommentList(@PathVariable("sutdyId") Long studyId,
+    												@PathVariable("articleId") Long articleId) {
+    	return studyService.getCommentList(studyId, articleId);
+    }
+    
+    @PostMapping("{articleId}")
+    @ApiOperation(value = "댓글 작성")
+    public void createComment(@PathVariable("sutdyId") Long studyId,
+    							@PathVariable("articleId") Long articleId,
+    							@RequestBody StudyCommentRequest commentForm) {
+    	
+    	studyService.addNewComment(studyId, articleId, commentForm);
+    }
+    
+    @PutMapping("{articleId}/{commentId}")
+    @ApiOperation(value = "댓글 수정")
+    public void updateComment(
+    		@PathVariable("sutdyId") Long studyId,
+    		@PathVariable("articleId") Long articleId,
+    		@PathVariable("commentId") Long commentId,
+    		@RequestParam(required = false) String content) {
+    	studyService.updateComment(studyId, articleId, commentId, content);
+    }
+    
+    
+    @DeleteMapping("{articleId}/{commentId}")
+    @ApiOperation(value = "댓글 삭제")
+    public void deleteComment(@PathVariable("sutdyId") Long studyId,
+    							@PathVariable("articleId") Long articleId,
+    							@PathVariable("commentId") Long commentId) {
+    	studyService.deleteComment(studyId, articleId, commentId);
     }
 }
