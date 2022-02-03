@@ -65,7 +65,7 @@ public class MatchController {
     @PutMapping("{articleId}")
     @ApiOperation(value = "모집글 수정(마감)")
     public void updateArticle(
-    		@RequestParam(required = true) Long articleId,
+    		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
