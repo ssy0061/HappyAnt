@@ -13,7 +13,7 @@ import {
   InputLabel,
 } from '@mui/material';
 
-export default function MatchingCreate(props) {
+export default function MatchItemCreate(props) {
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');

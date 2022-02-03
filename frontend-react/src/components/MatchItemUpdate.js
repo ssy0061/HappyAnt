@@ -11,7 +11,7 @@ import {
   InputLabel,
 } from '@mui/material';
 
-export default function MatchingUpdate(props) {
+export default function MatchItemUpdate(props) {
   const { item, goDetail } = props;
 
   const [inputTitle, setInputTitle] = useState('');
@@ -35,7 +35,7 @@ export default function MatchingUpdate(props) {
   const clickSubmit = () => {
     axios
       .put(
-        `/match/${item.id}?title=${inputTitle}&content=${inputContent}&category=${inputCategory}`
+        `/match/${item.articleId}?title=${inputTitle}&content=${inputContent}&category=${inputCategory}`
       )
       .then(goDetail)
       .catch((err) => console.log(err));
@@ -43,8 +43,8 @@ export default function MatchingUpdate(props) {
 
   return (
     <div>
-      <h1>update1 {item.articleId}</h1>
-      <DialogTitle>글 작성 폼</DialogTitle>
+      <h1>update</h1>
+      <DialogTitle>글 수정 폼</DialogTitle>
       <DialogContent>
         <div>
           <TextField
