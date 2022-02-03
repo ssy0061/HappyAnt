@@ -84,4 +84,36 @@ public class StudyController {
     												@RequestParam(required = true) String Keyword) {
     	return studyService.searchArticle(Keyword);
     }
+    
+//    @GetMapping("comment")
+//    @ApiOperation(value = "댓글 목록 조회")
+//    public List<StudyArticleResponse> getArticleList(@PathVariable("sutdyId") Long studyId) {
+//    	return studyService.getArticleList(studyId);
+//    }
+//    
+//    @PostMapping("comment")
+//    @ApiOperation(value = "댓글 작성")
+//    public void createArticle(@PathVariable("sutdyId") Long studyId,
+//    							@RequestBody StudyArticleRequest articleForm) {
+//    	
+//    	studyService.addNewArticle(studyId, articleForm);
+//    }
+//    
+//    @PutMapping("{articleId}")
+//    @ApiOperation(value = "댓글 수정")
+//    public void updateArticle(
+//    		@PathVariable("sutdyId") Long studyId,
+//    		@PathVariable("articleId") Long articleId,
+//    		@RequestParam(required = false) String title,
+//    		@RequestParam(required = false) String content) {
+//    	studyService.updateArticle(studyId, articleId, title, content);
+//    }
+//    
+//    
+//    @DeleteMapping("{articleId}")
+//    @ApiOperation(value = "댓글 삭제")
+//    public void deleteArticle(@PathVariable("sutdyId") Long studyId,
+//    							@PathVariable("articleId") Long articleId) {
+//    	studyService.deleteArticle(studyId, articleId);
+//    }
 }

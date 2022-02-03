@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.web.curation.dto.study.StudyArticleResponse;
+import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.model.account.User;
 
 import lombok.Getter;
@@ -59,4 +61,10 @@ public class StudyComment {
 			insertable = false, 
     		updatable = false)
 	private LocalDateTime updateDate;
+    
+	public StudyCommentResponse toResponse() {
+		return new StudyCommentResponse(studyArticle.getId(), id, content, 
+								studyCommenter.getId(), studyCommenter.getName(), 
+								createDate, updateDate);
+	}
 }
