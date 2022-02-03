@@ -169,6 +169,8 @@ function MatchList() {
           postPerPage={postPerPage}
           totalPosts={filterList.length}
           paginate={paginate}
+          //
+          currentPage={currentPage}
         />
       </div>
       <hr />
