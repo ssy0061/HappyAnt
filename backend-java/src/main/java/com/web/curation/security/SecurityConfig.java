@@ -1,10 +1,12 @@
 package com.web.curation.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@ComponentScan(basePackages = {"com.web.curation"})
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
@@ -41,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 //		http.authorizeRequests().anyRequest().permitAll();
 		http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
 		http.authorizeRequests().antMatchers("/myaccount/login", "/myaccount/token/refresh").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "myaccount/user/**").hasAnyAuthority("ROLE_USER");
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "myaccount/user/save/**").hasAnyAuthority("ROLE_ADMIN");
 		http.authorizeRequests().anyRequest().authenticated();
@@ -59,9 +64,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		
-		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui",
-				"/swagger-resources", "/configuration/security", "/swagger-ui.html",
-				"/webjars/**", "/swagger/**");
+		web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
+
 	}
 	
 	@Bean
