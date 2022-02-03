@@ -62,9 +62,18 @@ public class StudyComment {
     		updatable = false)
 	private LocalDateTime updateDate;
     
+    
+    
 	public StudyCommentResponse toResponse() {
-		return new StudyCommentResponse(studyArticle.getId(), id, content, 
+		return new StudyCommentResponse(id, studyArticle.getId(), content, 
 								studyCommenter.getId(), studyCommenter.getName(), 
 								createDate, updateDate);
+	}
+
+	public StudyComment(StudyArticle studyArticle, User studyCommenter, String content) {
+		super();
+		this.studyArticle = studyArticle;
+		this.studyCommenter = studyCommenter;
+		this.content = content;
 	}
 }

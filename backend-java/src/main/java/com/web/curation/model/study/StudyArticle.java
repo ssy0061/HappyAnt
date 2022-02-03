@@ -85,7 +85,7 @@ public class StudyArticle {
 	}
     
 	public StudyArticleResponse toResponse() {
-		return new StudyArticleResponse(study.getId(), id, title, content, 
+		return new StudyArticleResponse(id, study.getId(), title, content, 
 								studyWriter.getId(), studyWriter.getName(), 
 								createDate, updateDate);
 	}

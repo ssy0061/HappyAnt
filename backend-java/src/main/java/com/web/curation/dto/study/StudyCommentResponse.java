@@ -14,8 +14,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class StudyCommentResponse {
+	private Long commentId;
 	private Long articleId;
-	private Long CommentId;
 	private String content;
 	private Long writerId;
 	private String writerName;
