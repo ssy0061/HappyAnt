@@ -13,10 +13,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StudyArticleResponse {
+public class StudyCommentResponse {
+	private Long commentId;
 	private Long articleId;
-	private Long studyId;
-	private String title;
 	private String content;
 	private Long writerId;
 	private String writerName;
