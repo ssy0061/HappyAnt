@@ -2,29 +2,37 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-function MatchingAppliList(props) {
-  const { articleId } = props;
+export default function MatchingAppliList(props) {
+  const { pk } = props;
+  const { writer } = props;
   const yourName = useSelector((state) => state.user.userInfo.name);
+  const yourId = useSelector((state) => state.user.userInfo.id);
   const [applilist, setApplilist] = useState('');
 
-  axios({
-    method: 'get',
-    url: `/match/join/${articleId}`,
-  })
-    .then((response) => {
-      console.log(response);
-      setApplilist(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  if (writer === yourId) {
+    axios
+      .get(`match/join/{articleId}?articleId=${pk}`)
+      .then((res) => {
+        console.log(res.data);
+        setApplilist(res.data);
+      })
+      .catch((err) => console.log(err, 'applierror'));
 
-  return (
-    <div>
-      <h1>{applilist}</h1>
-      <h1>{yourName}</h1>
-    </div>
-  );
+    const listing = () => {
+      const result = [];
+      for (let i = 0; i < applilist.length; i += 1) {
+        result.push(<p key={i}>{`${applilist[i].userName}`}</p>);
+      }
+      return result;
+    };
+
+    return (
+      <div>
+        <h1>{yourName}</h1>
+        신청자
+        <div>{listing()}</div>
+      </div>
+    );
+  }
+  return null;
 }
-
-export default MatchingAppliList;

@@ -41,7 +41,7 @@ function nav() {
               <Link to="/profile">프로필</Link>
             </li>
             <li>
-              <Link to="/Match">매칭 게시판</Link>
+              <Link to="/match">매칭 게시판</Link>
             </li>
             <li>
               <button type="submit" onClick={clickLogout}>
