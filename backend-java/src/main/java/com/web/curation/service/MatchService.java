@@ -28,9 +28,6 @@ import com.web.curation.repository.study.StudyJoinRepo;
 import com.web.curation.repository.study.StudyRepo;
 import com.web.curation.specification.MatchArticleSpec;
 import com.web.curation.specification.MatchArticleSpec.MartchArticleSearchKey;
-import com.web.curation.specification.MatchJoinSpec;
-import com.web.curation.specification.StudyJoinSpec;
-import com.web.curation.specification.MatchJoinSpec.MatchJoinSearchKey;
 
 @Service
 public class MatchService {
@@ -126,21 +123,20 @@ public class MatchService {
     }
     
     // 스터디 신청
-    public void joinStudy(Long id, Long joinUserId, String content) {
-    	MatchArticle article = articleRepo.findById(id).get();
+    public void joinStudy(Long articleId, Long joinUserId, String content) {
+    	MatchArticle article = articleRepo.findById(articleId).get();
     	User joinUser = userRepo.findById(joinUserId)
     			.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.BAD_REQUEST,
 						"존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
 
-    	List<MatchJoin> chk = joinRepo.findAll(MatchJoinSpec.checkMatchJoin(joinUserId, id));
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
     				"작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
-    	} else if (chk.size() > 0) {
+    	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
     				"이미 신청한 모집글입니다.",
@@ -206,8 +202,7 @@ public class MatchService {
 		} else {
 			Long studyId = article.getStudyId();
 			Study study = studyRepo.findById(studyId).get();
-			List<StudyJoin> chk = studyJoinRepo.findAll(StudyJoinSpec.checkStudyJoin(joinUserId, studyId));
-			if (chk.size() > 0) {
+			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
 	    		throw new ResponseStatusException(
 	    				HttpStatus.BAD_REQUEST,
 	    				"이미 스터디에 가입한 회원입니다.",

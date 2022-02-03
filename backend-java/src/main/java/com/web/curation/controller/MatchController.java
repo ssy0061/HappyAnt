@@ -51,7 +51,7 @@ public class MatchController {
     @GetMapping("{articleId}")
     @ApiOperation(value = "모집글 상세 조회")
     public MatchArticleResponse getArticle(
-    		@PathVariable("articleId") Long articleId) {
+    		@RequestParam(required = true) Long articleId) {
     	return matchService.getArticle(articleId);
     }
     
@@ -65,7 +65,7 @@ public class MatchController {
     @PutMapping("{articleId}")
     @ApiOperation(value = "모집글 수정(마감)")
     public void updateArticle(
-    		@PathVariable("articleId") Long articleId,
+    		@RequestParam(required = true) Long articleId,
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
@@ -76,8 +76,8 @@ public class MatchController {
     
     @DeleteMapping("{articleId}")
     @ApiOperation(value = "모집글 삭제")
-    public void deleteArticle(@PathVariable("articleId") Long id) {
-    	matchService.deleteArticle(id);
+    public void deleteArticle(@PathVariable("articleId") Long articleId) {
+    	matchService.deleteArticle(articleId);
     }
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
@@ -91,10 +91,10 @@ public class MatchController {
     @PostMapping("join/{articleId}")
     @ApiOperation(value = "스터디 신청")
     public void joinStudy(
-    		@PathVariable("articleId") Long id,
+    		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = true) Long joinUserId,
     		@RequestParam(required = false) String content) {
-    	matchService.joinStudy(id, joinUserId, content);
+    	matchService.joinStudy(articleId, joinUserId, content);
     }
     
     @GetMapping("join")
@@ -105,7 +105,7 @@ public class MatchController {
     
     @GetMapping("join/{articleId}")
     @ApiOperation(value = "모집글의 신청자 목록 조회")
-    public List<MatchJoinUserResponse> getJoinUser(@RequestParam(required = true) Long articleId) {
+    public List<MatchJoinUserResponse> getJoinUser(@PathVariable("articleId") Long articleId) {
     	return matchService.getJoinUser(articleId);
     }
     

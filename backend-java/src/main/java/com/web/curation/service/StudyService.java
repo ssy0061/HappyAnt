@@ -19,8 +19,6 @@ import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
 import com.web.curation.repository.study.StudyJoinRepo;
 import com.web.curation.repository.study.StudyRepo;
-import com.web.curation.specification.MatchJoinSpec;
-import com.web.curation.specification.StudyJoinSpec;
 
 @Service
 public class StudyService {
@@ -50,8 +48,7 @@ public class StudyService {
 													HttpStatus.BAD_REQUEST,
 													"존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));
-		List<StudyJoin> chk = joinRepo.findAll(StudyJoinSpec.checkStudyJoin(joinUserId, studyId));
-		if (chk.size() > 0) {
+		if (joinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
     				"이미 스터디에 가입한 회원입니다.",
