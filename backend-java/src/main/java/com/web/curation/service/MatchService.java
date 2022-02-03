@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.repository.account.UserRepo;
@@ -62,7 +62,7 @@ public class MatchService {
     	Long writerId = articleForm.getWriterId();
     	// 1. dto를 Entity로 변경
     	MatchArticle article = articleForm.toEntity();
-    	User writer = userRepo.findById(writerId)
+    	MyUser writer = userRepo.findById(writerId)
     			.orElseThrow(() -> new ResponseStatusException(
 							HttpStatus.BAD_REQUEST,
 							"존재하지 않는 유저 id입니다.",
@@ -140,7 +140,7 @@ public class MatchService {
     				"작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
     	} else {
-    		User user = userRepo.findById(joinUserId).get();
+    		MyUser user = userRepo.findById(joinUserId).get();
         	
         	MatchJoin join = new MatchJoin();
         	join.setJoinArticle(article);

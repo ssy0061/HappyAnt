@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.curation.dto.match.MatchJoinUserResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +34,7 @@ public class MatchJoin {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "joinUser_id")
 	@JsonBackReference
-	private User joinUser;
+	private MyUser joinUser;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "joinArticle_id")

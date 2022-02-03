@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.dto.account.LoginResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.repository.account.UserRepo;
 
@@ -29,8 +29,8 @@ public class AccountService {
 	@Autowired
 	private UserRepo userRepository;
 	
-	public void signUp(User userInfo){
-		User user = new User();
+	public void signUp(MyUser userInfo){
+		MyUser user = new MyUser();
 		user.setEmail(userInfo.getEmail());
 		user.setName(userInfo.getName());
 		user.setPassword(userInfo.getPassword());
@@ -41,18 +41,18 @@ public class AccountService {
 
     }
 	
-	public void save(User user) {
+	public void save(MyUser user) {
 		userRepository.save(user);		
 	}
 	
-	public List<User> findAll() {
-		List<User> users = new ArrayList<>();
+	public List<MyUser> findAll() {
+		List<MyUser> users = new ArrayList<>();
 		userRepository.findAll().forEach(u -> users.add(u));
 		return users;
 	}
 	
-	public Optional<User> findById(Long id) {
-		Optional<User> user = userRepository.findById(id);
+	public Optional<MyUser> findById(Long id) {
+		Optional<MyUser> user = userRepository.findById(id);
 		return user;
 	}
 
@@ -62,8 +62,8 @@ public class AccountService {
 		userRepository.deleteById(id);
 	}
 	
-	public void updateById(Long id, User updatedMember) {
-		Optional<User> user = userRepository.findById(id);
+	public void updateById(Long id, MyUser updatedMember) {
+		Optional<MyUser> user = userRepository.findById(id);
 		if(user.isPresent()) {
 			user.get().setPassword(updatedMember.getPassword());
 			user.get().setName(updatedMember.getName());
@@ -73,7 +73,7 @@ public class AccountService {
 	
 	@Transactional
 	public void updateUser(Long id, String password, String question, String answer) {
-		User user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException(
+		MyUser user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException(
 				"id of user does not exist"));
 		if(password !=null && !Objects.equals(user.getPassword(), password)) {
 			user.setPassword(password);
@@ -95,8 +95,8 @@ public class AccountService {
 //		else return null;		
 //	}
 
-	public User findByEmail(String email) {
-		User user = userRepository.findByEmail(email);
+	public MyUser findByEmail(String email) {
+		MyUser user = userRepository.findByEmail(email);
 		return user;
 	}
 	

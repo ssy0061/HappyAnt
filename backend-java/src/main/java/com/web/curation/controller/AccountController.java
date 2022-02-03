@@ -26,7 +26,7 @@ import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 
 import com.web.curation.service.AccountService;
 import com.web.curation.model.match.MatchArticle;
@@ -56,27 +56,27 @@ public class AccountController {
 	@Autowired	
 	AccountService accountService;
     
-    @GetMapping("/account/getAllUser")
+    @GetMapping("/account")
     @ApiOperation(value = "모든 회원 정보 조회")
-    public ResponseEntity<List<User>> getAllUsers(){
-    	List<User> users = accountService.findAll();	
-    	return new ResponseEntity<List<User>>(users,HttpStatus.OK);
+    public ResponseEntity<List<MyUser>> getAllUsers(){
+    	List<MyUser> users = accountService.findAll();	
+    	return new ResponseEntity<List<MyUser>>(users,HttpStatus.OK);
     }
     
     @GetMapping("/account/{id}")
     @ApiOperation(value = "회원정보 조회")
-    public ResponseEntity<User> getUser(@RequestParam String email ){
-    	User user = accountService.findByEmail(email);
+    public ResponseEntity<MyUser> getUser(@RequestParam String email ){
+    	MyUser user = accountService.findByEmail(email);
     	Long id = user.getId();
     	System.out.println(user.toString());
-    	return new ResponseEntity<User>(user, HttpStatus.OK);
+    	return new ResponseEntity<MyUser>(user, HttpStatus.OK);
     }    
    
     
     @PostMapping("/account/signUp")
     @ApiOperation(value = "회원가입")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignupRequest userInfo) {
-    	User user = userInfo.toEntity();    	
+    	MyUser user = userInfo.toEntity();    	
     	
     	
     	String emailPattern = "\\w+@\\w+\\.\\w+(\\.\\w+)?";
@@ -119,7 +119,7 @@ public class AccountController {
     @PostMapping("/account/login")
     @ApiOperation(value = "로그인")
     public ResponseEntity<LoginResponse> getUser(@RequestBody LoginRequest userInfo){
-    	User user = accountService.findByEmail(userInfo.getEmail());    	
+    	MyUser user = accountService.findByEmail(userInfo.getEmail());    	
     	
     	if(user.getPassword().equals(userInfo.getPassword())) {
     		System.out.println("OK");

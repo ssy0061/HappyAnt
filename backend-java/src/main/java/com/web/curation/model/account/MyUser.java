@@ -2,12 +2,10 @@
 
 package com.web.curation.model.account;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.AllArgsConstructor;
 //import lombok.Data;
+import lombok.Data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,15 +33,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 
-@Getter
-@Setter
+@Data
 @Entity
 @NoArgsConstructor
-@ToString
-public class User {
+@AllArgsConstructor
+public class MyUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 	
     @Column    
@@ -53,7 +50,7 @@ public class User {
 
     @Column
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+//    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
 
     private String password;
 
@@ -65,8 +62,9 @@ public class User {
     private String question;    
     private String answer;
     
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    private Collection<Role> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+//    @ManyToMany(cascade = CascadeType.ALL)
+    private Collection<Role> roles = new ArrayList<>();
 
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -82,7 +80,7 @@ public class User {
     @JsonManagedReference
     private List<MatchJoin> matchJoinArticles = new ArrayList<MatchJoin>();
     
-    public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
+    public MyUser(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
 			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password) {
     	super();
     	this.email = email;
@@ -90,7 +88,7 @@ public class User {
     }
 
 		
-	public User(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
+	public MyUser(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
 			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password,
 			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, String question, String answer) {
 		super();
@@ -101,7 +99,7 @@ public class User {
 		this.answer = answer;
 	}
 	
-	public User(Long id, String email, String name, int score, String question, String answer) {
+	public MyUser(Long id, String email, String name, int score, String question, String answer) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -112,36 +110,20 @@ public class User {
 	}
 
 
-
-
-
-
-
-
-//    private String email;
-//    private String password;
-//    private String name;
-//    private int age;
-//    private String question;
-//    private String answer;
 	
-	
-	
-	
-	
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
-
-//    public Member(MemberSignupRequestDto request) {
-//        email = request.getEmail();
-//        password = request.getPassword();
-//        name = request.getName();
-//        role = Role.USER;
-//    }
-//
-//    public void encryptPassword(PasswordEncoder passwordEncoder) {
-//        password = passwordEncoder.encode(password);
-//    }
+    public MyUser(Long id, @NotBlank(message = "이메일은 필수 입력 값입니다.") @Email(message = "이메일 형식에 맞지 않습니다.") String email,
+			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password,
+			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, String question, String answer,
+			Collection<Role> roles) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.question = question;
+		this.answer = answer;
+		this.roles = roles;
+	}
 
     
 }
