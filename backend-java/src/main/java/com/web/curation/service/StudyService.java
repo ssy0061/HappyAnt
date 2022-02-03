@@ -13,10 +13,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
+import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
+import com.web.curation.dto.study.StudyJoinUserResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
@@ -200,5 +202,17 @@ public class StudyService {
     public void deleteComment(Long studyId, Long articleId, Long CommentId) {
     	checkStudyArticle(studyId, articleId);
     	commentRepo.deleteByStudyArticleIdAndId(articleId, CommentId);
+    }
+    
+    public List<StudyJoinUserResponse> searchMember(Long studyId) {
+    	studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
+												HttpStatus.NOT_FOUND,
+												"존재하지 않는 스터디 id입니다.",
+												new IllegalArgumentException()));
+    	List<StudyJoinUserResponse> response = new ArrayList<>();
+    	joinRepo.findByjoinStudyId(studyId).forEach(join -> {
+    		response.add(join.toJoinUserResponse());
+    	});
+    	return response;
     }
 }

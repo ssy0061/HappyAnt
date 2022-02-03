@@ -46,6 +46,6 @@ public class MatchJoin {
 	
 	// 모집글의 신청자 목록 조회 Response
 	public MatchJoinUserResponse toJoinUserResponse() {
-		return new MatchJoinUserResponse(joinArticle.getId(), joinUser.getId(), joinUser.getName(), content);
+		return new MatchJoinUserResponse(joinUser.getId(), joinUser.getName(), joinArticle.getId(), content);
 	}
 }

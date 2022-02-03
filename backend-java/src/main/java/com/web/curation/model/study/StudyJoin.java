@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.web.curation.dto.match.MatchJoinUserResponse;
+import com.web.curation.dto.study.StudyJoinUserResponse;
 import com.web.curation.model.account.User;
 import com.web.curation.model.match.MatchArticle;
 
@@ -42,4 +44,9 @@ public class StudyJoin {
 	
 	@Column
 	private Boolean leader;	
+	
+	// 스터디 멤버 목록 조회 Response
+	public StudyJoinUserResponse toJoinUserResponse() {
+		return new StudyJoinUserResponse(joinMember.getId(), joinMember.getName(), joinStudy.getId(), leader);
+	}
 }
