@@ -51,7 +51,7 @@ public class MatchController {
     @GetMapping("{articleId}")
     @ApiOperation(value = "모집글 상세 조회")
     public MatchArticleResponse getArticle(
-    		@RequestParam(required = true) Long articleId) {
+    		@PathVariable("articleId") Long articleId) {
     	return matchService.getArticle(articleId);
     }
     
