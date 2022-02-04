@@ -2,10 +2,10 @@ package com.web.curation.repository.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.web.curation.model.account.Role;
+import com.web.curation.model.account.MyRole;
 
-public interface Rolerepo extends JpaRepository<Role, Long> {
+public interface Rolerepo extends JpaRepository<MyRole, Long> {
 
-	Role findByName(String name);
+	MyRole findByName(String name);
 	
 }

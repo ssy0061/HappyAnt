@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 
@@ -63,8 +64,8 @@ public class MyUser {
     private String answer;
     
     @ManyToMany(fetch = FetchType.EAGER)
-//    @ManyToMany(cascade = CascadeType.ALL)
-    private Collection<Role> roles = new ArrayList<>();
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Collection<MyRole> roles = new ArrayList<>();
 
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -114,7 +115,7 @@ public class MyUser {
     public MyUser(Long id, @NotBlank(message = "이메일은 필수 입력 값입니다.") @Email(message = "이메일 형식에 맞지 않습니다.") String email,
 			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password,
 			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, String question, String answer,
-			Collection<Role> roles) {
+			Collection<MyRole> roles) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -124,6 +125,8 @@ public class MyUser {
 		this.answer = answer;
 		this.roles = roles;
 	}
+
+
 
     
 }

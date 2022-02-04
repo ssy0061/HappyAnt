@@ -88,13 +88,6 @@ public class AccountService {
 		}
 	}
 
-//	public User login(String email, String password) {
-//		User user = userRepository.findByEmail(email);
-//		boolean permission = user.getPassword().equals(password);
-//		if(permission) return user;
-//		else return null;		
-//	}
-
 	public MyUser findByEmail(String email) {
 		MyUser user = userRepository.findByEmail(email);
 		return user;

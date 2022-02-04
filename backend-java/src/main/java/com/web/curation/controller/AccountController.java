@@ -56,24 +56,24 @@ public class AccountController {
 	@Autowired	
 	AccountService accountService;
     
-    @GetMapping("/account")
+    @GetMapping("/myaccount")
     @ApiOperation(value = "모든 회원 정보 조회")
     public ResponseEntity<List<MyUser>> getAllUsers(){
     	List<MyUser> users = accountService.findAll();	
     	return new ResponseEntity<List<MyUser>>(users,HttpStatus.OK);
     }
     
-    @GetMapping("/account/{id}")
+    @GetMapping("/myaccount/{id}")
     @ApiOperation(value = "회원정보 조회")
     public ResponseEntity<MyUser> getUser(@RequestParam String email ){
     	MyUser user = accountService.findByEmail(email);
     	Long id = user.getId();
     	System.out.println(user.toString());
     	return new ResponseEntity<MyUser>(user, HttpStatus.OK);
-    }    
+    }
    
     
-    @PostMapping("/account/signUp")
+    @PostMapping("/myaccount/signUp")
     @ApiOperation(value = "회원가입")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignupRequest userInfo) {
     	MyUser user = userInfo.toEntity();    	
@@ -105,7 +105,7 @@ public class AccountController {
     }
 
 
-    @PutMapping("/account/{id}")
+    @PutMapping("/myaccount/{id}")
     @ApiOperation(value = "회원 정보 수정")
     public void updateUser(
     		@PathVariable("id") Long id,
@@ -115,27 +115,29 @@ public class AccountController {
     	accountService.updateUser(id, password, question, answer);
     }
     
+    
+    
 
-    @PostMapping("/account/login")
-    @ApiOperation(value = "로그인")
-    public ResponseEntity<LoginResponse> getUser(@RequestBody LoginRequest userInfo){
-    	MyUser user = accountService.findByEmail(userInfo.getEmail());    	
-    	
-    	if(user.getPassword().equals(userInfo.getPassword())) {
-    		System.out.println("OK");
-    		LoginResponse loginUser = new LoginResponse();
-        	loginUser.setId(user.getId());
-        	loginUser.setEmail(user.getEmail());
-        	loginUser.setName(user.getName());
-        	loginUser.setQuestion(user.getQuestion());
-        	loginUser.setScore(user.getScore());
-    		return new ResponseEntity<LoginResponse>(loginUser,HttpStatus.OK);
-    		
-    	}
-    	System.out.println("fail");
-    	return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-    	
-    }
+//    @PostMapping("/account/login")
+//    @ApiOperation(value = "로그인")
+//    public ResponseEntity<LoginResponse> getUser(@RequestBody LoginRequest userInfo){
+//    	MyUser user = accountService.findByEmail(userInfo.getEmail());    	
+//    	
+//    	if(user.getPassword().equals(userInfo.getPassword())) {
+//    		System.out.println("OK");
+//    		LoginResponse loginUser = new LoginResponse();
+//        	loginUser.setId(user.getId());
+//        	loginUser.setEmail(user.getEmail());
+//        	loginUser.setName(user.getName());
+//        	loginUser.setQuestion(user.getQuestion());
+//        	loginUser.setScore(user.getScore());
+//    		return new ResponseEntity<LoginResponse>(loginUser,HttpStatus.OK);
+//    		
+//    	}
+//    	System.out.println("fail");
+//    	return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+//    	
+//    }
     
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "삭제")
@@ -143,30 +145,6 @@ public class AccountController {
     	accountService.deleteById(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
-    
-    
-
-
-//    // 회원가입
-//    @PostMapping("/join")
-//    public Long join(@RequestBody Map<String, String> user) {
-//        return userRepository.save(User.builder()
-//                .email(user.get("email"))
-//                .password(passwordEncoder.encode(user.get("password")))
-//                .roles(Collections.singletonList("ROLE_ADMIN")) // 최초 가입시 USER 로 설정
-//                .build()).getId();
-//    }
-//    
-// // 로그인
-//    @PostMapping("/login")
-//    public String login(@RequestBody Map<String, String> user) {
-//        User member = userRepository.findByEmail(user.get("email"))
-//                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-//        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-//            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
-//        }
-//        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
-//    }
     
     
     @GetMapping("/account/test/{user_id}")

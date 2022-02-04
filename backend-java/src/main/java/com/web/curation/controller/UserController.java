@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import java.io.IOException;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,15 +36,20 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.curation.model.account.Role;
+import com.web.curation.dto.account.LoginRequest;
+import com.web.curation.dto.account.LoginResponse;
+import com.web.curation.dto.account.SignupRequest;
+import com.web.curation.model.account.MyRole;
+import com.web.curation.repository.account.UserRepo;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.service.UserService;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/myaccount")
+@RequestMapping("/account")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -51,16 +59,48 @@ public class UserController {
 	public ResponseEntity<List<MyUser>> getUsers() {
 		return ResponseEntity.ok().body(userService.getUsers());
 	}
-	
+    
+    @PostMapping("/signup")
+    @ApiOperation(value = "회원가입")
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignupRequest userInfo) {
+    	MyUser user = userInfo.toEntity();    	
+    	
+    	String emailPattern = "\\w+@\\w+\\.\\w+(\\.\\w+)?";
+    	String pwPattern = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}";
+    	
+    	boolean isEmail= userInfo.getEmail().matches(emailPattern);
+    	boolean isPw= userInfo.getPassword().matches(pwPattern);
+    	
+//    	이메일 패턴 검사
+    	if(!isEmail) {
+    		return new ResponseEntity<String>("Not valid email", HttpStatus.BAD_REQUEST);
+    	}
+    	
+//    	이메일 중복 검사
+    	if(userService.checkDupliByEmail(userInfo.getEmail())) {
+    		return new ResponseEntity<String>("Duplicate email", HttpStatus.CONFLICT);
+    	}    	
+    	
+//    	비밀번호 패턴 검사
+    	if(!isPw) {
+    		return new ResponseEntity<String>("Not valid password", HttpStatus.FORBIDDEN);
+    	}
+    	
+    	userService.save( user);
+    	return new ResponseEntity<String>("Accept", HttpStatus.OK);
+    }
+
+    
+    
 	@PostMapping("/user/save")
 	public ResponseEntity<MyUser> saveUser(@RequestBody MyUser user) {
-		URI uri= URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/myaccount/user/save").toUriString());
+		URI uri= URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/user/save").toUriString());
 		return ResponseEntity.created(uri).body(userService.saveUser(user));
 	}
 	
 	@PostMapping("/role/save")
-	public ResponseEntity<Role> saveRole(@RequestBody Role role) {
-		URI uri= URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/myaccount/role/save").toUriString());
+	public ResponseEntity<MyRole> saveRole(@RequestBody MyRole role) {
+		URI uri= URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/role/save").toUriString());
 		return ResponseEntity.created(uri).body(userService.saveRole(role));
 	}
 	
@@ -86,7 +126,7 @@ public class UserController {
 						.withSubject(user.getEmail())
 						.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
 						.withIssuer(request.getRequestURL().toString())
-						.withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+						.withClaim("roles", user.getRoles().stream().map(MyRole::getName).collect(Collectors.toList()))
 						.sign(algorithm);
 				
 				Map<String, String> tokens = new HashMap<>();

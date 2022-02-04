@@ -1,8 +1,11 @@
 package com.web.curation.service;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -13,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.web.curation.model.account.Role;
+import com.web.curation.model.account.MyRole;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.repository.account.Rolerepo;
 import com.web.curation.repository.account.UserRepo;
@@ -58,7 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	}
 
 	@Override
-	public Role saveRole(Role role) {
+	public MyRole saveRole(MyRole role) {
 		log.info("Saving new role {} to the database", role.getName());
 		return roleRepo.save(role);
 	}
@@ -67,7 +70,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	public void addRoleToUser(String email, String roleName) {
 		log.info("Adding role {} to user {}	",roleName, email);
 		MyUser user = userRepo.findByEmail(email);
-		Role role = roleRepo.findByName(roleName);
+		MyRole role = roleRepo.findByName(roleName);
 		user.getRoles().add(role);
 		
 		
@@ -84,7 +87,87 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		log.info("Fetching all users ");
 		return userRepo.findAll();
 	}
+	
 
+	
+	public void signUp(MyUser userInfo){
+		MyUser user = new MyUser();
+		user.setEmail(userInfo.getEmail());
+		user.setName(userInfo.getName());
+		user.setPassword(passwordEncoder.encode( userInfo.getPassword()));
+		user.setQuestion(userInfo.getQuestion());
+		user.setAnswer(userInfo.getAnswer());	
+		
+		userRepo.save(user);
+
+    }
+	
+	public void save(MyUser user) {
+		userRepo.save(user);		
+	}
+	
+	public List<MyUser> findAll() {
+		List<MyUser> users = new ArrayList<>();
+		userRepo.findAll().forEach(u -> users.add(u));
+		return users;
+	}
+	
+	public Optional<MyUser> findById(Long id) {
+		Optional<MyUser> user = userRepo.findById(id);
+		return user;
+	}
+
+	
+	public void deleteById(Long id) {
+		
+		userRepo.deleteById(id);
+	}
+	
+	public void updateById(Long id, MyUser updatedMember) {
+		Optional<MyUser> user = userRepo.findById(id);
+		if(user.isPresent()) {
+			user.get().setPassword(updatedMember.getPassword());
+			user.get().setName(updatedMember.getName());
+			userRepo.save(user.get());
+		}
+	}
+	
+	@Transactional
+	public void updateUser(Long id, String password, String question, String answer) {
+		MyUser user = userRepo.findById(id).orElseThrow(() -> new IllegalStateException(
+				"id of user does not exist"));
+		if(password !=null && !Objects.equals(user.getPassword(), password)) {
+			user.setPassword(password);
+		}
+		
+		if(question !=null && !Objects.equals(user.getQuestion(), question)) {
+			user.setQuestion(question);
+		}
+		
+		if(answer !=null && !Objects.equals(user.getAnswer(), answer)) {
+			user.setAnswer(answer);
+		}
+	}
+
+	public MyUser findByEmail(String email) {
+		MyUser user = userRepo.findByEmail(email);
+		return user;
+	}
+	
+	public boolean checkDupliByEmail(String email) {
+		List<String> emails = new ArrayList<>();
+		userRepo.findAll().forEach(u -> emails.add(u.getEmail()));
+		
+		boolean isDupli = false;
+		for (String e : emails) {
+			if(e.equals(email)) {
+				isDupli = true;
+				break;
+			}			
+		}
+		
+		return isDupli;
+	}
 
 
 }
