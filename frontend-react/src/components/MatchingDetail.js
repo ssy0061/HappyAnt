@@ -1,26 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import MatchingAppliList from './MatchingAppliList';
 
 export default function MatchingDetail(props) {
-  const { pk } = props;
-  const [matchItem, setMatchItem] = useState('');
-  const [writer, setWriter] = useState('');
-
-  // detail 정보 받아오기
-  axios
-    .get(`/match/${pk}`)
-    .then((res) => {
-      setMatchItem(res.data);
-      setWriter(matchItem.writerId);
-      console.log('detail 정보 받아오기');
-    })
-    .catch((err) => console.log(err));
+  const { item } = props;
+  console.log(item);
+  const pk = item.articleId;
 
   return (
     <div>
-      <h1>{pk}번 글 detail</h1>
-      <MatchingAppliList pk={pk} writer={writer} />
+      <div>
+        <h1>{item.title}</h1>
+        <p>{item.category}</p>
+        <p>{item.content}</p>
+        {item.state ? <p>마감되었습니다.</p> : <p>모집중입니다.</p>}
+      </div>
+      <div>
+        <MatchingAppliList item={item} articleId={pk} />
+      </div>
     </div>
   );
 }

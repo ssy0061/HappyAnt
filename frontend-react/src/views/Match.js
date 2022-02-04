@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MatchingCreate from '../components/MatchingCreate';
 import MatchingModal from '../components/MatchingModal';
+import MatchList from './MatchList';
 
 function Match() {
   const [open, setOpen] = useState(false);
@@ -22,6 +23,7 @@ function Match() {
   return (
     <div>
       <h1>Match</h1>
+      <MatchList />
       <button type="submit" onClick={handleClickCreateOpen}>
         글 작성
       </button>
