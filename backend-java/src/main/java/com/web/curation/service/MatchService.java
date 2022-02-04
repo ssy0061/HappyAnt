@@ -17,6 +17,7 @@ import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.model.account.User;
+import com.web.curation.model.match.JoinState;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.model.study.Study;
@@ -130,11 +131,17 @@ public class MatchService {
 						HttpStatus.BAD_REQUEST,
 						"존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
+    	
 
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
     				"작성한 모집글에 신청할 수 없습니다.",
+    				new IllegalArgumentException());
+    	} else if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudyId()).isPresent()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"스터디 멤버는 신청할 수 없습니다.",
     				new IllegalArgumentException());
     	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
@@ -197,6 +204,8 @@ public class MatchService {
 			// 스터디에 유저추가(멤버1)
 			StudyJoin join2 = new StudyJoin(null, joinUser, saved, false);
 			studyJoinRepo.save(join2);
+			MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).get();
+			matchJoin.setState(JoinState.APPROVED);
 			// matchArticle에 추가
 			article.setStudyId(saved.getId());
 		} else {
@@ -211,8 +220,25 @@ public class MatchService {
 				// 스터디에 유저추가(멤버1)
 				StudyJoin join = new StudyJoin(null, joinUser, study, false);
 				studyJoinRepo.save(join);
+				MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).get();
+				matchJoin.setState(JoinState.APPROVED);
 			}
 		}
 
+	}
+	
+	// 신청자 거부
+	@Transactional
+	public void denyJoinUser(Long articleId, Long joinUserId) {
+		MatchJoin join = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).get();
+		if (join.getState() == null) {
+			join.setState(JoinState.DENIED);
+		} else {
+			throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"승인 또는 거부한 신청자입니다.",
+    				new IllegalArgumentException());
+		}
+		
 	}
 }

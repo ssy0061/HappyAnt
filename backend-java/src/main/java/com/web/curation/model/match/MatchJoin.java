@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -41,11 +43,15 @@ public class MatchJoin {
 	@JsonBackReference
 	private MatchArticle joinArticle;
 	
+	// 소개
 	@Column
 	private String content;
 	
+	@Enumerated(value = EnumType.STRING)
+	private JoinState state;
+	
 	// 모집글의 신청자 목록 조회 Response
 	public MatchJoinUserResponse toJoinUserResponse() {
-		return new MatchJoinUserResponse(joinUser.getId(), joinUser.getName(), joinArticle.getId(), content);
+		return new MatchJoinUserResponse(joinUser.getId(), joinUser.getName(), joinArticle.getId(), content, state);
 	}
 }

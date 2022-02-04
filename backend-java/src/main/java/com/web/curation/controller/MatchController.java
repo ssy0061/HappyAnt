@@ -110,9 +110,16 @@ public class MatchController {
     }
     
     @PostMapping("{articleId}/{userId}")
-	@ApiOperation(value = "스터디원 추가")
+	@ApiOperation(value = "승인(스터디원 추가)")
 	public void addNewStudyMember(@PathVariable("articleId") Long articleId,
 									@PathVariable("userId") Long joinUserId) {
     	matchService.addNewMatchMember(articleId, joinUserId);
 	}
+    
+    @PutMapping("{articleId}/{userId}")
+    @ApiOperation(value = "거부")
+    public void denyJoinUser(@PathVariable("articleId") Long articleId,
+								@PathVariable("userId") Long joinUserId) {
+    	matchService.denyJoinUser(articleId, joinUserId);
+    }
 }
