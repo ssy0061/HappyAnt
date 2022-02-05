@@ -55,9 +55,10 @@ public class MatchService {
     }
     
     public MatchArticleResponse getArticle(Long articleId) {
-    	MatchArticle article = articleRepo.findById(articleId)
-    			.orElseThrow(() -> new IllegalStateException(
-    					"article with id " + articleId + " does not exist"));
+    	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.NOT_FOUND,
+																"존재하지 않는 게시글 id입니다.",
+																new IllegalArgumentException()));
     	MatchArticleResponse response = article.toResponse();
     	return response;
     }
@@ -68,7 +69,7 @@ public class MatchService {
     	MatchArticle article = articleForm.toEntity();
     	User writer = userRepo.findById(writerId)
     			.orElseThrow(() -> new ResponseStatusException(
-							HttpStatus.BAD_REQUEST,
+							HttpStatus.NOT_FOUND,
 							"존재하지 않는 유저 id입니다.",
 							new IllegalArgumentException()));
     	article.setWriter(writer);
@@ -86,7 +87,7 @@ public class MatchService {
     		Boolean state) {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new ResponseStatusException(
-						HttpStatus.BAD_REQUEST,
+						HttpStatus.NOT_FOUND,
 						"존재하지 않는 게시글 id입니다.",
 						new IllegalArgumentException()));
     	
@@ -125,10 +126,13 @@ public class MatchService {
     
     // 스터디 신청
     public void joinStudy(Long articleId, Long joinUserId, String content) {
-    	MatchArticle article = articleRepo.findById(articleId).get();
+    	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.NOT_FOUND,
+																"존재하지 않는 게시글 id입니다.",
+																new IllegalArgumentException()));
     	User joinUser = userRepo.findById(joinUserId)
     			.orElseThrow(() -> new ResponseStatusException(
-						HttpStatus.BAD_REQUEST,
+						HttpStatus.NOT_FOUND,
 						"존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
     	
@@ -177,11 +181,14 @@ public class MatchService {
 	// 모집글에서 '승인'으로 멤버 추가
 	@Transactional
 	public void addNewMatchMember(Long articleId, Long joinUserId) {
-		MatchArticle article = articleRepo.findById(articleId).get();
+		MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.NOT_FOUND,
+																"존재하지 않는 게시글 id입니다.",
+																new IllegalArgumentException()));
 
 		User leader = article.getWriter();
 		User joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
-													HttpStatus.BAD_REQUEST,
+													HttpStatus.NOT_FOUND,
 													"존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));
 		if (leader.getId() == joinUserId) {
@@ -204,13 +211,19 @@ public class MatchService {
 			// 스터디에 유저추가(멤버1)
 			StudyJoin join2 = new StudyJoin(null, joinUser, saved, false);
 			studyJoinRepo.save(join2);
-			MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).get();
+			MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
+											.orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
+																new IllegalArgumentException()));
 			matchJoin.setState(JoinState.APPROVED);
 			// matchArticle에 추가
 			article.setStudyId(saved.getId());
 		} else {
 			Long studyId = article.getStudyId();
-			Study study = studyRepo.findById(studyId).get();
+			Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
+														HttpStatus.BAD_REQUEST,
+														"모집글의 스터디 정보를 알 수 없습니다.",
+														new IllegalArgumentException()));
 			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
 	    		throw new ResponseStatusException(
 	    				HttpStatus.BAD_REQUEST,
@@ -220,7 +233,10 @@ public class MatchService {
 				// 스터디에 유저추가(멤버1)
 				StudyJoin join = new StudyJoin(null, joinUser, study, false);
 				studyJoinRepo.save(join);
-				MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).get();
+				MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
+												.orElseThrow(() -> new ResponseStatusException(
+																	HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
+																	new IllegalArgumentException()));
 				matchJoin.setState(JoinState.APPROVED);
 			}
 		}
@@ -230,7 +246,10 @@ public class MatchService {
 	// 신청자 거부
 	@Transactional
 	public void denyJoinUser(Long articleId, Long joinUserId) {
-		MatchJoin join = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).get();
+		MatchJoin join = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
+												.orElseThrow(() -> new ResponseStatusException(
+														HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
+														new IllegalArgumentException()));
 		if (join.getState() == null) {
 			join.setState(JoinState.DENIED);
 		} else {
