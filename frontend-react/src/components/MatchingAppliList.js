@@ -16,7 +16,7 @@ export default function MatchingAppliList(props) {
   // 신청자 정보 받아오기
   const getApplilist = () => {
     axios
-      .get(`match/join/{articleId}?articleId=${pk}`)
+      .get(`match/join/${pk}`)
       .then((res) => {
         console.log(res.data, '신청자 리스트');
         setApplilist(res.data);
@@ -27,32 +27,34 @@ export default function MatchingAppliList(props) {
     getApplilist();
   }
   console.log(applilist, 'appli');
-  // const openModal = () => {
-  //   setModalOpen(true);
-  // };
-  // const closeModal = () => {
-  //   setModalOpen(false);
-  // };
 
   // 로그인 한 사람과 작성자가 같을 시 보이는 부분
   if (item.writerId === yourId) {
     const listing = () => {
       const result = [];
       for (let i = 0; i < applilist.length; i += 1) {
-        result.push(
-          <div>
-            <p key={i}>
-              {`${applilist[i].userName}`}
-              <MatchingAppliAccept content={applilist[i].content} />
-            </p>
-          </div>
-        );
+        // 지원자의 state의 상태를 통해 리스트에 띄울지 말지 정함
+        if (!applilist[i].state) {
+          result.push(
+            <div>
+              <p key={i}>
+                {`${applilist[i].userName}`}
+                <MatchingAppliAccept
+                  pk={pk}
+                  content={applilist[i].content}
+                  userId={applilist[i].userId}
+                />
+              </p>
+            </div>
+          );
+        }
       }
       return result;
     };
 
     return (
       <div>
+        <hr />
         신청자
         {listing()}
       </div>
