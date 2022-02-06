@@ -128,8 +128,24 @@ public class StudyController {
     }
     
     @GetMapping("member")
-    @ApiOperation(value = "스터디 멤버 검색")
+    @ApiOperation(value = "스터디 멤버 조회")
     public List<StudyJoinUserResponse> searchMember(@PathVariable("studyId") Long studyId) {
     	return studyService.searchMember(studyId);
+    }
+    
+    @PostMapping("member/{userId}/leader")
+    @ApiOperation(value = "스터디장 위임", notes="로그인한 리더(loginUserId)가 선택한 유저(userId)에게 리더 권한을 위임합니다.")
+    public void leaveLeader(@PathVariable("studyId") Long studyId,
+    						@PathVariable("userId") Long userId,
+    						@RequestParam(required = true) Long loginUserId) {
+    	studyService.delegateLeader(studyId, userId, loginUserId);
+    }
+    
+    @DeleteMapping("member/{userId}")
+    @ApiOperation(value = "스터디 멤버 추방/탈퇴", notes="로그인한 리더가 선택한 유저(userId)를 추방하거나 로그인한 유저가 스스로(userId) 스터디에서 탈퇴합니다.")
+    public void deleteMember(@PathVariable("studyId") Long studyId,
+    						@PathVariable("userId") Long userId,
+    						@RequestParam(required = true) Long loginUserId) {
+    	studyService.deleteMember(studyId, userId, loginUserId);
     }
 }

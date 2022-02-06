@@ -42,8 +42,7 @@ public class Study {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "leader_id",
-		referencedColumnName = "id",
-		updatable = false) // 외래키로 조인
+		referencedColumnName = "id") // 외래키로 조인
 	@JsonBackReference
 	private User leader;
 	
