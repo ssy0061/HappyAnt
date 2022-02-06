@@ -1,6 +1,7 @@
 package com.web.curation.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.model.study.Study;
@@ -57,7 +58,7 @@ public class StudyService {
 													HttpStatus.NOT_FOUND,
 													"존재하지 않는 스터디 id입니다.",
 													new IllegalArgumentException()));
-		User joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
+		MyUser joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
 													HttpStatus.NOT_FOUND,
 													"존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));
@@ -92,7 +93,7 @@ public class StudyService {
     
     public void addNewArticle(Long studyId, StudyArticleRequest articleForm) {
     	Long writerId = articleForm.getWriterId();
-    	User writer = userRepo.findById(writerId).get();
+    	MyUser writer = userRepo.findById(writerId).get();
     	if (joinRepo.findByJoinMemberIdAndJoinStudyId(writerId, studyId).isEmpty()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
@@ -175,7 +176,7 @@ public class StudyService {
 	
     public void addNewComment(Long studyId, Long articleId, StudyCommentRequest commentForm) {
     	Long writerId = commentForm.getWriterId();
-    	User writer = userRepo.findById(writerId).get();
+    	MyUser writer = userRepo.findById(writerId).get();
     	checkStudyArticle(studyId, articleId);
     	
     	StudyArticle article = articleRepo.findById(articleId).get();

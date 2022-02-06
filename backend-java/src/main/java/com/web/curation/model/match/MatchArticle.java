@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.dto.match.MatchArticleResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 
 @Entity // DB가 해당 객체를 인식 가능!
 public class MatchArticle {
@@ -57,7 +57,7 @@ public class MatchArticle {
 				referencedColumnName = "id",
 				updatable = false) // 외래키로 조인
 	@JsonBackReference
-	private User writer;
+	private MyUser writer;
 
 	@OneToMany(mappedBy="joinArticle", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
@@ -111,11 +111,11 @@ public class MatchArticle {
 	}
 	
 
-	public User getWriter() {
+	public MyUser getWriter() {
 		return writer;
 	}
 
-	public void setWriter(User writer) {
+	public void setWriter(MyUser writer) {
 		this.writer = writer;
 	}
 	
@@ -139,7 +139,7 @@ public class MatchArticle {
 		
 	}
 
-	public MatchArticle(String title, String category, String content, Boolean state, User writer) {
+	public MatchArticle(String title, String category, String content, Boolean state, MyUser writer) {
 		super();
 		this.title = title;
 		this.category = category;
