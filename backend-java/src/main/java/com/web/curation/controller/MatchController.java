@@ -66,18 +66,20 @@ public class MatchController {
     @ApiOperation(value = "모집글 수정(마감)")
     public void updateArticle(
     		@PathVariable("articleId") Long articleId,
+    		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
     		@RequestParam(required = false) Boolean state) {
-    	matchService.updateArticle(articleId, title, category, content, state);
+    	matchService.updateArticle(articleId, loginUserId, title, category, content, state);
     }
     
     
     @DeleteMapping("{articleId}")
     @ApiOperation(value = "모집글 삭제")
-    public void deleteArticle(@PathVariable("articleId") Long articleId) {
-    	matchService.deleteArticle(articleId);
+    public void deleteArticle(@PathVariable("articleId") Long articleId,
+    							@RequestParam(required = true) Long loginUserId) {
+    	matchService.deleteArticle(articleId, loginUserId);
     }
 
     // 검색 키워드 하나로 제목 or 내용 검색하기

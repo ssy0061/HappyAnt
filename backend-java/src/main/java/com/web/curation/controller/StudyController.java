@@ -67,17 +67,19 @@ public class StudyController {
     public void updateArticle(
     		@PathVariable("studyId") Long studyId,
     		@PathVariable("articleId") Long articleId,
+    		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String content) {
-    	studyService.updateArticle(studyId, articleId, title, content);
+    	studyService.updateArticle(studyId, articleId, loginUserId, title, content);
     }
     
     
     @DeleteMapping("{articleId}")
     @ApiOperation(value = "게시글 삭제")
     public void deleteArticle(@PathVariable("studyId") Long studyId,
-    							@PathVariable("articleId") Long articleId) {
-    	studyService.deleteArticle(studyId, articleId);
+    							@PathVariable("articleId") Long articleId,
+    							@RequestParam(required = true) Long loginUserId) {
+    	studyService.deleteArticle(studyId, articleId, loginUserId);
     }
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
@@ -85,7 +87,7 @@ public class StudyController {
     @ApiOperation(value = "게시글 검색")
     public List<StudyArticleResponse> SerachArticle(@PathVariable("studyId") Long studyId,
     												@RequestParam(required = true) String Keyword) {
-    	return studyService.searchArticle(Keyword);
+    	return studyService.searchArticle(studyId, Keyword);
     }
     
     @GetMapping("{articleId}/comment")
@@ -110,8 +112,9 @@ public class StudyController {
     		@PathVariable("studyId") Long studyId,
     		@PathVariable("articleId") Long articleId,
     		@PathVariable("commentId") Long commentId,
+    		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String content) {
-    	studyService.updateComment(studyId, articleId, commentId, content);
+    	studyService.updateComment(studyId, articleId, commentId, loginUserId, content);
     }
     
     
@@ -119,8 +122,9 @@ public class StudyController {
     @ApiOperation(value = "댓글 삭제")
     public void deleteComment(@PathVariable("studyId") Long studyId,
     							@PathVariable("articleId") Long articleId,
-    							@PathVariable("commentId") Long commentId) {
-    	studyService.deleteComment(studyId, articleId, commentId);
+    							@PathVariable("commentId") Long commentId,
+    							@RequestParam(required = true) Long loginUserId) {
+    	studyService.deleteComment(studyId, articleId, commentId, loginUserId);
     }
     
     @GetMapping("member")

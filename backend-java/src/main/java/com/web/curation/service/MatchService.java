@@ -56,8 +56,7 @@ public class MatchService {
     
     public MatchArticleResponse getArticle(Long articleId) {
     	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
-																HttpStatus.NOT_FOUND,
-																"존재하지 않는 게시글 id입니다.",
+																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 																new IllegalArgumentException()));
     	MatchArticleResponse response = article.toResponse();
     	return response;
@@ -69,8 +68,7 @@ public class MatchService {
     	MatchArticle article = articleForm.toEntity();
     	User writer = userRepo.findById(writerId)
     			.orElseThrow(() -> new ResponseStatusException(
-							HttpStatus.NOT_FOUND,
-							"존재하지 않는 유저 id입니다.",
+							HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 							new IllegalArgumentException()));
     	article.setWriter(writer);
 //    	writer.getMatchArticles().add(article);
@@ -81,16 +79,20 @@ public class MatchService {
     @Transactional // 변경된 데이터를 DB에 저장
     public void updateArticle(
     		Long articleId,
+    		Long userId,
     		String title,
     		String category,
     		String content,
     		Boolean state) {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new ResponseStatusException(
-						HttpStatus.NOT_FOUND,
-						"존재하지 않는 게시글 id입니다.",
+						HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 						new IllegalArgumentException()));
-    	
+    	if (article.getWriter().getId() != userId) {
+    		throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "게시글(댓글) 작성자가 아닙니다.",
+					new IllegalArgumentException());
+    	}
     	if (title != null && title.length() > 0 && !Objects.equals(article.getTitle(), title)) {
     		article.setTitle(title);
     	}
@@ -108,7 +110,15 @@ public class MatchService {
     	}
     }
     
-    public void deleteArticle(Long articleId) {
+    public void deleteArticle(Long articleId, Long userId) {
+    	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
+																new IllegalArgumentException()));
+    	if (article.getWriter().getId() != userId) {
+    		throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "게시글(댓글) 작성자가 아닙니다.",
+					new IllegalArgumentException());
+    	}
     	articleRepo.deleteById(articleId);
     }
     
@@ -127,30 +137,25 @@ public class MatchService {
     // 스터디 신청
     public void joinStudy(Long articleId, Long joinUserId, String content) {
     	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
-																HttpStatus.NOT_FOUND,
-																"존재하지 않는 게시글 id입니다.",
+																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 																new IllegalArgumentException()));
     	User joinUser = userRepo.findById(joinUserId)
     			.orElseThrow(() -> new ResponseStatusException(
-						HttpStatus.NOT_FOUND,
-						"존재하지 않는 유저 id입니다.",
+						HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
     	
 
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"작성한 모집글에 신청할 수 없습니다.",
+    				HttpStatus.BAD_REQUEST, "작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
     	} else if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudyId()).isPresent()) {
     		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"스터디 멤버는 신청할 수 없습니다.",
+    				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
     				new IllegalArgumentException());
     	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"이미 신청한 모집글입니다.",
+    				HttpStatus.BAD_REQUEST, "이미 신청한 모집글입니다.",
     				new IllegalArgumentException());
     	} else {
         	MatchJoin join = new MatchJoin();
@@ -182,19 +187,16 @@ public class MatchService {
 	@Transactional
 	public void addNewMatchMember(Long articleId, Long joinUserId) {
 		MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
-																HttpStatus.NOT_FOUND,
-																"존재하지 않는 게시글 id입니다.",
+																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 																new IllegalArgumentException()));
 
 		User leader = article.getWriter();
 		User joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
-													HttpStatus.NOT_FOUND,
-													"존재하지 않는 유저 id입니다.",
+													HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));
 		if (leader.getId() == joinUserId) {
     		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"모집글 작성자는 일반 회원으로 추가할 수 없습니다.",
+    				HttpStatus.BAD_REQUEST, "모집글 작성자는 일반 회원으로 추가할 수 없습니다.",
     				new IllegalArgumentException());
 		}
 
@@ -221,13 +223,11 @@ public class MatchService {
 		} else {
 			Long studyId = article.getStudyId();
 			Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
-														HttpStatus.BAD_REQUEST,
-														"모집글의 스터디 정보를 알 수 없습니다.",
+														HttpStatus.BAD_REQUEST, "모집글의 스터디 정보를 알 수 없습니다.",
 														new IllegalArgumentException()));
 			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
 	    		throw new ResponseStatusException(
-	    				HttpStatus.BAD_REQUEST,
-	    				"이미 스터디에 가입한 회원입니다.",
+	    				HttpStatus.BAD_REQUEST, "이미 스터디에 가입한 회원입니다.",
 	    				new IllegalArgumentException());
 			} else {
 				// 스터디에 유저추가(멤버1)
@@ -254,8 +254,7 @@ public class MatchService {
 			join.setState(JoinState.DENIED);
 		} else {
 			throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"승인 또는 거부한 신청자입니다.",
+    				HttpStatus.BAD_REQUEST, "승인 또는 거부한 신청자입니다.",
     				new IllegalArgumentException());
 		}
 		

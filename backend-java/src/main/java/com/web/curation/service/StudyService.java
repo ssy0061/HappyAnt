@@ -77,6 +77,9 @@ public class StudyService {
 	}
 	
     public List<StudyArticleResponse> getArticleList(Long studyId) {
+    	studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
+										HttpStatus.NOT_FOUND,"존재하지 않는 스터디 id입니다.",
+										new IllegalArgumentException()));
     	List<StudyArticleResponse> articleList = new ArrayList<>();
     	
     	articleRepo.findByStudyId(studyId).forEach(article -> {
@@ -87,22 +90,25 @@ public class StudyService {
     }
     
     public StudyArticleResponse getArticle(Long studyId, Long articleId) {
-    	StudyArticle article = articleRepo.findByStudyIdAndId(studyId, articleId).get();
+    	StudyArticle article = articleRepo.findByStudyIdAndId(studyId, articleId)
+    							.orElseThrow(() -> new ResponseStatusException(
+									HttpStatus.BAD_REQUEST, "스터디 또는 게시글 id를 확인하세요",
+									new IllegalArgumentException()));
     	StudyArticleResponse response = article.toResponse();
     	return response;
     }
     
     public void addNewArticle(Long studyId, StudyArticleRequest articleForm) {
+    	Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
+													HttpStatus.NOT_FOUND,"존재하지 않는 스터디 id입니다.",
+													new IllegalArgumentException()));
     	Long writerId = articleForm.getWriterId();
-    	User writer = userRepo.findById(writerId).get();
-    	if (joinRepo.findByJoinMemberIdAndJoinStudyId(writerId, studyId).isEmpty()) {
-    		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"스터디원(리더)만 작성할 수 있습니다.",
-    				new IllegalArgumentException());
-    	}
+    	User writer = userRepo.findById(writerId).orElseThrow(() -> new ResponseStatusException(
+													HttpStatus.NOT_FOUND,"존재하지 않는 유저 id입니다.",
+													new IllegalArgumentException()));
     	
-    	Study study = studyRepo.findById(studyId).get();
+    	checkStudyMember(studyId, writerId);
+    	
     	StudyArticle article = articleForm.toEntity();
     	
     	article.setStudyWriter(writer);
@@ -114,9 +120,14 @@ public class StudyService {
     public void updateArticle(
     		Long studyId,
     		Long articleId,
+    		Long userId,
     		String title,
     		String content) {
-    	StudyArticle article = articleRepo.findByStudyIdAndId(studyId, articleId).get();
+    	StudyArticle article = articleRepo.findByStudyIdAndId(studyId, articleId)
+					    			.orElseThrow(() -> new ResponseStatusException(
+									HttpStatus.BAD_REQUEST, "스터디 또는 게시글 id를 확인하세요",
+									new IllegalArgumentException()));
+    	checkWriter(article.getStudyWriter().getId(), userId);
     	
     	if (title != null && title.length() > 0 && !Objects.equals(article.getTitle(), title)) {
     		article.setTitle(title);
@@ -128,16 +139,24 @@ public class StudyService {
     }
     
     @Transactional
-    public void deleteArticle(Long studyId, Long articleId) {
+    public void deleteArticle(Long studyId, Long articleId, Long userId) {
+    	StudyArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.NOT_FOUND,"존재하지 않는 게시글 id입니다.",
+																new IllegalArgumentException()));
+    	checkStudyArticle(studyId, articleId);
+    	checkWriter(article.getStudyWriter().getId(), userId);
     	articleRepo.deleteByStudyIdAndId(studyId, articleId);
     }
     
     
-    // 검색 키워드 하나로 제목 & 내용 검색하기
-    public List<StudyArticleResponse> searchArticle(String keyWord) {
+    // 검색 키워드 하나로  '특정 스터디'의 제목 & 내용 검색하기
+    public List<StudyArticleResponse> searchArticle(Long studyId, String keyWord) {
+    	studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
+													HttpStatus.NOT_FOUND,"존재하지 않는 스터디 id입니다.",
+													new IllegalArgumentException()));
     	List<StudyArticleResponse> articleList = new ArrayList<>();
     	
-		articleRepo.findAll(StudyArticleSpec.searchWith(keyWord)).forEach(article -> {
+		articleRepo.findAll(StudyArticleSpec.searchWith(studyId, keyWord)).forEach(article -> {
 			StudyArticleResponse response = article.toResponse();
     		articleList.add(response);
 		});
@@ -147,20 +166,39 @@ public class StudyService {
     // 아래는 댓글
     // 아래는 댓글
     
+    // 스터디의 게시글인지 확인
     public void checkStudyArticle(Long studyId, Long articleId) {
     	// articleId로 존재여부 조회 -> studyId 비교
-       	if (!Objects.equals(articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
-											HttpStatus.NOT_FOUND,
-											"존재하지 않는 게시글id입니다.",
-											new IllegalArgumentException()))
-							       			.getStudy().getId(), studyId)) {
+    	articleRepo.findByStudyIdAndId(studyId, articleId)
+					.orElseThrow(() -> new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "스터디 또는 게시글 id를 확인하세요",
+					new IllegalArgumentException()));
+    }
+    
+    // 스터디의 멤버인지 확인
+    public void checkStudyMember(Long studyId, Long userId) {
+    	if (joinRepo.findByJoinMemberIdAndJoinStudyId(userId, studyId).isEmpty()) {
     		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"게시글의 스터디id와 입력한 스터디id 값이 다릅니다.",
+    				HttpStatus.BAD_REQUEST, "스터디 멤버(리더)가 아닙니다.",
     				new IllegalArgumentException());
     	}
     }
+    // 게시글의 댓글인지 확인
+    public StudyComment getAndCheckComment(Long articleId, Long commentId) {
+    	return commentRepo.findByStudyArticleIdAndId(articleId, commentId)
+			    			.orElseThrow(() -> new ResponseStatusException(
+			    					HttpStatus.BAD_REQUEST, "게시글 또는 댓글 id를 확인하세요",
+			    					new IllegalArgumentException()));
+    }
     
+    // 작성자인지 확인
+    public void checkWriter(Long writerId, Long userId) {
+    	if (writerId != userId) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST, "게시글(댓글) 작성자가 아닙니다.",
+    				new IllegalArgumentException());
+    	}
+    }
     
     public List<StudyCommentResponse> getCommentList(Long studyId, Long articleId) {
     	checkStudyArticle(studyId, articleId);
@@ -176,11 +214,17 @@ public class StudyService {
     }
 	
     public void addNewComment(Long studyId, Long articleId, StudyCommentRequest commentForm) {
-    	Long writerId = commentForm.getWriterId();
-    	User writer = userRepo.findById(writerId).get();
-    	checkStudyArticle(studyId, articleId);
     	
-    	StudyArticle article = articleRepo.findById(articleId).get();
+    	Long writerId = commentForm.getWriterId();
+    	User writer = userRepo.findById(writerId).orElseThrow(() -> new ResponseStatusException(
+													HttpStatus.NOT_FOUND,"존재하지 않는 유저 id입니다.",
+													new IllegalArgumentException()));
+    	checkStudyArticle(studyId, articleId);
+    	checkStudyMember(studyId, writerId);
+    	StudyArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
+																HttpStatus.NOT_FOUND,"존재하지 않는 게시글 id입니다.",
+																new IllegalArgumentException()));
+    	
     	StudyComment comment = commentForm.toEntity();
     	
     	comment.setStudyCommenter(writer);
@@ -189,19 +233,22 @@ public class StudyService {
     }
     
     @Transactional // 변경된 데이터를 DB에 저장
-    public void updateComment(Long studyId, Long articleId, Long commentId, String content) {
+    public void updateComment(Long studyId, Long articleId, Long commentId, Long userId, String content) {
     	checkStudyArticle(studyId, articleId);
-    	
-    	StudyComment comment = commentRepo.findByStudyArticleIdAndId(articleId, commentId).get();
+
+    	StudyComment comment = getAndCheckComment(articleId, commentId);
+    	checkWriter(comment.getStudyCommenter().getId(), userId);
     	if (content != null && content.length() > 0 && !Objects.equals(comment.getContent(), content)) {
     		comment.setContent(content);
     	}
     }
     
     @Transactional
-    public void deleteComment(Long studyId, Long articleId, Long CommentId) {
+    public void deleteComment(Long studyId, Long articleId, Long commentId, Long userId) {
     	checkStudyArticle(studyId, articleId);
-    	commentRepo.deleteByStudyArticleIdAndId(articleId, CommentId);
+    	StudyComment comment = getAndCheckComment(articleId, commentId);
+    	checkWriter(comment.getStudyCommenter().getId(), userId);
+    	commentRepo.deleteByStudyArticleIdAndId(articleId, commentId);
     }
     
     public List<StudyJoinUserResponse> searchMember(Long studyId) {

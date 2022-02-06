@@ -159,8 +159,8 @@ public class MatchArticle {
 	@Override
 	public String toString() {
 		return "MatchArticle [id=" + id + ", title=" + title + ", category=" + category + ", content=" + content
-				+ ", createDate=" + createDate + ", state=" + state + ", writer=" + writer + ", studyId=" + studyId
-				+ "]";
+				+ ", createDate=" + createDate + ", state=" + state + ", writer=" + writer + ", matchJoinUsers="
+				+ matchJoinUsers + ", studyId=" + studyId + "]";
 	}
 	
 }

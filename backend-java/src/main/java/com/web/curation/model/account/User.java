@@ -78,22 +78,27 @@ public class User {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy="writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     @JsonManagedReference
     private List<MatchArticle> matchArticles = new ArrayList<MatchArticle>();
     
     @OneToMany(mappedBy="joinUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     @JsonManagedReference
     private List<MatchJoin> matchJoinArticles = new ArrayList<MatchJoin>();
     
     @OneToMany(mappedBy="joinMember", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     @JsonManagedReference
     private List<StudyJoin> joinStudy = new ArrayList<StudyJoin>();
     
     @OneToMany(mappedBy="studyWriter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     @JsonManagedReference
     private List<StudyArticle> studyArticles = new ArrayList<StudyArticle>();
     
     @OneToMany(mappedBy="studyCommenter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     @JsonManagedReference
     private List<StudyComment> studyComments = new ArrayList<StudyComment>();
     
