@@ -3,9 +3,11 @@
 package com.web.curation.model.account;
 
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 //import lombok.Data;
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,7 +36,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -125,8 +128,5 @@ public class MyUser {
 		this.answer = answer;
 		this.roles = roles;
 	}
-
-
-
     
 }
