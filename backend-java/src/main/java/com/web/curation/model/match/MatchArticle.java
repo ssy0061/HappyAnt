@@ -63,6 +63,9 @@ public class MatchArticle {
 	@JsonManagedReference
     private List<MatchJoin> matchJoinUsers = new ArrayList<MatchJoin>();
 	
+	@Column
+	private Long studyId;
+	
 	public Long getId() {
 		return id;
 	}
@@ -123,8 +126,15 @@ public class MatchArticle {
 	public void setMatchJoinUsers(List<MatchJoin> matchJoinUsers) {
 		this.matchJoinUsers = matchJoinUsers;
 	}
-
 	
+	public Long getStudyId() {
+		return studyId;
+	}
+
+	public void setStudyId(Long studyId) {
+		this.studyId = studyId;
+	}
+
 	public MatchArticle() {
 		
 	}
@@ -143,14 +153,14 @@ public class MatchArticle {
 	}
 	
 	public MatchArticleResponse toResponse() {
-		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, state);
+		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, state, studyId);
 	}
-	
-	
+
 	@Override
 	public String toString() {
-		return "Mat_Article [id=" + id + ", title=" + title + ", category=" + category + ", content=" + content
-				+ ", createDate=" + createDate + ", state=" + state + ", writer=" + writer + "]";
+		return "MatchArticle [id=" + id + ", title=" + title + ", category=" + category + ", content=" + content
+				+ ", createDate=" + createDate + ", state=" + state + ", writer=" + writer + ", studyId=" + studyId
+				+ "]";
 	}
 	
 }

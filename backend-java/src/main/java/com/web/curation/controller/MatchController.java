@@ -76,8 +76,8 @@ public class MatchController {
     
     @DeleteMapping("{articleId}")
     @ApiOperation(value = "모집글 삭제")
-    public void deleteArticle(@PathVariable("articleId") Long id) {
-    	matchService.deleteArticle(id);
+    public void deleteArticle(@PathVariable("articleId") Long articleId) {
+    	matchService.deleteArticle(articleId);
     }
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
@@ -91,10 +91,10 @@ public class MatchController {
     @PostMapping("join/{articleId}")
     @ApiOperation(value = "스터디 신청")
     public void joinStudy(
-    		@PathVariable("articleId") Long id,
+    		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = true) Long joinUserId,
     		@RequestParam(required = false) String content) {
-    	matchService.joinStudy(id, joinUserId, content);
+    	matchService.joinStudy(articleId, joinUserId, content);
     }
     
     @GetMapping("join")
@@ -105,7 +105,14 @@ public class MatchController {
     
     @GetMapping("join/{articleId}")
     @ApiOperation(value = "모집글의 신청자 목록 조회")
-    public List<MatchJoinUserResponse> getJoinUser(@RequestParam(required = true) Long articleId) {
+    public List<MatchJoinUserResponse> getJoinUser(@PathVariable("articleId") Long articleId) {
     	return matchService.getJoinUser(articleId);
     }
+    
+    @PostMapping("{articleId}/{userId}")
+	@ApiOperation(value = "스터디원 추가")
+	public void addNewStudyMember(@PathVariable("articleId") Long articleId,
+									@PathVariable("userId") Long joinUserId) {
+    	matchService.addNewMatchMember(articleId, joinUserId);
+	}
 }

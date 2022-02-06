@@ -13,17 +13,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.dto.account.FindPwRequest;
 import com.web.curation.dto.account.FindPwResponse;
 import com.web.curation.dto.account.FindPwSuccessRequest;
-import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.model.account.MyRole;
 import com.web.curation.model.account.MyUser;
-import com.web.curation.model.match.MatchArticle;
 import com.web.curation.repository.account.RoleRepo;
 import com.web.curation.repository.account.UserRepo;
 

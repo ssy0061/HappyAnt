@@ -9,11 +9,8 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.web.curation.dto.match.MatchArticleRequest;
@@ -22,13 +19,15 @@ import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
+import com.web.curation.model.study.Study;
+import com.web.curation.model.study.StudyJoin;
 import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
 import com.web.curation.repository.match.MatchJoinRepo;
+import com.web.curation.repository.study.StudyJoinRepo;
+import com.web.curation.repository.study.StudyRepo;
 import com.web.curation.specification.MatchArticleSpec;
-import com.web.curation.specification.MatchArticleSpec.SearchKey;
-
-import io.swagger.annotations.ApiOperation;
+import com.web.curation.specification.MatchArticleSpec.MartchArticleSearchKey;
 
 @Service
 public class MatchService {
@@ -39,6 +38,10 @@ public class MatchService {
     private UserRepo userRepo;
     @Autowired 
     private MatchJoinRepo joinRepo;
+	@Autowired
+	private StudyRepo studyRepo;
+	@Autowired
+	private StudyJoinRepo studyJoinRepo;
     
     public List<MatchArticleResponse> getArticleList() {
     	List<MatchArticleResponse> articleList = new ArrayList<>();
@@ -110,41 +113,38 @@ public class MatchService {
     
     // 검색 키워드 하나로 제목 & 내용 검색하기
     public List<MatchArticleResponse> searchArticle(String keyWord) {
-    	Map<String, Object> searchKeyword = new HashMap<>();
-    	searchKeyword.put("title", keyWord);
-    	searchKeyword.put("content", keyWord);
-    	Map<SearchKey, Object> searchKeys = new HashMap<>();
-    	for (String key : searchKeyword.keySet()) {
-    		searchKeys.put(SearchKey.valueOf(key.toUpperCase()), searchKeyword.get(key));
-    	}
     	List<MatchArticleResponse> articleList = new ArrayList<>();
-    	if (searchKeys.isEmpty()) {
-    		articleRepo.findAll().forEach(article -> {
-				MatchArticleResponse response = article.toResponse();
-	    		articleList.add(response);
-			});
-    	} else {
-    		articleRepo.findAll(MatchArticleSpec.searchWith(searchKeys)).forEach(article -> {
-    			MatchArticleResponse response = article.toResponse();
-	    		articleList.add(response);
-    		});
-    	}
+    	
+		articleRepo.findAll(MatchArticleSpec.searchWith(keyWord)).forEach(article -> {
+			MatchArticleResponse response = article.toResponse();
+    		articleList.add(response);
+		});
     	return articleList;
     }
     
-    public void joinStudy(Long id, Long joinUserId, String content) {
-    	MatchArticle article = articleRepo.findById(id).get();
+    // 스터디 신청
+    public void joinStudy(Long articleId, Long joinUserId, String content) {
+    	MatchArticle article = articleRepo.findById(articleId).get();
+    	MyUser joinUser = userRepo.findById(joinUserId)
+    			.orElseThrow(() -> new ResponseStatusException(
+						HttpStatus.BAD_REQUEST,
+						"존재하지 않는 유저 id입니다.",
+						new IllegalArgumentException()));
+
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
     				"작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
+    	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"이미 신청한 모집글입니다.",
+    				new IllegalArgumentException());
     	} else {
-    		MyUser user = userRepo.findById(joinUserId).get();
-        	
         	MatchJoin join = new MatchJoin();
         	join.setJoinArticle(article);
-        	join.setJoinUser(user);
+        	join.setJoinUser(joinUser);
         	join.setContent(content);
         	
         	joinRepo.save(join);
@@ -166,4 +166,53 @@ public class MatchService {
     	});
     	return response;
     }
+    
+	// 모집글에서 '승인'으로 멤버 추가
+	@Transactional
+	public void addNewMatchMember(Long articleId, Long joinUserId) {
+		MatchArticle article = articleRepo.findById(articleId).get();
+
+		MyUser leader = article.getWriter();
+		MyUser joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
+													HttpStatus.BAD_REQUEST,
+													"존재하지 않는 유저 id입니다.",
+													new IllegalArgumentException()));
+		if (leader.getId() == joinUserId) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"모집글 작성자는 일반 회원으로 추가할 수 없습니다.",
+    				new IllegalArgumentException());
+		}
+
+		// 스터디 없으면 생성, 있으면 멤버만 추가
+		if (article.getStudyId() == null) {
+			// 스터디 생성
+			Study study = new Study();
+			study.setLeader(leader);
+			Study saved = studyRepo.save(study);
+			
+			// 스터디에 유저추가(리더)
+			StudyJoin join = new StudyJoin(null, leader, saved, true);
+			studyJoinRepo.save(join);
+			// 스터디에 유저추가(멤버1)
+			StudyJoin join2 = new StudyJoin(null, joinUser, saved, false);
+			studyJoinRepo.save(join2);
+			// matchArticle에 추가
+			article.setStudyId(saved.getId());
+		} else {
+			Long studyId = article.getStudyId();
+			Study study = studyRepo.findById(studyId).get();
+			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
+	    		throw new ResponseStatusException(
+	    				HttpStatus.BAD_REQUEST,
+	    				"이미 스터디에 가입한 회원입니다.",
+	    				new IllegalArgumentException());
+			} else {
+				// 스터디에 유저추가(멤버1)
+				StudyJoin join = new StudyJoin(null, joinUser, study, false);
+				studyJoinRepo.save(join);
+			}
+		}
+
+	}
 }
