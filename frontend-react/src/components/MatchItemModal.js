@@ -61,7 +61,12 @@ export default function MatchItemModal({ pk, handleClickClose }) {
 
   return (
     <div>
-      <Dialog fullWidth maxWidth="md" open>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open
+        aria-describedby="alert-dialog-slide-description"
+      >
         {mode === 1 && <MatchingDetail item={item} />}
         {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
@@ -77,7 +82,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
               <Button onClick={deleteItem}>삭제</Button>
             </div>
           )}
-          <Button onClick={handleClickClose}>취소</Button>
+          <Button onClick={handleClickClose}>닫기</Button>
         </DialogActions>
       </Dialog>
     </div>

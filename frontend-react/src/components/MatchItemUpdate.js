@@ -97,7 +97,8 @@ export default function MatchItemUpdate(props) {
           </Select>
         </div>
         <DialogActions>
-          <Button onClick={clickSubmit}>완료</Button>
+          <Button onClick={goDetail}>◀이전</Button>
+          <Button onClick={clickSubmit}>완료✔</Button>
         </DialogActions>
       </DialogContent>
     </div>
