@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.model.study.Study;
@@ -65,7 +65,7 @@ public class MatchService {
     	Long writerId = articleForm.getWriterId();
     	// 1. dto를 Entity로 변경
     	MatchArticle article = articleForm.toEntity();
-    	User writer = userRepo.findById(writerId)
+    	MyUser writer = userRepo.findById(writerId)
     			.orElseThrow(() -> new ResponseStatusException(
 							HttpStatus.BAD_REQUEST,
 							"존재하지 않는 유저 id입니다.",
@@ -125,7 +125,7 @@ public class MatchService {
     // 스터디 신청
     public void joinStudy(Long articleId, Long joinUserId, String content) {
     	MatchArticle article = articleRepo.findById(articleId).get();
-    	User joinUser = userRepo.findById(joinUserId)
+    	MyUser joinUser = userRepo.findById(joinUserId)
     			.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.BAD_REQUEST,
 						"존재하지 않는 유저 id입니다.",
@@ -172,8 +172,8 @@ public class MatchService {
 	public void addNewMatchMember(Long articleId, Long joinUserId) {
 		MatchArticle article = articleRepo.findById(articleId).get();
 
-		User leader = article.getWriter();
-		User joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
+		MyUser leader = article.getWriter();
+		MyUser joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
 													HttpStatus.BAD_REQUEST,
 													"존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));

@@ -1,6 +1,7 @@
 package com.web.curation.model.study;
 
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 
 import lombok.AllArgsConstructor;
@@ -45,7 +46,7 @@ public class Study {
 		referencedColumnName = "id",
 		updatable = false) // 외래키로 조인
 	@JsonBackReference
-	private User leader;
+	private MyUser leader;
 	
 	@OneToMany(mappedBy="joinStudy", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
