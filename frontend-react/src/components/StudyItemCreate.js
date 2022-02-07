@@ -17,7 +17,6 @@ import {
   IconButton,
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
-import StudyItemButton from './StudyItemButton';
 
 export default function StudyItemCreate(props) {
   const [title, setTitle] = useState('');
@@ -105,7 +104,6 @@ export default function StudyItemCreate(props) {
   return (
     <div>
       <Dialog open fullWidth maxWidth="md">
-        <StudyItemButton />
         <DialogTitle>(스터디)글 작성 폼</DialogTitle>
         <DialogContent>
           <TextField

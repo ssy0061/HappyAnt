@@ -16,10 +16,13 @@ export default function StudyCommentCreate() {
   };
 
   return (
-    <TextField
-      variant="filled"
-      onChange={handleContent}
-      onKeyUp={submitContent}
-    />
+    <div>
+      <TextField
+        id="inputForm"
+        variant="filled"
+        onChange={handleContent}
+        onKeyUp={submitContent}
+      />
+    </div>
   );
 }
