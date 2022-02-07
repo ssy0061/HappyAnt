@@ -120,9 +120,8 @@ public class AccountController {
     	
     	accountService.updatePw(userInfo);
     	
-		return new ResponseEntity<String>("Update user password", HttpStatus.OK);    	
+		return new ResponseEntity<String>("Update user password", HttpStatus.OK);   	
     }
-        
     
     @PostMapping(value = "/signup")
     @ApiOperation(value = "회원가입")
@@ -248,11 +247,6 @@ public class AccountController {
 		private String email;
 		private String roleName;
 	}
-    
-	
-	
-	
-	
     
     @GetMapping("/account/test/{user_id}")
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")

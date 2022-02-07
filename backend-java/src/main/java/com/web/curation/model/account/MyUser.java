@@ -150,5 +150,29 @@ public class MyUser {
 		this.answer = answer;
 		this.roles = roles;
 	}
+
+	public MyUser(Long id, @NotBlank(message = "이메일은 필수 입력 값입니다.") @Email(message = "이메일 형식에 맞지 않습니다.") String email,
+			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, int score, String question, String answer,
+			Collection<MyRole> roles, LocalDateTime createDate, List<MatchArticle> matchArticles,
+			List<MatchJoin> matchJoinArticles, List<StudyJoin> joinStudy, List<StudyArticle> studyArticles,
+			List<StudyComment> studyComments) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.score = score;
+		this.question = question;
+		this.answer = answer;
+		this.roles = roles;
+		this.createDate = createDate;
+		this.matchArticles = matchArticles;
+		this.matchJoinArticles = matchJoinArticles;
+		this.joinStudy = joinStudy;
+		this.studyArticles = studyArticles;
+		this.studyComments = studyComments;
+	}
+    
+    
+    
     
 }
