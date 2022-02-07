@@ -27,7 +27,8 @@ function StudyList() {
       },
     })
       .then((res) => {
-        setArticleList(res.data);
+        // console.log(res.data.reverse());
+        setArticleList(res.data.reverse());
         setFilterList(res.data.slice(prev, curr));
         // setFilterList(res.data);
       })
@@ -49,8 +50,8 @@ function StudyList() {
   // 제목내용, 작성자로 검색
   const handleSearch = (event) => {
     // 제목,내용 으로 검색
-    if (selected === 'title' && searchValue) {
-      console.log(searchValue);
+    if (selected === 'title' && event.target.value !== '') {
+      console.log(event);
       axios({
         method: 'get',
         url: `/study/${studyId}/search?Keyword=${searchValue}`,
@@ -60,12 +61,12 @@ function StudyList() {
       })
         .then((res) => {
           console.log(res);
-          setFilterList(res.data);
+          setFilterList(res.data.reverse());
           setThisState(true);
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else {
+    } else if (event.target.value !== '') {
       const { value } = event.target;
       let result = [];
 
@@ -75,11 +76,14 @@ function StudyList() {
 
       setFilterList(result);
       setThisState(true);
+    } else {
+      alert('검색어를 입력하세요');
     }
   };
   // 검색 엔터키 누를때
   const onKeyPress = (e) => {
     if (e.key === 'Enter') {
+      console.log(e);
       handleSearch(e);
     }
   };
@@ -127,7 +131,7 @@ function StudyList() {
   useEffect(() => {
     if (inView && !thisState) {
       console.log(filterList);
-      setPrev((current) => current + 20);
+      setPrev(curr);
       setCurr((current) => current + 20);
       const items = articleList.slice(prev, curr);
       console.log('hi');
