@@ -179,10 +179,7 @@ public class AccountController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     	accountService.deleteById(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-    }
-    
-
-    
+    }    
     
 	@PostMapping(value ="/user/save")
 	public ResponseEntity<MyUser> saveUser(@RequestBody MyUser user) {
