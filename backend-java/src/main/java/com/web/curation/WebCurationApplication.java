@@ -28,22 +28,22 @@ public class WebCurationApplication {
 		return new BCryptPasswordEncoder();
 	}	
 	
-	@Bean
-	CommandLineRunner run(AccountService accountService) {
-		return args ->{
-			//권한 생성			
-			List<MyRole> roles= accountService.getRoles();
-			if(roles.size() ==0) {
-				accountService.saveRole(new MyRole(null,"ROLE_USER"));
-				accountService.saveRole(new MyRole(null,"ROLE_ADMIN"));
-		 		// 임시 user data 추가
-				accountService.saveUser(new MyUser(null, "deokkyu@ssafy.com", "ssafy123A!", "김덕규", "question", "answer", new ArrayList<>()));
-				
-				accountService.addRoleToUser("deokkyu@ssafy.com", "ROLE_USER");
-			}		
-			
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(AccountService accountService) {
+//		return args ->{
+//			//권한 생성			
+//			List<MyRole> roles= accountService.getRoles();
+//			if(roles.size() ==0) {
+//				accountService.saveRole(new MyRole(null,"ROLE_USER"));
+//				accountService.saveRole(new MyRole(null,"ROLE_ADMIN"));
+//		 		// 임시 user data 추가
+//				accountService.saveUser(new MyUser(null, "deokkyu@ssafy.com", "ssafy123A!", "김덕규", "question", "answer", new ArrayList<>()));
+//				
+//				accountService.addRoleToUser("deokkyu@ssafy.com", "ROLE_USER");
+//			}		
+//			
+//		};
+//	}
 
 	
 	

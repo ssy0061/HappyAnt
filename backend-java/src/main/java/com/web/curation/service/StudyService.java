@@ -59,7 +59,7 @@ public class StudyService {
 				HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다.", new IllegalArgumentException()));
 	}
 	// 유저 존재 확인
-	public User checkAndGetUser(Long userId) {
+	public MyUser checkAndGetUser(Long userId) {
 		return userRepo.findById(userId).orElseThrow(() -> new ResponseStatusException(
 				HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.", new IllegalArgumentException()));
 	}
@@ -204,7 +204,7 @@ public class StudyService {
 	
     public void addNewComment(Long studyId, Long articleId, StudyCommentRequest commentForm) {
     	Long writerId = commentForm.getWriterId();
-    	User writer = checkAndGetUser(writerId);
+    	MyUser writer = checkAndGetUser(writerId);
     	StudyArticle article = checkAndGetStudyArticle(studyId, articleId);
     	checkStudyMember(studyId, writerId);
     	
@@ -246,7 +246,7 @@ public class StudyService {
     @Transactional
     public void delegateLeader(Long studyId, Long userId, Long loginUserId) {
     	checkAndGetStudy(studyId);
-    	User user = checkAndGetUser(userId);
+    	MyUser user = checkAndGetUser(userId);
     	// 스터디 멤버(리더)인지 검증
     	StudyJoin loginUser = checkStudyMember(studyId, loginUserId);
     	StudyJoin newLeader = checkStudyMember(studyId, userId);
