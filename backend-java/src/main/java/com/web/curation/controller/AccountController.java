@@ -54,6 +54,7 @@ import com.web.curation.model.account.MyUser;
 import com.web.curation.service.AccountService;
 import com.web.curation.service.AccountServiceImpl;
 import com.web.curation.model.match.MatchArticle;
+import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
 
 import io.swagger.annotations.ApiOperation;
@@ -81,6 +82,7 @@ public class AccountController {
 	AccountService accountService;
 	
 	private final PasswordEncoder passwordEncoder;
+	private final UserRepo userRepo;
 	
     @GetMapping("")
     @ApiOperation(value = "모든 회원 정보 조회")
@@ -92,7 +94,7 @@ public class AccountController {
     @GetMapping("/search")
     @ApiOperation(value = "회원 검색")
     public ResponseEntity<String> searchUser(@RequestParam String email){
-    	boolean isExistsEmail = accountService.existsByEmail(email);   	
+    	boolean isExistsEmail = accountService.existsByEmail(email);
 
     	if(isExistsEmail) {
     		MyUser user = accountService.findByEmail(email);
@@ -247,6 +249,10 @@ public class AccountController {
 		private String roleName;
 	}
     
+	
+	
+	
+	
     
     @GetMapping("/account/test/{user_id}")
     @ApiOperation(value = "(TEST) 작성한 모집글 보기")

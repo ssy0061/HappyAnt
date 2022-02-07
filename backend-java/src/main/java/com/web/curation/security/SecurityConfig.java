@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //		http.authorizeRequests().anyRequest().permitAll();
 		http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-		http.authorizeRequests().antMatchers("/account/login", "/account/token/refresh", "/account/signup","/account/**","/match/**", "/study/**").permitAll();
+		http.authorizeRequests().antMatchers("/account/login", "/account/token/refresh", "/account/signup").permitAll();
 //		http.authorizeRequests().antMatchers("/account").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "account/user/**").hasAnyAuthority("ROLE_USER");
@@ -69,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 "/configuration/ui",
                 "/swagger-resources/**",
                 "/configuration/security",
+                "/configuration/**",
                 "/swagger-ui.html",
                 "/webjars/**");
 
