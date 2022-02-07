@@ -1,6 +1,7 @@
 package com.web.curation.model.study;
 
 import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class StudyJoin {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	@JsonBackReference
-	private User joinMember;
+	private MyUser joinMember;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "study_id")

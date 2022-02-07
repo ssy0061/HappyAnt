@@ -1,6 +1,7 @@
 package com.web.curation.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.model.study.Study;
@@ -67,7 +68,7 @@ public class StudyService {
 	@Transactional
 	public void addNewStudyMember(Long studyId, Long joinUserId) {
 		Study study = checkAndGetStudy(studyId);
-		User joinUser = checkAndGetUser(joinUserId);
+		MyUser joinUser = checkAndGetUser(joinUserId);
 		if (joinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST,
@@ -101,7 +102,7 @@ public class StudyService {
     public void addNewArticle(Long studyId, StudyArticleRequest articleForm) {
     	Study study = checkAndGetStudy(studyId);
     	Long writerId = articleForm.getWriterId();
-    	User writer = checkAndGetUser(writerId);
+    	MyUser writer = checkAndGetUser(writerId);
     	
     	checkStudyMember(studyId, writerId);
     	
@@ -202,7 +203,6 @@ public class StudyService {
     }
 	
     public void addNewComment(Long studyId, Long articleId, StudyCommentRequest commentForm) {
-    	
     	Long writerId = commentForm.getWriterId();
     	User writer = checkAndGetUser(writerId);
     	StudyArticle article = checkAndGetStudyArticle(studyId, articleId);

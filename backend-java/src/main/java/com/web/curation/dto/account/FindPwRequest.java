@@ -1,7 +1,5 @@
 package com.web.curation.dto.account;
 
-import com.web.curation.model.account.MyUser;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +9,9 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @ToString
-public class LoginRequest {
+public class FindPwRequest {
 
 	private String email;
-	private String password;
-
+	private String question;
+	private String answer;
 }
