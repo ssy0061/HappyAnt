@@ -20,6 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 
@@ -43,8 +44,7 @@ public class Study {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "leader_id",
-		referencedColumnName = "id",
-		updatable = false) // 외래키로 조인
+		referencedColumnName = "id") // 외래키로 조인
 	@JsonBackReference
 	private MyUser leader;
 	
@@ -73,4 +73,8 @@ public class Study {
     		insertable = false, 
     		updatable = false)
 	private LocalDateTime createDate;
+    
+    public StudyResponse toResponse() {
+    	return new StudyResponse(id, name, leader.getId(), category, area, interest, createDate);
+    }
 }

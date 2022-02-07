@@ -13,4 +13,5 @@ public interface StudyJoinRepo extends JpaRepository<StudyJoin, Long> {
 	List<StudyJoin> findByjoinMemberId(Long joinMemberId);
 	List<StudyJoin> findByjoinStudyId(Long joinStudyId);
 	Optional<StudyJoin> findByJoinMemberIdAndJoinStudyId(Long joinMemberId, Long joinStudyId);
+	void deleteByJoinStudyIdAndJoinMemberId(Long joinStudyId, Long joinMemberId);
 }
