@@ -11,11 +11,12 @@ import {
   InputLabel,
 } from '@mui/material';
 
-export default function MatchingUpdate(props) {
-  const { pk } = props;
+export default function MatchItemUpdate(props) {
+  const { item, goDetail } = props;
 
   const [inputTitle, setInputTitle] = useState('');
   const [inputContent, setInputContent] = useState('');
+  const [inputCategory, setInputCategory] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
 
   const handleInputTitle = (e) => {
@@ -27,23 +28,23 @@ export default function MatchingUpdate(props) {
   const handleMemberNum = (e) => {
     setMemeberNum(e.target.value);
   };
+  const handleInputCategory = (e) => {
+    setInputCategory(e.target.value);
+  };
 
   const clickSubmit = () => {
-    const body = {
-      title: inputTitle,
-      content: inputContent,
-      memberNum,
-    };
     axios
-      .post(URL, body)
-      .then((res) => console.log(res))
+      .put(
+        `/match/${item.articleId}?title=${inputTitle}&content=${inputContent}&category=${inputCategory}`
+      )
+      .then(goDetail)
       .catch((err) => console.log(err));
   };
 
   return (
     <div>
-      <h1>update1 {pk}</h1>
-      <DialogTitle>글 작성 폼</DialogTitle>
+      <h1>update</h1>
+      <DialogTitle>글 수정 폼</DialogTitle>
       <DialogContent>
         <div>
           <TextField
@@ -53,11 +54,24 @@ export default function MatchingUpdate(props) {
             label="제목"
             type="title"
             fullWidth
+            defaultValue={item.title}
             variant="standard"
             onChange={handleInputTitle}
           />
         </div>
-
+        <div>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="카테고리"
+            type="text"
+            fullWidth
+            variant="outlined"
+            defaultValue={item.category}
+            multiline
+            onChange={handleInputCategory}
+          />
+        </div>
         <div>
           <TextField
             autoFocus
@@ -66,9 +80,9 @@ export default function MatchingUpdate(props) {
             type="text"
             fullWidth
             variant="outlined"
+            defaultValue={item.content}
             multiline
             rows={15}
-            maxRows={20}
             onChange={handleInputContent}
           />
           <br />
@@ -83,7 +97,7 @@ export default function MatchingUpdate(props) {
           </Select>
         </div>
         <DialogActions>
-          <Button onClick={clickSubmit}>작성</Button>
+          <Button onClick={clickSubmit}>완료</Button>
         </DialogActions>
       </DialogContent>
     </div>

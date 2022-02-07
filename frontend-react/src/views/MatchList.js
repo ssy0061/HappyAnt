@@ -52,7 +52,7 @@ function MatchList() {
         setFilterList(response.data);
       })
       .catch((error) => {
-        console.log(error, 'not token');
+        console.log(error);
       });
   }, []);
 

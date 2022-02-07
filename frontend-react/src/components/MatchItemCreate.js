@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-// 이부분 프리티어랑 eslint 충돌나는듯..
-
+import { useSelector } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -14,12 +13,17 @@ import {
   InputLabel,
 } from '@mui/material';
 
-export default function MatchingCreate(props) {
+export default function MatchItemCreate(props) {
+  const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
+  const userId = useSelector((state) => state.user.userInfo.id);
   const { handleClickClose } = props;
 
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
   const handleTitle = (e) => {
     setTitle(e.target.value);
   };
@@ -34,9 +38,10 @@ export default function MatchingCreate(props) {
 
   const onClickCreate = () => {
     const body = {
+      category,
       title,
       content,
-      memberNum,
+      writerId: userId,
     };
 
     if (title === '' || content === '' || memberNum === '') {
@@ -46,6 +51,7 @@ export default function MatchingCreate(props) {
         .post('/match', body)
         .then((response) => {
           console.log(response);
+          handleClickClose();
         })
         .catch((error) => {
           console.log(error);
@@ -81,11 +87,22 @@ export default function MatchingCreate(props) {
               variant="outlined"
               multiline
               rows={15}
-              maxRows={20}
               onChange={handleContent}
             />
             <br />
             <br />
+            <div>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="카테고리"
+                type="title"
+                fullWidth
+                variant="outlined"
+                onChange={handleCategory}
+              />
+            </div>
             <InputLabel>스터디원 수</InputLabel>
             <Select value={memberNum} label="멤버수" onChange={handleMemberNum}>
               <MenuItem value={2}>2명</MenuItem>

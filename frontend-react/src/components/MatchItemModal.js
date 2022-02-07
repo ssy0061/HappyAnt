@@ -1,56 +1,61 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import axios from 'axios';
-import MatchingUpdate from './MatchingUpdate';
-import MatchingDetail from './MatchingDetail';
+import MatchingUpdate from './MatchItemUpdate';
+import MatchingDetail from './MatchItemDetail';
 
 // 글작성자 ? 수정/삭제/닫기 : 닫기    || 드랍다운(수정/삭제) 우측 상단 & 닫기 우측하단
 // 수정창에서 닫기버튼 누르면 디테일로
-export default function MatchingModal({ pk, handleClickClose }) {
+export default function MatchItemModal({ pk, handleClickClose }) {
+  const yourId = useSelector((state) => state.user.userInfo.id);
   const [item, setItem] = useState([]);
   const [mode, setMode] = useState(1);
   const goUpdate = () => {
     setMode(2);
   };
-
   const getItem = () => {
     axios
-      .get(`/match/${pk}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+      .get(`/match/${pk}`)
       .then((res) => {
         setItem(res.data);
         console.log(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        alert('존재하지 않는 글입니다');
+        handleClickClose();
+      });
   };
   useEffect(() => {
     getItem();
   }, []);
 
   const goDetail = () => {
+    getItem();
     setMode(1);
     // item을 다시 가져옴
-    getItem();
   };
   const setStateTrue = () => {
     axios
-      .put(`/match/${item.id}?state=${1}`)
-      .then(getItem())
+      .put(`/match/${item.articleId}?state=${true}`)
+      .then(() => {
+        getItem();
+      })
       .catch((err) => console.log(err));
   };
   const setStateFalse = () => {
     axios
-      .put(`/match/${item.id}?state=${0}`)
-      .then(getItem())
+      .put(`/match/${item.articleId}?state=${false}`)
+      .then(() => {
+        getItem();
+      })
       .catch((err) => console.log(err));
   };
   const deleteItem = () => {
-    axios.delete(`/match/${item.id}`);
+    axios.delete(`/match/${item.articleId}`);
     handleClickClose();
   };
 
@@ -60,10 +65,18 @@ export default function MatchingModal({ pk, handleClickClose }) {
         {mode === 1 && <MatchingDetail item={item} />}
         {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
-          {item.state === false && <Button onClick={setStateTrue}>마감</Button>}
-          {item.state === true && <Button onClick={setStateFalse}>모집</Button>}
-          <Button onClick={goUpdate}>수정</Button>
-          <Button onClick={deleteItem}>삭제</Button>
+          {item.writerId === yourId && mode === 1 && (
+            <div>
+              {item.state === true && (
+                <Button onClick={setStateFalse}>마감</Button>
+              )}
+              {item.state === false && (
+                <Button onClick={setStateTrue}>모집</Button>
+              )}
+              <Button onClick={goUpdate}>수정</Button>
+              <Button onClick={deleteItem}>삭제</Button>
+            </div>
+          )}
           <Button onClick={handleClickClose}>취소</Button>
         </DialogActions>
       </Dialog>
