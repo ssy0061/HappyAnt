@@ -47,9 +47,13 @@ public class WebCurationApplication {
 				accountService.addRoleToUser("deokkyu@ssafy.com", "ROLE_USER");
 				accountService.addRoleToUser("deokkyu@ssafy.com", "ROLE_ADMIN");
 				accountService.addRoleToUser("qudwns@ssafy.com", "ROLE_USER");
+				accountService.addRoleToUser("qudwns@ssafy.com", "ROLE_ADMIN");				
 				accountService.addRoleToUser("wnsgk@ssafy.com", "ROLE_USER");
+				accountService.addRoleToUser("wnsgk@ssafy.com", "ROLE_ADMIN");
 				accountService.addRoleToUser("tkddyd@ssafy.com", "ROLE_USER");				
+				accountService.addRoleToUser("tkddyd@ssafy.com", "ROLE_ADMIN");				
 				accountService.addRoleToUser("gusah@ssafy.com", "ROLE_USER");
+				accountService.addRoleToUser("gusah@ssafy.com", "ROLE_ADMIN");
 			}		
 			
 		};
