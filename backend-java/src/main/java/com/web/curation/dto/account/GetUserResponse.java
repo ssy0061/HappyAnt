@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import com.web.curation.dto.match.MatchArticleResponse;
+import com.web.curation.dto.study.StudyArticleResponse;
+import com.web.curation.dto.study.StudyCommentResponse;
+import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.model.account.MyRole;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
@@ -22,19 +26,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetUserResponse {
 
-	private Long id;
+	private Long userId;
 	private String email;
-	private String name;
+	private String userName;
 	private int score;
 	private String question;
 	private String answer;
-	private Collection<MyRole> roles;
 	private LocalDateTime createDate;
-	private List<MatchArticle> matchArticles;
-	private List<MatchJoin> matchJoinArticles;
-	private List<StudyJoin> joinStudy;
-	private List<StudyArticle> studyArticles;
-	private List<StudyComment> studyComments;
+	private List<String> roles;
+	private List<MatchArticleResponse> matchArticles;
+	private List<MatchArticleResponse> matchJoinArticles;
+	private List<StudyResponse> joinStudy;
+	private List<StudyArticleResponse> studyArticles;
+	private List<StudyCommentResponse> studyComments;
 	
 	
 }
