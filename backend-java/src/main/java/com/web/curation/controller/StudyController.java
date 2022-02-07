@@ -135,7 +135,7 @@ public class StudyController {
     
     @PostMapping("member/{userId}/leader")
     @ApiOperation(value = "스터디장 위임", notes="로그인한 리더(loginUserId)가 선택한 유저(userId)에게 리더 권한을 위임합니다.")
-    public void leaveLeader(@PathVariable("studyId") Long studyId,
+    public void delegateLeader(@PathVariable("studyId") Long studyId,
     						@PathVariable("userId") Long userId,
     						@RequestParam(required = true) Long loginUserId) {
     	studyService.delegateLeader(studyId, userId, loginUserId);
@@ -148,4 +148,9 @@ public class StudyController {
     						@RequestParam(required = true) Long loginUserId) {
     	studyService.deleteMember(studyId, userId, loginUserId);
     }
+    
+    // 알림 기능 완성 후 구현예정
+//    @PostMapping("member/{userId}/invite")
+//    @ApiOperation(value = "스터디 멤버 초대", notes="이메일로 초대합니다. 존재하는 유저의 정확한 이메일이 필요합니다.")
+//    public void 
 }

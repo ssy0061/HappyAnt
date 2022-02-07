@@ -44,10 +44,11 @@ public class MatchArticle {
     		updatable = false)
 	private LocalDateTime createDate;
 	
-//	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-//			insertable = false, 
-//    		updatable = false)
-//	private LocalDateTime updateDate;
+    @CreatedDate
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+			insertable = false, 
+    		updatable = false)
+	private LocalDateTime updateDate;
 	
 	@Column
 	private Boolean state;
@@ -153,7 +154,7 @@ public class MatchArticle {
 	}
 	
 	public MatchArticleResponse toResponse() {
-		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, state, studyId);
+		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), createDate, updateDate, state, studyId);
 	}
 
 	@Override

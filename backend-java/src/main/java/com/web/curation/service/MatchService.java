@@ -204,7 +204,7 @@ public class MatchService {
 		if (article.getStudyId() == null) {
 			// 스터디 생성
 			Study study = new Study();
-			study.setLeader(leader);
+//			study.setLeader(leader);
 			Study saved = studyRepo.save(study);
 			
 			// 스터디에 유저추가(리더)

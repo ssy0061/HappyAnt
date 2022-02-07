@@ -1,4 +1,4 @@
-package com.web.curation.dto.match;
+package com.web.curation.dto.study;
 
 import java.time.LocalDateTime;
 
@@ -13,15 +13,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MatchArticleResponse {
-	private Long articleId;
-	private String category;
-	private String title;
-	private String content;
-	private Long writerId;
-	private String writerName;
-	private LocalDateTime createDate;
-	private LocalDateTime updateDate;
-	private Boolean state;
+public class StudyResponse {
 	private Long studyId;
+	private String studyName;
+	private Long leaderId;
+	private String area;
+	private String category;
+	private String interest;
+	private LocalDateTime createDate;
 }
