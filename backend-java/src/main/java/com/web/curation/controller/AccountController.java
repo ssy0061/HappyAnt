@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.curation.dto.account.FindPwRequest;
 import com.web.curation.dto.account.FindPwSuccessRequest;
+import com.web.curation.dto.account.GetUserResponse;
 import com.web.curation.dto.account.LoginRequest;
 import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.dto.account.SignupRequest;
@@ -86,9 +87,12 @@ public class AccountController {
 	
     @GetMapping("")
     @ApiOperation(value = "모든 회원 정보 조회")
-    public ResponseEntity<List<MyUser>> getAllUsers(){
-    	List<MyUser> users = accountService.findAll();	
-    	return new ResponseEntity<List<MyUser>>(users,HttpStatus.OK);
+    public ResponseEntity<List<GetUserResponse>> getAllUsers(){
+    	List<GetUserResponse> users = new ArrayList<>();
+		accountService.findAll().forEach(user -> {
+    		users.add(user.toResponse());
+    	});;	
+    	return new ResponseEntity<List<GetUserResponse>>(users,HttpStatus.OK);
     }
     
     @GetMapping("/search")
@@ -158,10 +162,9 @@ public class AccountController {
     
     @GetMapping(value ="/{id}")
     @ApiOperation(value = "회원정보 조회")
-    public ResponseEntity<MyUser> getUser(@RequestParam String email ){
+    public ResponseEntity<GetUserResponse> getUser(@RequestParam String email ){
     	MyUser user = accountService.findByEmail(email);
-    	Long id = user.getId();
-    	return new ResponseEntity<MyUser>(user, HttpStatus.OK);
+    	return new ResponseEntity<GetUserResponse>(user.toResponse(), HttpStatus.OK);
     }
     
     @PutMapping(value ="/{id}")
