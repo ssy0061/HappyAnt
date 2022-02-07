@@ -25,7 +25,7 @@ function KakaoLogin() {
             // 회원가입
             axios({
               method: 'post',
-              url: '/account/signUp',
+              url: '/account/signup',
               data: {
                 email: response.kakao_account.email,
                 name: response.kakao_account.profile.nickname,

@@ -22,7 +22,7 @@ function GoogleLoginBtn() {
     // 회원가입
     axios({
       method: 'post',
-      url: '/account/signUp',
+      url: '/account/signup',
       data: {
         email: response.profileObj.email,
         name: response.profileObj.name,

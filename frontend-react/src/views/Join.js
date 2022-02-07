@@ -50,7 +50,7 @@ function Join() {
     } else {
       axios({
         method: 'post',
-        url: '/account/signUp',
+        url: '/account/signup',
         data: {
           answer: hintAnswer,
           email,
