@@ -34,26 +34,34 @@ export default function Login() {
   // 로그인 버튼
   const onClickLogin = (e) => {
     e.preventDefault();
-
-    const body = {
-      email: inputId,
-      password: inputPw,
-    };
+    const params = new URLSearchParams();
+    params.append('email', inputId);
+    params.append('password', inputPw);
 
     axios
-      .post('/account/login', body)
+      .post('/account/login', params)
       .then((res) => {
-        dispatch(login(res.data));
+        // dispatch(login(res.data));
         alert('안녕하세요!');
         navigate('/profile');
-        console.log(res.data);
-        // localStorage.setItem('jwt', res.data.token);
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refreshToken);
+
+        // store에 저장할 정보요청
+        axios
+          .get(`/account/{id}?email=${inputId}`, {
+            headers: { Authorization: `Bearer ${res.data.accessToken}` },
+          })
+          .then((response) => {
+            dispatch(login(response.data));
+          });
       })
       .catch((err) => {
         console.log(err);
         alert('로그인 정보를 확인하세요');
       });
   };
+
   const onCheckEnter = (e) => {
     if (e.key === 'Enter') {
       onClickLogin(e);

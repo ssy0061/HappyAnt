@@ -43,6 +43,9 @@ function MatchList() {
     axios({
       method: 'get',
       url: '/match',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
     })
       .then((response) => {
         setList(response.data);
