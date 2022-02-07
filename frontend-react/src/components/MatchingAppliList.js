@@ -11,12 +11,16 @@ export default function MatchingAppliList(props) {
   const yourId = useSelector((state) => state.user.userInfo.id);
   const [applilist, setApplilist] = useState('');
   console.log(pk, 'ok');
-  // const [modalOpen, setModalOpen] = useState(false);
+  console.log(applilist);
 
   // 신청자 정보 받아오기
   const getApplilist = () => {
     axios
-      .get(`match/join/${pk}`)
+      .get(`match/join/${pk}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then((res) => {
         console.log(res.data, '신청자 리스트');
         setApplilist(res.data);

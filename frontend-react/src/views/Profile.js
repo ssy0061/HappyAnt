@@ -1,36 +1,37 @@
-import axios from 'axios';
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // import BtnEntrust from '../components/BtnEntrust';
 // import Checkstudy from '../components/Checkstudy';
 
 function Profile() {
+  // 로그인 확인
   const loginPage = useSelector((state) => state.user.isLogin);
-  const yourName = useSelector((state) => state.user.userInfo.name);
+  // 유저 정보 가져오기
   const Info = useSelector((state) => state.user.userInfo);
-  const [study, setStudy] = useState('');
-  console.log(Info.email, 'email');
-  // 추후 스터디로 바뀔 예정
-  const getStudy = () => {
-    axios
-      .get(`/account/{email}?email=${Info.email}`)
-      .then((res) => {
-        console.log(res.data, 'study');
-        setStudy(res.data);
-      })
-      .catch((err) => console.log(err, 'dont study'));
+  console.log('profile페이지');
+  console.log(Info, '유저 정보');
+  const study = Info.joinStudy;
+  console.log(study, '스터디');
+  // console.log(study[0].id, '조인스터디');
+  const studyList = () => {
+    if (study) {
+      const list = [];
+      for (let i = 0; i < study.length; i += 1) {
+        list.push(<p key={i}>{`${study[i].id} /`}</p>);
+      }
+      return <div>{list}</div>;
+    }
+    return <div>스터디를 신청해 보세요!</div>;
   };
-  useEffect(() => {
-    getStudy();
-  }, []);
+
   return (
     <div>
       {loginPage && (
         <div>
-          <h1>{yourName}님의 프로필입니다</h1>
-          {/* <Checkstudy study={study} /> */}
-          {study.joinStudy}
+          <h1>{Info.name}님의 프로필입니다</h1>
+          <hr />
+          <h3>스터디 목록</h3>
+          {studyList()}
         </div>
       )}
       {!loginPage && (

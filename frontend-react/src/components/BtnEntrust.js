@@ -2,11 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 export default function BtnEntrust() {
-  const [MemberList, setMemberList] = useState('');
-  const [Selected, setSelected] = useState('');
+  const [memberList, setMemberList] = useState('');
+  const [selected, setSelected] = useState('');
   // 임의 pk => 추후 props로 상위 컴포넌트에서 받아 올 것
   const pk = 1;
-  const userId = 1;
 
   // 해당 스터디의 멤버 조회
   const member = () => {
@@ -24,18 +23,26 @@ export default function BtnEntrust() {
 
   const handleSelect = (e) => {
     setSelected(e.target.value);
+    console.log(selected);
   };
+
   // 위임하기
   const onEntrust = (e) => {
     e.preventDefault();
-    console.log('onclick');
+    axios
+      .post(`/study/${pk}/member/${selected}/leader`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err, '위임 error'));
   };
+
   // 추방하기
   const onDeport = (e) => {
     e.preventDefault();
     console.log('onclick');
     axios
-      .delete(`/study/${pk}/member/${userId}`)
+      .delete(`/study/${pk}/member/${selected}`)
       .then((res) => {
         console.log(res, '스터디원 추방');
       })
@@ -46,8 +53,8 @@ export default function BtnEntrust() {
     <div>
       <h1>위임 / 추방 기능</h1>
       <div>
-        <select onChange={handleSelect} value={Selected}>
-          {MemberList.map((item) => (
+        <select onChange={handleSelect} value={selected}>
+          {memberList.map((item) => (
             <option value={item} key={item}>
               {item}
             </option>
@@ -61,7 +68,7 @@ export default function BtnEntrust() {
         </button>
         <hr />
         <p>
-          Selected: <b>{Selected}</b>
+          Selected: <b>{selected}</b>
         </p>
       </div>
     </div>
