@@ -22,6 +22,10 @@ function KakaoLogin() {
           url: '/v2/user/me',
           success(response) {
             console.log(response);
+
+            const params = new URLSearchParams();
+            params.append('email', response.kakao_account.email);
+            params.append('password', `${response.id}Zz!`);
             // 회원가입
             axios({
               method: 'post',
@@ -38,17 +42,31 @@ function KakaoLogin() {
                 // 자동 로그인
 
                 setOpen(true);
+
                 axios({
                   method: 'post',
                   url: '/account/login',
-                  data: {
-                    email: response.kakao_account.email,
-                    password: `${response.id}Zz!`,
-                  },
+                  data: params,
                 })
                   .then((ress) => {
                     console.log(ress);
                     dispatch(login(ress.data));
+                    localStorage.setItem('accessToken', ress.data.accessToken);
+                    localStorage.setItem(
+                      'refreshToken',
+                      ress.data.refreshToken
+                    );
+
+                    axios({
+                      method: 'get',
+                      url: `/account/{id}?email=${response.kakao_account.email}`,
+                      headers: {
+                        Authorization: `Bearer ${ress.data.accessToken}`,
+                      },
+                    })
+                      .then((getRes) => dispatch(login(getRes.data)))
+                      .catch((getErr) => console.log(getErr));
+
                     // localStorage.setItem('jwt', res.data.token);
                   })
                   .catch((err) => {
@@ -60,18 +78,32 @@ function KakaoLogin() {
                 // 회원가입 실패
 
                 // 이미 존재하는 회원이라면 로그인 시도
+
                 axios({
                   method: 'post',
                   url: '/account/login',
-                  data: {
-                    email: response.kakao_account.email,
-                    password: `${response.id}Zz!`,
-                  },
+                  data: params,
                 })
                   .then((ress) => {
                     console.log(ress);
                     dispatch(login(ress.data));
                     // localStorage.setItem('jwt', res.data.token);
+                    localStorage.setItem('accessToken', ress.data.accessToken);
+                    localStorage.setItem(
+                      'refreshToken',
+                      ress.data.refreshToken
+                    );
+
+                    axios({
+                      method: 'get',
+                      url: `/account/{id}?email=${response.kakao_account.email}`,
+                      headers: {
+                        Authorization: `Bearer ${ress.data.accessToken}`,
+                      },
+                    })
+                      .then((res) => dispatch(login(res.data)))
+                      .catch((err) => console.log(err));
+
                     navigate('/profile');
                   })
                   .catch((err) => {
