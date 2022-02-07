@@ -262,7 +262,7 @@ public class StudyService {
     		Study study = checkAndGetStudy(studyId);
     		loginUser.setLeader(false);
     		newLeader.setLeader(true);
-//    		study.setLeader(user);
+    		study.setLeader(user);
     	}
     }
     

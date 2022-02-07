@@ -172,6 +172,11 @@ public class MatchService {
     	joinRepo.findByJoinUserId(userId).forEach(join -> {
     		response.add(join.getJoinArticle().toResponse());
     	});
+    	if (response.isEmpty()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.NOT_FOUND, "신청한 모집글이 없습니다.",
+    				new IllegalArgumentException());
+    	}
     	return response;
     }
     
@@ -180,6 +185,11 @@ public class MatchService {
     	joinRepo.findByJoinArticleId(articleId).forEach(join -> {
     		response.add(join.toJoinUserResponse());
     	});
+    	if (response.isEmpty()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.NOT_FOUND, "신청자가 없습니다.",
+    				new IllegalArgumentException());
+    	}
     	return response;
     }
     
@@ -204,7 +214,7 @@ public class MatchService {
 		if (article.getStudyId() == null) {
 			// 스터디 생성
 			Study study = new Study();
-//			study.setLeader(leader);
+			study.setLeader(leader);
 			Study saved = studyRepo.save(study);
 			
 			// 스터디에 유저추가(리더)
