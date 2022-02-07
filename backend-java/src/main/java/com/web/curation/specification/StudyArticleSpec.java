@@ -31,7 +31,7 @@ public class StudyArticleSpec {
 		}
 	}
 	
-	// 제목만 검색하기
+	// 모든 스터디의 제목만 검색하기
 	public static Specification<StudyArticle> likeTitle(String title) {
 		return new Specification<StudyArticle>() {
 			@Override
@@ -41,12 +41,13 @@ public class StudyArticleSpec {
 		};
 	}
 	
-	// 제목, 내용 동시 검색
-	public static Specification<StudyArticle> searchWith(String keyword) {
+	// 특정 스터디의 제목, 내용 동시 검색
+	public static Specification<StudyArticle> searchWith(Long studyId, String keyword) {
 		Map<StudyArticleSearchKey, Object> searchKeyword = toStudyArticleSearchKey(keyword);
 	    return (Specification<StudyArticle>) ((root, query, builder) -> {
 	        List<Predicate> predicate = getPredicateStudyArticle(searchKeyword, root, builder);
-	        return builder.or(predicate.toArray(new Predicate[0]));
+	        Predicate findStudy = builder.equal(root.get("study"), studyId);
+	        return builder.and(builder.or(predicate.toArray(new Predicate[0])), findStudy);
 	    });
 	}
 	private static Map<StudyArticleSearchKey, Object> toStudyArticleSearchKey(String keyword) {
