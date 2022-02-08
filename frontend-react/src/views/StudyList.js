@@ -136,31 +136,36 @@ function StudyList() {
       const items = articleList.slice(prev, curr);
       console.log('hi');
       setFilterList(filterList.concat(items));
-
-      // 왜 filterList articleList가 비어있지??
     }
   }, [inView]);
   return (
     <div>
-      <h1>StudyList</h1>
-      <MatchListSearch
-        handleSelect={handleSelect}
-        searchValue={searchValue}
-        saveSearchValue={saveSearchValue}
-        onKeyPress={onKeyPress}
-        handleSearch={handleSearch}
-      />
-
-      {filterList.map((item) => (
-        <div key={item.articleId}>
-          <h1>{item.title}</h1>
-          <p>{item.articleId}</p>
-          <p>{item.writerName}</p>
-          <p>{item.content}</p>
-          <p>{item.createDate}</p>
-          <hr />
-        </div>
-      ))}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <h1>StudyList</h1>
+        <MatchListSearch
+          handleSelect={handleSelect}
+          searchValue={searchValue}
+          saveSearchValue={saveSearchValue}
+          onKeyPress={onKeyPress}
+          handleSearch={handleSearch}
+        />
+        {filterList.map((item) => (
+          <div style={{ width: '50%' }} key={item.articleId}>
+            <h1>{item.title}</h1>
+            <span>{item.articleId}</span>
+            <p>{item.writerName}</p>
+            <p>{item.content}</p>
+            <p>{item.createDate}</p>
+            <hr />
+          </div>
+        ))}
+      </div>
 
       <div ref={ref} />
       <hr />
