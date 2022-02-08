@@ -19,7 +19,7 @@ export default function MatchItemCreate(props) {
   const [content, setContent] = useState('');
   const [studyName, setStudyName] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
-  const userId = useSelector((state) => state.user.userInfo.id);
+  const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
 
   const handleStudyName = (e) => {
@@ -42,7 +42,7 @@ export default function MatchItemCreate(props) {
 
   const onClickCreate = () => {
     const data = {
-      tempStudy: studyName,
+      tempStudyName: studyName,
       category,
       content,
       title,
@@ -96,19 +96,6 @@ export default function MatchItemCreate(props) {
               onChange={handleStudyName}
             />
           </div>
-          <div>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="studyName"
-              type="studyName"
-              fullWidth
-              variant="standard"
-              onChange={handleStudyName}
-            />
-          </div>
-
           <div>
             <TextField
               autoFocus

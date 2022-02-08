@@ -19,14 +19,14 @@ const style = {
 
 export default function MatchingAppliAccept(props) {
   const { pk, content, userId } = props;
+  console.log(pk, content, userId);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const acceptStudy = (e) => {
-    e.preventDefault();
 
+  const acceptStudy = () => {
     axios
-      .post(`/match/${pk}/${userId}`, {
+      .post(`/match/${pk}/${userId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -37,6 +37,22 @@ export default function MatchingAppliAccept(props) {
       .catch((err) => {
         console.log(err);
         alert('이미 수락한 인원입니다.');
+      });
+  };
+
+  const denyStudy = () => {
+    axios
+      .put(`/match/${pk}/${userId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then(() => {
+        alert('거절하였습니다!');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('이미 거절한 인원입니다.');
       });
   };
   return (
@@ -59,7 +75,9 @@ export default function MatchingAppliAccept(props) {
             <button type="submit" onClick={acceptStudy}>
               수락
             </button>
-            <button type="submit">거절</button>
+            <button type="submit" onClick={denyStudy}>
+              거절
+            </button>
           </Typography>
         </Box>
       </Modal>

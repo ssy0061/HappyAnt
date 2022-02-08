@@ -8,7 +8,7 @@ export default function MatchingAppliList(props) {
   const { pk } = props;
   const yourId = useSelector((state) => state.user.userInfo.userId);
   const [applilist, setApplilist] = useState('');
-
+  console.log(pk, 'ok');
   // 신청자 정보 받아오기
   const getApplilist = () => {
     axios
