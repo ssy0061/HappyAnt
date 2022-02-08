@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 // import BtnEntrust from '../components/BtnEntrust';
-// import Checkstudy from '../components/Checkstudy';
 
 function Profile() {
   // 로그인 확인
@@ -12,12 +11,30 @@ function Profile() {
   console.log(Info, '유저 정보');
   const study = Info.joinStudy;
   console.log(study, '스터디');
-  // console.log(study[0].id, '조인스터디');
+  const goToPage = (id, e) => {
+    // 30번째 줄 onclick에서 id(스터디 링크)를 받아 Link 이동
+    // 스터디 페이지가 완성될 시 아래 코드 살려서 이동
+    // 스터디 링크에 따라 아래 이동 링크 변경될 예정
+    // document.location.href(`/study/${study[i].id}`);
+    console.log(id);
+    e.preventDefault();
+  };
+  // 스터디 리스트 나열하기
   const studyList = () => {
-    if (study) {
+    if (study.length !== 0) {
       const list = [];
       for (let i = 0; i < study.length; i += 1) {
-        list.push(<p key={i}>{`${study[i].id} /`}</p>);
+        list.push(
+          <div key={i}>
+            <span>{`${study[i].studyName}`}</span>
+            <button
+              type="button"
+              onClick={(e) => goToPage(`${study[i].studyId}`, e)}
+            >
+              페이지 이동
+            </button>
+          </div>
+        );
       }
       return <div>{list}</div>;
     }
@@ -28,7 +45,7 @@ function Profile() {
     <div>
       {loginPage && (
         <div>
-          <h1>{Info.name}님의 프로필입니다</h1>
+          <h1>{Info.userName}님의 프로필입니다</h1>
           <hr />
           <h3>스터디 목록</h3>
           {studyList()}
