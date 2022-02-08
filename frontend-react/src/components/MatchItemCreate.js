@@ -95,7 +95,6 @@ export default function MatchItemCreate(props) {
               onChange={handleStudyName}
             />
           </div>
-
           <div>
             <TextField
               autoFocus

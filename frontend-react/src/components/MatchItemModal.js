@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import axios from 'axios';
 import MatchItemUpdate from './MatchItemUpdate';
 import MatchItemDetail from './MatchItemDetail';
-import MatchingAppliList from './MatchingAppliList';
+import MatchItemAppliList from './MatchItemAppliList';
 
 // 글작성자 ? 수정/삭제/닫기 : 닫기    || 드랍다운(수정/삭제) 우측 상단 & 닫기 우측하단
 // 수정창에서 닫기버튼 누르면 디테일로
@@ -25,8 +25,8 @@ export default function MatchItemModal({ pk, handleClickClose }) {
         },
       })
       .then((res) => {
+        console.log(res.data, 'console');
         setItem(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -37,7 +37,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   useEffect(() => {
     getItem();
   }, []);
-
   const goDetail = () => {
     getItem();
     setMode(1);
@@ -105,7 +104,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
           <div>
             <MatchItemDetail item={item} />
             {item.writerId === yourId && (
-              <MatchingAppliList item={item} articleId={pk} />
+              <MatchItemAppliList item={item} articleId={pk} />
             )}
           </div>
         )}

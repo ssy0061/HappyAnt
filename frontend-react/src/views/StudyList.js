@@ -92,41 +92,8 @@ function StudyList(props) {
   const handleSelect = (event) => {
     setSelected(event.target.value);
   };
-  //
-  // 여기까지 검색박스 코드 복사붙여넣기
 
-  // // 무한 스크롤 구현해보기
-  // const [target, setTarget] = useState();
-
-  // const onIntersect = async ([entry], observer) => {
-  //   if (entry.isIntersecting) {
-  //     observer.unobserve(entry.target);
-
-  //     // 가져오는 부분
-  //     setPrev((current) => current + 20);
-  //     setCurr((current) => current + 20);
-  //     console.log('hi');
-  //     console.log(filterList);
-  //     console.log(articleList);
-  //     // 왜 filterList articleList가 비어있지??
-  //     setFilterList(...filterList, articleList.slice(prev, curr));
-
-  //     observer.observe(entry.target);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   console.log(target);
-  //   let observer;
-
-  //   if (target) {
-  //     observer = new IntersectionObserver(onIntersect, {
-  //       threshold: 0.4,
-  //     });
-  //     observer.observe(target);
-  //   }
-  //   return () => observer && observer.disconnect();
-  // }, [target]);
+  // 무한스크롤 라이브러리 활용
   const { ref, inView } = useInView({ threshold: 0 });
   useEffect(() => {
     if (inView && !thisState) {
@@ -171,7 +138,6 @@ function StudyList(props) {
 
       <div ref={ref} />
       <hr />
-      {/* <div ref={setTarget} /> */}
     </div>
   );
 }
