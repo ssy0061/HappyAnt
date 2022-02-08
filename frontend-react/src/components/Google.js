@@ -88,9 +88,11 @@ function GoogleLoginBtn() {
                 Authorization: `Bearer ${ress.data.accessToken}`,
               },
             })
-              .then((getRes) => dispatch(login(getRes.data)))
+              .then((getRes) => {
+                dispatch(login(getRes.data));
+                navigate('/profile');
+              })
               .catch((getErr) => console.log(getErr));
-            navigate('/profile');
           })
           .catch((err) => {
             console.log(err);
