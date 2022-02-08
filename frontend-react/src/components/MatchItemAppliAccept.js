@@ -26,7 +26,7 @@ export default function MatchingAppliAccept(props) {
 
   const acceptStudy = () => {
     axios
-      .post(`/match/${pk}/${userId}`, {
+      .post(`/match/${pk}/${userId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -42,7 +42,7 @@ export default function MatchingAppliAccept(props) {
 
   const denyStudy = () => {
     axios
-      .put(`/match/${pk}/${userId}`, {
+      .put(`/match/${pk}/${userId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
