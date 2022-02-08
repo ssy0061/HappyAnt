@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import MatchItemCreate from '../components/MatchItemCreate';
 import MatchItemModal from '../components/MatchItemModal';
 import StudyItemButton from '../components/StudyItemButton';
-import StudyItemCreate from '../components/StudyItemCreate';
 import MatchList from './MatchList';
 
 function Match() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
-  const [open3, setOpen3] = useState(false);
   const handleClickCreateOpen = () => {
     setOpen(true);
   };
@@ -22,12 +20,6 @@ function Match() {
   const handleClickClose2 = () => {
     setOpen2(false);
   };
-  const handleClickOpen3 = () => {
-    setOpen3(true);
-  };
-  const handleClickClose3 = () => {
-    setOpen3(false);
-  };
 
   return (
     <div>
@@ -39,14 +31,10 @@ function Match() {
       <button type="submit" onClick={handleClickOpen2}>
         디테일 임시
       </button>
-      <button type="submit" onClick={handleClickOpen3}>
-        스터디 글 작성
-      </button>
       <StudyItemButton />
 
       {open && <MatchItemCreate handleClickClose={handleClickCreateClose} />}
       {open2 && <MatchItemModal pk={1} handleClickClose={handleClickClose2} />}
-      {open3 && <StudyItemCreate handleClickClose={handleClickClose3} />}
     </div>
   );
 }

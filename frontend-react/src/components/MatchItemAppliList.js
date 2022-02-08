@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import MatchingAppliAccept from './MatchItemAppliAccept';
+import MatchItemAppliAccept from './MatchItemAppliAccept';
 
 export default function MatchingAppliList(props) {
   const { item } = props;
@@ -37,7 +37,7 @@ export default function MatchingAppliList(props) {
             <div key={i}>
               <span>
                 {`${applilist[i].userName}`}
-                <MatchingAppliAccept
+                <MatchItemAppliAccept
                   pk={pk}
                   content={applilist[i].content}
                   userId={applilist[i].userId}
