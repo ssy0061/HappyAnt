@@ -24,8 +24,8 @@ export default function MatchItemModal({ pk, handleClickClose }) {
         },
       })
       .then((res) => {
+        console.log(res.data, 'console');
         setItem(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -36,7 +36,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   useEffect(() => {
     getItem();
   }, []);
-
   const goDetail = () => {
     getItem();
     setMode(1);
@@ -74,7 +73,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
     axios.delete(`/match/${item.articleId}`);
     handleClickClose();
   };
-
   return (
     <div>
       <Dialog

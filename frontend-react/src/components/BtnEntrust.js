@@ -4,13 +4,17 @@ import React, { useEffect, useState } from 'react';
 export default function BtnEntrust() {
   const [memberList, setMemberList] = useState('');
   const [selected, setSelected] = useState('');
-  // 임의 pk => 추후 props로 상위 컴포넌트에서 받아 올 것
+  // 임의 스터디 pk => 추후 props로 상위 컴포넌트에서 받아 올 것
   const pk = 1;
-
+  console.log('멤버axios전');
   // 해당 스터디의 멤버 조회
   const member = () => {
     axios
-      .get(`study/${pk}/member`)
+      .get(`study/${pk}/member`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then((res) => {
         console.log(res, '스터디원');
         setMemberList(res);
@@ -20,6 +24,7 @@ export default function BtnEntrust() {
   useEffect(() => {
     member();
   }, []);
+  console.log(memberList);
 
   const handleSelect = (e) => {
     setSelected(e.target.value);
@@ -29,24 +34,25 @@ export default function BtnEntrust() {
   // 위임하기
   const onEntrust = (e) => {
     e.preventDefault();
-    axios
-      .post(`/study/${pk}/member/${selected}/leader`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err, '위임 error'));
+    console.log('entrust');
+    // axios
+    //   .post(`/study/${pk}/member/${selected}/leader`)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => console.log(err, '위임 error'));
   };
 
   // 추방하기
   const onDeport = (e) => {
     e.preventDefault();
     console.log('onclick');
-    axios
-      .delete(`/study/${pk}/member/${selected}`)
-      .then((res) => {
-        console.log(res, '스터디원 추방');
-      })
-      .catch((err) => console.log(err, '추방 error'));
+    // axios
+    //   .delete(`/study/${pk}/member/${selected}`)
+    //   .then((res) => {
+    //     console.log(res, '스터디원 추방');
+    //   })
+    //   .catch((err) => console.log(err, '추방 error'));
   };
 
   return (

@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import MatchingAppliAccept from './MatchingAppliAccept';
+import MatchingAppliAccept from './MatchItemAppliAccept';
 
 export default function MatchingAppliList(props) {
   const { item } = props;
-  // eslint-disable-next-line react/destructuring-assignment
-  const pk = props.articleId;
-  console.log(item, '1');
-  const yourId = useSelector((state) => state.user.userInfo.id);
+  const { pk } = props;
+  const yourId = useSelector((state) => state.user.userInfo.userId);
   const [applilist, setApplilist] = useState('');
-  console.log(pk, 'ok');
-  console.log(applilist);
 
   // 신청자 정보 받아오기
   const getApplilist = () => {
@@ -30,8 +26,6 @@ export default function MatchingAppliList(props) {
   if (!applilist.length) {
     getApplilist();
   }
-  console.log(applilist, 'appli');
-
   // 로그인 한 사람과 작성자가 같을 시 보이는 부분
   if (item.writerId === yourId) {
     const listing = () => {
@@ -40,15 +34,15 @@ export default function MatchingAppliList(props) {
         // 지원자의 state의 상태를 통해 리스트에 띄울지 말지 정함
         if (!applilist[i].state) {
           result.push(
-            <div>
-              <p key={i}>
+            <div key={i}>
+              <span>
                 {`${applilist[i].userName}`}
                 <MatchingAppliAccept
                   pk={pk}
                   content={applilist[i].content}
                   userId={applilist[i].userId}
                 />
-              </p>
+              </span>
             </div>
           );
         }
@@ -59,7 +53,7 @@ export default function MatchingAppliList(props) {
     return (
       <div>
         <hr />
-        신청자
+        <h4>신청자</h4>
         {listing()}
       </div>
     );
