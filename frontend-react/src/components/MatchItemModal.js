@@ -18,7 +18,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const getItem = () => {
     axios
-      .get(`/match/${pk}`)
+      .get(`/match/${pk}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then((res) => {
         setItem(res.data);
         console.log(res.data);
@@ -40,7 +44,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const setStateTrue = () => {
     axios
-      .put(`/match/${item.articleId}?state=${true}`)
+      .put(`/match/${item.articleId}?state=${true}&loginUserId=${yourId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then(() => {
         getItem();
       })
@@ -48,7 +56,15 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const setStateFalse = () => {
     axios
-      .put(`/match/${item.articleId}?state=${false}`)
+      .put(
+        `/match/${item.articleId}?state=${false}&loginUserId=${yourId}`,
+        [],
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
       .then(() => {
         getItem();
       })
