@@ -32,7 +32,7 @@ export default function StudyItemCreate(props) {
     false,
   ]);
 
-  const userId = useSelector((state) => state.user.userInfo.id);
+  const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
 
   const handleTitle = (e) => {

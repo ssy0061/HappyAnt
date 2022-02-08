@@ -19,7 +19,7 @@ export default function MatchItemUpdate(props) {
   const [inputContent, setInputContent] = useState('');
   const [inputCategory, setInputCategory] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
-  const yourId = useSelector((state) => state.user.userInfo.id);
+  const yourId = useSelector((state) => state.user.userInfo.userId);
 
   const handleInputTitle = (e) => {
     setInputTitle(e.target.value);
