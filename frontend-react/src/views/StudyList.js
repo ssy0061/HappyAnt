@@ -161,7 +161,9 @@ function StudyList() {
             <span>{item.articleId}</span>
             <p>{item.writerName}</p>
             <p>{item.content}</p>
-            <p>{item.createDate}</p>
+            <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
+              11
+            )}`}</p>
             <hr />
           </div>
         ))}
