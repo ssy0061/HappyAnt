@@ -16,8 +16,9 @@ function App() {
         <Route path="/join" element={<Join />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/Match" element={<Match />} />
         <Route path="/studyList" element={<StudyList />} />
+        <Route path="/match" element={<Match />} />
+
       </Routes>
     </div>
   );

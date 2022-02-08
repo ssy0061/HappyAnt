@@ -1,6 +1,4 @@
-package com.web.curation.dto.account;
-
-import com.web.curation.model.account.MyUser;
+package com.web.curation.dto.study;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +11,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class LoginRequest {
-
-	private String email;
-	private String password;
-
+public class StudyJoinUserResponse {
+	private Long UserId;
+	private String UserName;
+	private Long StudyId;
+	private Boolean leader;
 }

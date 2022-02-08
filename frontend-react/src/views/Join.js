@@ -61,7 +61,9 @@ function Join() {
       })
         .then((response) => {
           console.log(response);
-          dispatch(login(response.data));
+          const params = new URLSearchParams();
+          params.append('email', email);
+          params.append('password', pwd);
           // 회원가입 버튼 누르고 정상 응답이 반환되면 모달창(가이드라인) 오픈
           // 모달창에서 프로필 작성하러 가기 누르면 로그인처리 됨과 동시에 프로필로 이동
           setOpen(true);
@@ -69,15 +71,20 @@ function Join() {
           axios({
             method: 'post',
             url: '/account/login',
-            data: {
-              email,
-              password: pwd,
-            },
+            data: params,
           })
             .then((ress) => {
               console.log(ress);
               dispatch(login(ress.data));
-              // localStorage.setItem('jwt', res.data.token);
+              localStorage.setItem('accessToken', ress.data.accessToken);
+              localStorage.setItem('refreshToken', ress.data.refreshToken);
+              axios
+                .get(`/account/{id}?email=${email}`, {
+                  headers: { Authorization: `Bearer ${ress.data.accessToken}` },
+                })
+                .then((res) => {
+                  dispatch(login(res.data));
+                });
             })
             .catch((err) => {
               console.log(err);

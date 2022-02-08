@@ -24,8 +24,14 @@ import javax.persistence.Table;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.web.curation.dto.account.GetUserResponse;
+import com.web.curation.dto.match.MatchArticleResponse;
+import com.web.curation.dto.study.StudyArticleResponse;
+import com.web.curation.dto.study.StudyCommentResponse;
+import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
+import com.web.curation.model.study.Study;
 import com.web.curation.model.study.StudyArticle;
 import com.web.curation.model.study.StudyComment;
 import com.web.curation.model.study.StudyJoin;
@@ -150,5 +156,44 @@ public class MyUser {
 		this.answer = answer;
 		this.roles = roles;
 	}
+
+	public MyUser(Long id, @NotBlank(message = "이메일은 필수 입력 값입니다.") @Email(message = "이메일 형식에 맞지 않습니다.") String email,
+			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, int score, String question, String answer,
+			Collection<MyRole> roles, LocalDateTime createDate, List<MatchArticle> matchArticles,
+			List<MatchJoin> matchJoinArticles, List<StudyJoin> joinStudy, List<StudyArticle> studyArticles,
+			List<StudyComment> studyComments) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.score = score;
+		this.question = question;
+		this.answer = answer;
+		this.roles = roles;
+		this.createDate = createDate;
+		this.matchArticles = matchArticles;
+		this.matchJoinArticles = matchJoinArticles;
+		this.joinStudy = joinStudy;
+		this.studyArticles = studyArticles;
+		this.studyComments = studyComments;
+	}
+    
+    public GetUserResponse toResponse() {
+    	List<String> rRes = new ArrayList<>();
+    	roles.forEach(role -> {rRes.add(role.getName());});
+    	List<MatchArticleResponse> maRes = new ArrayList<>();
+    	matchArticles.forEach(article -> {maRes.add(article.toResponse());});
+       	List<MatchArticleResponse> mjaRes = new ArrayList<>();
+    	matchJoinArticles.forEach(article -> {mjaRes.add(article.getJoinArticle().toResponse());});
+    	List<StudyResponse> sRes = new ArrayList<>();
+    	joinStudy.forEach(study -> {sRes.add(study.getJoinStudy().toResponse());});
+    	List<StudyArticleResponse> saRes = new ArrayList<>();
+    	studyArticles.forEach(article -> {saRes.add(article.toResponse());});
+    	List<StudyCommentResponse> scRes = new ArrayList<>();
+    	studyComments.forEach(comment -> {scRes.add(comment.toResponse());});
+    	return new GetUserResponse(id, email, name, score, question, answer, createDate,
+    							rRes, maRes, mjaRes, sRes, saRes, scRes);
+    }
+    
     
 }
