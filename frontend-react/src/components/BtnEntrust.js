@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 export default function BtnEntrust() {
-  const [memberList, setMemberList] = useState('');
+  const [memberList, setMemberList] = useState([]);
   const [selected, setSelected] = useState('');
   // 임의 스터디 pk => 추후 props로 상위 컴포넌트에서 받아 올 것
   const pk = 1;
@@ -19,7 +19,9 @@ export default function BtnEntrust() {
         console.log(res, '스터디원');
         setMemberList(res);
       })
-      .catch((err) => console.log(err, 'member error'));
+      .catch((err) => {
+        console.log(err, 'member error');
+      });
   };
   useEffect(() => {
     member();

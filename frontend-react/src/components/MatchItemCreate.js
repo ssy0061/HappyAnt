@@ -35,21 +35,20 @@ export default function MatchItemCreate(props) {
   const handleContent = (e) => {
     setContent(e.target.value);
   };
-
   const handleMemberNum = (e) => {
     setMemeberNum(e.target.value);
   };
 
   const onClickCreate = () => {
     const data = {
-      tempStudyName: studyName,
+      headcount: memberNum,
       category,
       content,
+      tempStudyName: studyName,
       title,
       writerId: userId,
     };
     console.log(localStorage.getItem('accessToken'));
-    console.log(userId);
     if (title === '' || content === '' || memberNum === '') {
       console.log('내용을 기입해주세요.');
     } else {

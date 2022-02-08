@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 // import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { logout } from '../redux/userSlice';
+import UserDelete from '../components/Userdelete';
 
 function nav() {
   // 로그인 상태 체크
@@ -22,8 +23,13 @@ function nav() {
   //   navigate('/study');
   // };
 
+  // -----------------------css--------------------------------
+  const navbarDesign = {
+    backgroundColor: '#f0f0f1',
+  };
+
   return (
-    <div>
+    <div style={navbarDesign}>
       <h1>Navbar</h1>
       <Link to={`/study/${1}`}>1번스터디로 가기</Link>
       {/* 비로그인 상태일때 보이는 navbar */}
@@ -55,6 +61,7 @@ function nav() {
               <button type="submit" onClick={clickLogout}>
                 로그아웃
               </button>
+              <UserDelete />
             </li>
           </ul>
           {/* <FormControl style={{ width: '256px' }}>

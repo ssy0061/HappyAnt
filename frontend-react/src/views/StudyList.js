@@ -4,9 +4,9 @@ import { useInView } from 'react-intersection-observer';
 
 import MatchListSearch from '../components/MatchListSearch';
 
-function StudyList() {
+function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
-  const [studyId] = useState('1');
+  const { studyId } = props;
   // 원본 데이터
   const [articleList, setArticleList] = useState([]);
   // 필터한 데이터

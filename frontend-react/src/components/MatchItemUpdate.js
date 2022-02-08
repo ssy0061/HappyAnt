@@ -35,6 +35,8 @@ export default function MatchItemUpdate(props) {
   };
 
   const clickSubmit = () => {
+    console.log(item.articleId);
+    console.log(yourId);
     axios
       .put(`/match/${item.articleId}`, [], {
         headers: {

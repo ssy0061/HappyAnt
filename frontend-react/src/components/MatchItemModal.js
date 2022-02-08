@@ -4,8 +4,9 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import axios from 'axios';
-import MatchingUpdate from './MatchItemUpdate';
-import MatchingDetail from './MatchItemDetail';
+import MatchItemUpdate from './MatchItemUpdate';
+import MatchItemDetail from './MatchItemDetail';
+import MatchItemAppliList from './MatchItemAppliList';
 
 // 글작성자 ? 수정/삭제/닫기 : 닫기    || 드랍다운(수정/삭제) 우측 상단 & 닫기 우측하단
 // 수정창에서 닫기버튼 누르면 디테일로
@@ -70,9 +71,27 @@ export default function MatchItemModal({ pk, handleClickClose }) {
       .catch((err) => console.log(err));
   };
   const deleteItem = () => {
-    axios.delete(`/match/${item.articleId}`);
+    axios.delete(`/match/${item.articleId}`, {
+      params: { loginUserId: yourId },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
     handleClickClose();
   };
+  const applyStudy = () => {
+    console.log(item.articleId);
+    axios.post(`/match/join/${item.articleId}`, [], {
+      params: {
+        joinUserId: yourId,
+        content: '임시',
+      },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+  };
+
   return (
     <div>
       <Dialog
@@ -81,9 +100,19 @@ export default function MatchItemModal({ pk, handleClickClose }) {
         open
         aria-describedby="alert-dialog-slide-description"
       >
-        {mode === 1 && <MatchingDetail item={item} pk={pk} />}
-        {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
+        {mode === 1 && (
+          <div>
+            <MatchItemDetail item={item} />
+            {item.writerId === yourId && (
+              <MatchItemAppliList item={item} articleId={pk} />
+            )}
+          </div>
+        )}
+        {mode === 2 && <MatchItemUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
+          {item.writerId !== yourId && mode === 1 && (
+            <Button onClick={applyStudy}>신청</Button>
+          )}
           {item.writerId === yourId && mode === 1 && (
             <div>
               {item.state === true && (
