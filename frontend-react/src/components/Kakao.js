@@ -22,6 +22,7 @@ function KakaoLogin() {
           url: '/v2/user/me',
           success(response) {
             console.log(response);
+            console.log('여기에 정보');
 
             const params = new URLSearchParams();
             params.append('email', response.kakao_account.email);
@@ -101,10 +102,11 @@ function KakaoLogin() {
                         Authorization: `Bearer ${ress.data.accessToken}`,
                       },
                     })
-                      .then((res) => dispatch(login(res.data)))
+                      .then((res) => {
+                        dispatch(login(res.data));
+                        navigate('/profile');
+                      })
                       .catch((err) => console.log(err));
-
-                    navigate('/profile');
                   })
                   .catch((err) => {
                     console.log(err);
