@@ -83,6 +83,7 @@ public class MatchService {
     		String title,
     		String category,
     		String content,
+    		String tempStudyName,
     		Boolean state) {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new ResponseStatusException(
@@ -103,6 +104,10 @@ public class MatchService {
     	
     	if (content != null && content.length() > 0 && !Objects.equals(article.getContent(), content)) {
     		article.setContent(content);
+    	}
+    	
+    	if (tempStudyName != null && tempStudyName.length() > 0 && !Objects.equals(article.getTempStudyName(), tempStudyName)) {
+    		article.setTempStudyName(tempStudyName);
     	}
     	
     	if (state != null && !Objects.equals(article.getState(), state)) {
@@ -149,10 +154,12 @@ public class MatchService {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
-    	} else if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudyId()).isPresent()) {
-    		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
-    				new IllegalArgumentException());
+    	} else if (article.getStudy() != null) {
+    		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
+    			throw new ResponseStatusException(
+        				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
+        				new IllegalArgumentException());
+    		}
     	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "이미 신청한 모집글입니다.",
@@ -211,10 +218,11 @@ public class MatchService {
 		}
 
 		// 스터디 없으면 생성, 있으면 멤버만 추가
-		if (article.getStudyId() == null) {
+		if (article.getStudy() == null) {
 			// 스터디 생성
 			Study study = new Study();
 			study.setLeader(leader);
+			study.setName(article.getTempStudyName());
 			Study saved = studyRepo.save(study);
 			
 			// 스터디에 유저추가(리더)
@@ -229,9 +237,9 @@ public class MatchService {
 																new IllegalArgumentException()));
 			matchJoin.setState(JoinState.APPROVED);
 			// matchArticle에 추가
-			article.setStudyId(saved.getId());
+			article.setStudy(saved);
 		} else {
-			Long studyId = article.getStudyId();
+			Long studyId = article.getStudy().getId();
 			Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
 														HttpStatus.BAD_REQUEST, "모집글의 스터디 정보를 알 수 없습니다.",
 														new IllegalArgumentException()));
