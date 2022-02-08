@@ -96,6 +96,18 @@ export default function MatchItemCreate(props) {
               onChange={handleStudyName}
             />
           </div>
+          <div>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="studyName"
+              type="studyName"
+              fullWidth
+              variant="standard"
+              onChange={handleStudyName}
+            />
+          </div>
 
           <div>
             <TextField
