@@ -22,12 +22,15 @@ export default function MatchingAppliAccept(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
   const acceptStudy = (e) => {
     e.preventDefault();
 
     axios
-      .post(`/match/${pk}/${userId}`)
+      .post(`/match/${pk}/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then(() => {
         alert('승인되었습니다!');
       })
