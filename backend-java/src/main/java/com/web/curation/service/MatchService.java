@@ -149,29 +149,29 @@ public class MatchService {
 						HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
     	
-
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
-    	} else if (article.getStudy() != null) {
+    	} 
+		if (article.getStudy() != null) {
     		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
     			throw new ResponseStatusException(
         				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
         				new IllegalArgumentException());
     		}
-    	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
+    	} 
+		if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "이미 신청한 모집글입니다.",
     				new IllegalArgumentException());
-    	} else {
-        	MatchJoin join = new MatchJoin();
-        	join.setJoinArticle(article);
-        	join.setJoinUser(joinUser);
-        	join.setContent(content);
-        	
-        	joinRepo.save(join);
-    	}
+    	} 
+    	MatchJoin join = new MatchJoin();
+    	join.setJoinArticle(article);
+    	join.setJoinUser(joinUser);
+    	join.setContent(content);
+    	
+    	joinRepo.save(join);
     }
     
     public List<MatchArticleResponse> getJoinArticle(Long userId) {
