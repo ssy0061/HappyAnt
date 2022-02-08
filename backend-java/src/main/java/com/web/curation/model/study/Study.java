@@ -68,6 +68,9 @@ public class Study {
 	@Column
 	private String interest;
 	
+	@Column
+	private Long headCount;
+	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
     		insertable = false, 
@@ -75,6 +78,6 @@ public class Study {
 	private LocalDateTime createDate;
     
     public StudyResponse toResponse() {
-    	return new StudyResponse(id, name, leader.getId(), category, area, interest, createDate);
+    	return new StudyResponse(id, name, leader.getId(), category, area, interest, headCount, createDate);
     }
 }

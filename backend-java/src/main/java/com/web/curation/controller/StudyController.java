@@ -149,6 +149,20 @@ public class StudyController {
     	studyService.deleteMember(studyId, userId, loginUserId);
     }
     
+    @PutMapping
+    @ApiOperation(value = "스터디 수정")
+    public void updateStudy(
+    		@PathVariable("studyId") Long studyId,
+    		@RequestParam(required = true) Long loginUserId,
+    		@RequestParam(required = false) String name,
+    		@RequestParam(required = false) String category,
+    		@RequestParam(required = false) String area,
+    		@RequestParam(required = false) String interest,
+    		@RequestParam(required = false) Long headCount) {
+    	studyService.updateStudy(studyId, loginUserId, name, category, 
+    							area, interest, headCount);
+    }
+    
     // 알림 기능 완성 후 구현예정
 //    @PostMapping("member/{userId}/invite")
 //    @ApiOperation(value = "스터디 멤버 초대", notes="이메일로 초대합니다. 존재하는 유저의 정확한 이메일이 필요합니다.")

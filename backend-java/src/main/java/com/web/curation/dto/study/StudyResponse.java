@@ -20,5 +20,6 @@ public class StudyResponse {
 	private String area;
 	private String category;
 	private String interest;
+	private Long headCount;
 	private LocalDateTime createDate;
 }

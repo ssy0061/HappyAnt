@@ -214,13 +214,16 @@ public class MatchService {
 
 		MyUser leader = article.getWriter();
 		MyUser joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
-													HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
-													new IllegalArgumentException()));
+														HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
+														new IllegalArgumentException()));
 		if (leader.getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "모집글 작성자는 일반 회원으로 추가할 수 없습니다.",
     				new IllegalArgumentException());
 		}
+		joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
+							.orElseThrow(() -> new ResponseStatusException(
+							HttpStatus.NOT_FOUND, "모집글 신청자가 아닙니다."));
 
 		// 스터디 없으면 생성, 있으면 멤버만 추가
 		if (article.getStudy() == null) {
@@ -243,11 +246,19 @@ public class MatchService {
 			matchJoin.setState(JoinState.APPROVED);
 			// matchArticle에 추가
 			article.setStudy(saved);
+			// 인원이 모두 모집되면 자동 마감
+			if (article.getHeadCount() == 2) {
+				article.setState(true);
+			}
 		} else {
 			Long studyId = article.getStudy().getId();
 			Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
 														HttpStatus.BAD_REQUEST, "모집글의 스터디 정보를 알 수 없습니다.",
 														new IllegalArgumentException()));
+//			// 제한인원만큼 스터디멤버(리더 포함)가 있는 경우 모집 마감
+//			if (studyJoinRepo.findByjoinStudyId(studyId).size() == study.getHeadCount()) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
+//			}
 			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
 	    		throw new ResponseStatusException(
 	    				HttpStatus.BAD_REQUEST, "이미 스터디에 가입한 회원입니다.",
@@ -261,6 +272,11 @@ public class MatchService {
 																	HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
 																	new IllegalArgumentException()));
 				matchJoin.setState(JoinState.APPROVED);
+				
+//				// 인원이 모두 모집되면 자동 마감
+//				if (studyJoinRepo.findByjoinStudyId(studyId).size() == study.getHeadCount()) {
+//					article.setState(true);
+//				}
 			}
 		}
 

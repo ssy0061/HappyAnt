@@ -63,7 +63,7 @@ public class MatchController {
     }
     
     @PutMapping("{articleId}")
-    @ApiOperation(value = "모집글 수정(마감)")
+    @ApiOperation(value = "모집글 수정(마감)", notes="headCount는 2이상일 때 수정됩니다.")
     public void updateArticle(
     		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = true) Long loginUserId,
