@@ -44,7 +44,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const setStateTrue = () => {
     axios
-      .put(`/match/${item.articleId}?state=${true}`)
+      .put(`/match/${item.articleId}?state=${true}&loginUserId=${yourId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then(() => {
         getItem();
       })
@@ -52,7 +56,15 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const setStateFalse = () => {
     axios
-      .put(`/match/${item.articleId}?state=${false}`)
+      .put(
+        `/match/${item.articleId}?state=${false}&loginUserId=${yourId}`,
+        [],
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
       .then(() => {
         getItem();
       })
@@ -65,7 +77,12 @@ export default function MatchItemModal({ pk, handleClickClose }) {
 
   return (
     <div>
-      <Dialog fullWidth maxWidth="md" open>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open
+        aria-describedby="alert-dialog-slide-description"
+      >
         {mode === 1 && <MatchingDetail item={item} />}
         {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
@@ -81,7 +98,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
               <Button onClick={deleteItem}>삭제</Button>
             </div>
           )}
-          <Button onClick={handleClickClose}>취소</Button>
+          <Button onClick={handleClickClose}>닫기</Button>
         </DialogActions>
       </Dialog>
     </div>
