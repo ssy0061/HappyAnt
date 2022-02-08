@@ -7,7 +7,7 @@ import StudyCommentCreate from './StudyCommentCreate';
 // if 댓글작성자? 수정 삭제버튼 표시
 export default function StudyCommentList(id) {
   const [comment, setComment] = useState([]);
-  const yourId = useSelector((state) => state.user.userInfo.id);
+  const yourId = useSelector((state) => state.user.userInfo.userId);
   // const clickUpdate = () => {  }
   const commentList = comment.map((item) => (
     <>

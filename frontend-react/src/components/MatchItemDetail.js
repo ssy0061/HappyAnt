@@ -2,9 +2,8 @@ import React from 'react';
 import MatchItemAppliList from './MatchItemAppliList';
 
 export default function MatchItemDetail(props) {
-  const { item } = props;
-  const { pk } = props;
-  console.log(item, 'item');
+  const { item, pk } = props;
+  console.log(item);
   return (
     <div>
       <h1>제목 : {item.title}</h1>

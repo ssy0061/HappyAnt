@@ -10,7 +10,7 @@ import MatchingDetail from './MatchItemDetail';
 // 글작성자 ? 수정/삭제/닫기 : 닫기    || 드랍다운(수정/삭제) 우측 상단 & 닫기 우측하단
 // 수정창에서 닫기버튼 누르면 디테일로
 export default function MatchItemModal({ pk, handleClickClose }) {
-  const yourId = useSelector((state) => state.user.userInfo.id);
+  const yourId = useSelector((state) => state.user.userInfo.userId);
   const [item, setItem] = useState([]);
   const [mode, setMode] = useState(1);
   const goUpdate = () => {
@@ -81,7 +81,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
         open
         aria-describedby="alert-dialog-slide-description"
       >
-        {mode === 1 && <MatchingDetail item={item} />}
+        {mode === 1 && <MatchingDetail item={item} pk={pk} />}
         {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
           {item.writerId === yourId && mode === 1 && (
