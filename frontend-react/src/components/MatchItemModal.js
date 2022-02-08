@@ -4,8 +4,8 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import axios from 'axios';
-import MatchingUpdate from './MatchItemUpdate';
-import MatchingDetail from './MatchItemDetail';
+import MatchItemUpdate from './MatchItemUpdate';
+import MatchItemDetail from './MatchItemDetail';
 
 // 글작성자 ? 수정/삭제/닫기 : 닫기    || 드랍다운(수정/삭제) 우측 상단 & 닫기 우측하단
 // 수정창에서 닫기버튼 누르면 디테일로
@@ -18,10 +18,14 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const getItem = () => {
     axios
-      .get(`/match/${pk}`)
+      .get(`/match/${pk}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then((res) => {
+        console.log(res.data, 'console');
         setItem(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -32,7 +36,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   useEffect(() => {
     getItem();
   }, []);
-
   const goDetail = () => {
     getItem();
     setMode(1);
@@ -58,12 +61,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
     axios.delete(`/match/${item.articleId}`);
     handleClickClose();
   };
-
   return (
     <div>
       <Dialog fullWidth maxWidth="md" open>
-        {mode === 1 && <MatchingDetail item={item} />}
-        {mode === 2 && <MatchingUpdate item={item} goDetail={goDetail} />}
+        {mode === 1 && <MatchItemDetail item={item} pk={pk} />}
+        {mode === 2 && <MatchItemUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
           {item.writerId === yourId && mode === 1 && (
             <div>

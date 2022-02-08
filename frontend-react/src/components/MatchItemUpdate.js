@@ -35,7 +35,12 @@ export default function MatchItemUpdate(props) {
   const clickSubmit = () => {
     axios
       .put(
-        `/match/${item.articleId}?title=${inputTitle}&content=${inputContent}&category=${inputCategory}`
+        `/match/${item.articleId}?title=${inputTitle}&content=${inputContent}&category=${inputCategory}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
       )
       .then(goDetail)
       .catch((err) => console.log(err));

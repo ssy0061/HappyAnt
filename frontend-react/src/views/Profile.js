@@ -14,22 +14,22 @@ function Profile() {
   const goToPage = (id, e) => {
     // 30번째 줄 onclick에서 id(스터디 링크)를 받아 Link 이동
     // 스터디 페이지가 완성될 시 아래 코드 살려서 이동
+    // 스터디 링크에 따라 아래 이동 링크 변경될 예정
     // document.location.href(`/study/${study[i].id}`);
     console.log(id);
     e.preventDefault();
   };
   // 스터디 리스트 나열하기
   const studyList = () => {
-    if (study) {
+    if (study.length !== 0) {
       const list = [];
       for (let i = 0; i < study.length; i += 1) {
         list.push(
-          <div>
-            {/* 현재는 id로 되어있지만 추후 name으로 변경될 예정 */}
-            <span key={i}>{`${study[i].id}`}스터디 이름</span>
+          <div key={i}>
+            <span>{`${study[i].studyName}`}</span>
             <button
               type="button"
-              onClick={(e) => goToPage(`${study[i].id}`, e)}
+              onClick={(e) => goToPage(`${study[i].studyId}`, e)}
             >
               페이지 이동
             </button>
@@ -45,7 +45,7 @@ function Profile() {
     <div>
       {loginPage && (
         <div>
-          <h1>{Info.name}님의 프로필입니다</h1>
+          <h1>{Info.userName}님의 프로필입니다</h1>
           <hr />
           <h3>스터디 목록</h3>
           {studyList()}
