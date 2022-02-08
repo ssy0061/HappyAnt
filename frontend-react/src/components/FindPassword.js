@@ -58,10 +58,15 @@ export default function FindPassword(props) {
       alert('email을 입력해주세요');
     } else {
       axios
-        .get(`account/{id}?email=${email}`)
-        .then(() => {
-          console.log('email 조회 완료');
-          setLevel(level + 1);
+        .get(`account/search?email=${email}`)
+        // .get(`/account/{id}?email=${email}`)
+        .then((res) => {
+          if (res.data !== 'none') {
+            console.log('email 조회 완료');
+            setLevel(level + 1);
+          } else {
+            alert('email을 다시 확인해주세요.');
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -75,7 +80,7 @@ export default function FindPassword(props) {
       question: pwQuestion,
       answer: pwAnswer,
     };
-
+    console.log(body);
     axios
       .post('/account/find_pw', body)
       .then((res) => {
@@ -94,15 +99,18 @@ export default function FindPassword(props) {
       console.log('비번 안 맞음');
     } else {
       const body = {
+        email,
+        question: pwQuestion,
+        answer: pwAnswer,
         password,
       };
       // test용
       console.log(body);
       axios
-        .put('/account/find_pw', body)
+        .post('/account/find_pw/success', body)
         .then((res) => {
           // 비번 변경 성공 메시지
-          alert('비밀번호 변경이 완료되었습니다.');
+          alert('비밀번호 변경이 완료되었습니다! 다시 로그인해주세요!');
           console.log(res);
           navigate('/login');
         })
@@ -187,7 +195,7 @@ export default function FindPassword(props) {
               <TextField
                 autoFocus
                 margin="dense"
-                id="name"
+                id="paswword"
                 label="Password"
                 type="password"
                 fullWidth
@@ -196,7 +204,7 @@ export default function FindPassword(props) {
               />
               <TextField
                 margin="dense"
-                id="name"
+                id="passwordConfirm"
                 label="Password Confirmation"
                 type="password"
                 fullWidth
