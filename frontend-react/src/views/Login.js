@@ -45,10 +45,9 @@ export default function Login() {
       .then((res) => {
         alert('안녕하세요!');
         navigate('/profile');
-        console.log(res.data.accessToken);
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
-
+        console.log(res.data.accessToken);
         // store에 저장할 정보요청
         axios
           .get(`/account/{id}?email=${inputId}`, {
@@ -56,7 +55,6 @@ export default function Login() {
           })
           .then((response) => {
             dispatch(login(response.data));
-            console.log(response.data);
           });
       })
       .catch((err) => {
@@ -77,7 +75,7 @@ export default function Login() {
     left: '55%',
     top: '150px',
     width: '400px',
-    height: '430px',
+    height: '500px',
     textAlign: 'center',
     verticalAlign: 'middle',
     borderRadius: '50px',

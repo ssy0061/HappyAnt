@@ -8,7 +8,7 @@ export default function MatchingAppliList(props) {
   // eslint-disable-next-line react/destructuring-assignment
   const pk = props.articleId;
   console.log(item, '1');
-  const yourId = useSelector((state) => state.user.userInfo.id);
+  const yourId = useSelector((state) => state.user.userInfo.userId);
   const [applilist, setApplilist] = useState('');
   console.log(pk, 'ok');
   console.log(applilist);

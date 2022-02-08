@@ -25,9 +25,13 @@ export default function MatchingAppliAccept(props) {
 
   const acceptStudy = (e) => {
     e.preventDefault();
-
+    console.log(pk, userId);
     axios
-      .post(`/match/${pk}/${userId}`)
+      .post(`/match/${pk}/${userId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then(() => {
         alert('승인되었습니다!');
       })

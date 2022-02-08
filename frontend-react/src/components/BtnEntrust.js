@@ -1,21 +1,23 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-export default function BtnEntrust() {
-  const [memberList, setMemberList] = useState('');
+export default function BtnEntrust(props) {
+  const [memberList, setMemberList] = useState([]);
   const [selected, setSelected] = useState('');
   // 임의 pk => 추후 props로 상위 컴포넌트에서 받아 올 것
-  const pk = 1;
+  const { studyId } = props;
 
   // 해당 스터디의 멤버 조회
   const member = () => {
     axios
-      .get(`study/${pk}/member`)
+      .get(`/study/${studyId}/member`)
       .then((res) => {
         console.log(res, '스터디원');
         setMemberList(res);
       })
-      .catch((err) => console.log(err, 'member error'));
+      .catch((err) => {
+        console.log(err, 'member error');
+      });
   };
   useEffect(() => {
     member();
@@ -30,7 +32,7 @@ export default function BtnEntrust() {
   const onEntrust = (e) => {
     e.preventDefault();
     axios
-      .post(`/study/${pk}/member/${selected}/leader`)
+      .post(`/study/${studyId}/member/${selected}/leader`)
       .then((res) => {
         console.log(res);
       })
@@ -42,7 +44,7 @@ export default function BtnEntrust() {
     e.preventDefault();
     console.log('onclick');
     axios
-      .delete(`/study/${pk}/member/${selected}`)
+      .delete(`/study/${studyId}/member/${selected}`)
       .then((res) => {
         console.log(res, '스터디원 추방');
       })
