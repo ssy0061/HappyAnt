@@ -63,6 +63,7 @@ public class MatchService {
     }
     
     public void addNewArticle(MatchArticleRequest articleForm) {
+    	if (articleForm.getHeadCount() < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
     	Long writerId = articleForm.getWriterId();
     	// 1. dto를 Entity로 변경
     	MatchArticle article = articleForm.toEntity();
@@ -71,7 +72,6 @@ public class MatchService {
 							HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 							new IllegalArgumentException()));
     	article.setWriter(writer);
-//    	writer.getMatchArticles().add(article);
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
     	articleRepo.save(article);
     }
@@ -84,6 +84,7 @@ public class MatchService {
     		String category,
     		String content,
     		String tempStudyName,
+    		Long headCount,
     		Boolean state) {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new ResponseStatusException(
@@ -108,6 +109,10 @@ public class MatchService {
     	
     	if (tempStudyName != null && tempStudyName.length() > 0 && !Objects.equals(article.getTempStudyName(), tempStudyName)) {
     		article.setTempStudyName(tempStudyName);
+    	}
+    	
+    	if (headCount != null && headCount > 1 &&!Objects.equals(article.getHeadCount(), headCount)) {
+    		article.setHeadCount(headCount);
     	}
     	
     	if (state != null && !Objects.equals(article.getState(), state)) {

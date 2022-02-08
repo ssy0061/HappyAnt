@@ -21,6 +21,7 @@ public class MatchArticleResponse {
 	private Long writerId;
 	private String writerName;
 	private String tempStudyName;
+	private Long headCount;
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
 	private Boolean state;
