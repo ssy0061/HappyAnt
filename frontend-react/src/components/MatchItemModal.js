@@ -18,7 +18,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const getItem = () => {
     axios
-      .get(`/match/${pk}`)
+      .get(`/match/${pk}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then((res) => {
         setItem(res.data);
         console.log(res.data);
