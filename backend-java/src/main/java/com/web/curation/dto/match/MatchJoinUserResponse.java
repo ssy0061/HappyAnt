@@ -1,5 +1,7 @@
 package com.web.curation.dto.match;
 
+import com.web.curation.model.match.JoinState;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +14,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class MatchJoinUserResponse {
-	private Long ArticleId;
 	private Long UserId;
 	private String UserName;
+	private Long ArticleId;
 	private String content;
+	private JoinState state;
 }

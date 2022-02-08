@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,9 +19,7 @@ import org.springframework.data.annotation.CreatedDate;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.dto.study.StudyArticleResponse;
-import com.web.curation.model.account.User;
-import com.web.curation.model.match.MatchArticle;
-import com.web.curation.model.match.MatchJoin;
+import com.web.curation.model.account.MyUser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +49,7 @@ public class StudyArticle {
 				referencedColumnName = "id",
 				updatable = false)
 	@JsonBackReference
-	private User studyWriter;
+	private MyUser studyWriter;
     
     @OneToMany(mappedBy="studyArticle", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

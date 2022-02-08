@@ -2,6 +2,7 @@ package com.web.curation.model.study;
 
 import java.time.LocalDateTime;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +16,7 @@ import org.springframework.data.annotation.CreatedDate;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +46,7 @@ public class StudyComment {
 				referencedColumnName = "id",
 				updatable = false)
 	@JsonBackReference
-	private User studyCommenter;
+	private MyUser studyCommenter;
     
 	@Column
 	private String content;
@@ -70,7 +71,7 @@ public class StudyComment {
 								createDate, updateDate);
 	}
 
-	public StudyComment(StudyArticle studyArticle, User studyCommenter, String content) {
+	public StudyComment(StudyArticle studyArticle, MyUser studyCommenter, String content) {
 		super();
 		this.studyArticle = studyArticle;
 		this.studyCommenter = studyCommenter;

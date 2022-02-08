@@ -1,6 +1,6 @@
 package com.web.curation.dto.account;
 
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

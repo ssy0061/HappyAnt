@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import MatchListPagination from '../components/MatchListPagination';
 import MatchListCheckbox from '../components/MatchListCheckbox';
 import MatchListSearch from '../components/MatchListSearch';
+import MatchItemModal from '../components/MatchItemModal';
 
 function MatchList() {
   // 원본 데이터
@@ -27,6 +28,18 @@ function MatchList() {
   const indexOfFirstPost = indexOfLastPost - postPerPage;
   // 0~9까지의 필터리스트를 slice해서 새로운 배열에 담고 currentPosts에 담음(화면에 이걸 출력)
   const currentPosts = filterList.slice(indexOfFirstPost, indexOfLastPost);
+
+  // 글 디테일 모달값
+  const [open2, setOpen2] = useState(false);
+  const [detailId, setDetailId] = useState();
+  const handleClickOpen2 = (id) => {
+    setDetailId(id);
+    setOpen2(true);
+    console.log(id);
+  };
+  const handleClickClose2 = () => {
+    setOpen2(false);
+  };
 
   // 필터리스트에 값 변화가 있을때마다 첫번째 페이지로 보게 이동시키기
   useEffect(() => {
@@ -78,6 +91,9 @@ function MatchList() {
       axios({
         method: 'get',
         url: `/match/search?Keyword=${event.target.value}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
       })
         .then((res) => {
           setFilterList(res.data);
@@ -159,7 +175,19 @@ function MatchList() {
                 {item.articleId}
                 {item.writerName}
               </td>
-              <td style={{ cursor: 'pointer' }}>{item.title}</td>
+              <td>
+                <button
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => handleClickOpen2(item.articleId)}
+                  type="button"
+                >
+                  {item.title}
+                </button>
+              </td>
               {item.status === true ? <td>모집완료</td> : <td>모집중</td>}
             </tr>
           ))}
@@ -184,6 +212,9 @@ function MatchList() {
         onKeyPress={onKeyPress}
         handleSearch={handleSearch}
       />
+      {open2 && (
+        <MatchItemModal pk={detailId} handleClickClose={handleClickClose2} />
+      )}
     </div>
   );
 }

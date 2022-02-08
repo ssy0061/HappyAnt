@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FindPassword from '../components/FindPassword';
 import { login } from '../redux/userSlice';
+import Google from '../components/Google';
+import Kakao from '../components/Kakao';
 
 export default function Login() {
   const [inputId, setInputId] = useState('');
@@ -152,6 +154,10 @@ export default function Login() {
               비밀번호 찾기
             </Button>
             {/* 모달창 open -> 가입 이메일 입력 -> [추가항목 보임] 비밀번호 찾기 질문 입력/확인 -> 비밀번호 변경 완료 확인 및 재로그인 하라고 알려줌  */}
+          </div>
+          <div>
+            <Google />
+            <Kakao />
           </div>
         </div>
         {open && <FindPassword handleClickClose={handleClickClose} />}

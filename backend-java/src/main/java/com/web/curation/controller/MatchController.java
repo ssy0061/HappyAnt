@@ -19,7 +19,7 @@ import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.account.User;
+import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.service.MatchService;
@@ -66,18 +66,21 @@ public class MatchController {
     @ApiOperation(value = "모집글 수정(마감)")
     public void updateArticle(
     		@PathVariable("articleId") Long articleId,
+    		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
+    		@RequestParam(required = false) String tempStudyName,
     		@RequestParam(required = false) Boolean state) {
-    	matchService.updateArticle(articleId, title, category, content, state);
+    	matchService.updateArticle(articleId, loginUserId, title, category, content, tempStudyName, state);
     }
     
     
     @DeleteMapping("{articleId}")
     @ApiOperation(value = "모집글 삭제")
-    public void deleteArticle(@PathVariable("articleId") Long articleId) {
-    	matchService.deleteArticle(articleId);
+    public void deleteArticle(@PathVariable("articleId") Long articleId,
+    							@RequestParam(required = true) Long loginUserId) {
+    	matchService.deleteArticle(articleId, loginUserId);
     }
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
@@ -110,9 +113,16 @@ public class MatchController {
     }
     
     @PostMapping("{articleId}/{userId}")
-	@ApiOperation(value = "스터디원 추가")
+	@ApiOperation(value = "승인(스터디원 추가)")
 	public void addNewStudyMember(@PathVariable("articleId") Long articleId,
 									@PathVariable("userId") Long joinUserId) {
     	matchService.addNewMatchMember(articleId, joinUserId);
 	}
+    
+    @PutMapping("{articleId}/{userId}")
+    @ApiOperation(value = "거부")
+    public void denyJoinUser(@PathVariable("articleId") Long articleId,
+								@PathVariable("userId") Long joinUserId) {
+    	matchService.denyJoinUser(articleId, joinUserId);
+    }
 }
