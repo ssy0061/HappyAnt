@@ -7,9 +7,9 @@ export default function MatchItemDetail(props) {
   console.log(item, 'item');
   return (
     <div>
-      <h1>{item.title}</h1>
-      <p>{item.category}</p>
-      <p>{item.content}</p>
+      <h1>제목 : {item.title}</h1>
+      <p>카테고리 : {item.category}</p>
+      <p>내용 : {item.content}</p>
       {item.state ? <p>상태 : 모집중</p> : <p>상태 : 마감</p>}
       <MatchItemAppliList item={item} pk={pk} />
     </div>

@@ -17,19 +17,19 @@ export default function MatchItemCreate(props) {
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [studyName, setstudyName] = useState('');
+  const [studyName, setStudyName] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
   const userId = useSelector((state) => state.user.userInfo.id);
   const { handleClickClose } = props;
 
+  const handleStudyName = (e) => {
+    setStudyName(e.target.value);
+  };
   const handleCategory = (e) => {
     setCategory(e.target.value);
   };
   const handleTitle = (e) => {
     setTitle(e.target.value);
-  };
-  const handleStudyName = (e) => {
-    setstudyName(e.target.value);
   };
 
   const handleContent = (e) => {
@@ -41,23 +41,20 @@ export default function MatchItemCreate(props) {
   };
 
   const onClickCreate = () => {
-    const body = {
+    const data = {
+      tempStudy: studyName,
       category,
-      title,
       content,
+      title,
       writerId: userId,
     };
-
-    if (
-      title === '' ||
-      studyName === '' ||
-      content === '' ||
-      memberNum === ''
-    ) {
+    console.log(localStorage.getItem('accessToken'));
+    console.log(userId);
+    if (title === '' || content === '' || memberNum === '') {
       console.log('내용을 기입해주세요.');
     } else {
       axios
-        .post('/match', body, {
+        .post('/match', data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -87,6 +84,16 @@ export default function MatchItemCreate(props) {
               fullWidth
               variant="standard"
               onChange={handleTitle}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="스터디 이름"
+              type="title"
+              fullWidth
+              variant="standard"
+              onChange={handleStudyName}
             />
           </div>
           <div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+// import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { logout } from '../redux/userSlice';
 
 function nav() {
@@ -12,13 +13,19 @@ function nav() {
 
   const clickLogout = () => {
     dispatch(logout());
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     navigate('/login');
   };
   // const userName = useSelector((state) => state.user.username);
+  // const clickStudy = () => {
+  //   navigate('/study');
+  // };
 
   return (
     <div>
       <h1>Navbar</h1>
+      <Link to={`/study/${1}`}>1번스터디로 가기</Link>
       {/* 비로그인 상태일때 보이는 navbar */}
       {!loginPage && (
         <div>
@@ -50,6 +57,20 @@ function nav() {
               </button>
             </li>
           </ul>
+          {/* <FormControl style={{ width: '256px' }}>
+            <InputLabel id="demo-simple-select-label">내스터디 목록</InputLabel>
+            <Select label="스터디 목록" value={studyId} onChange={clickStudy}>
+              <MenuItem onClick={console.log('1번')} value={1}>
+                1번 스터디 이름
+              </MenuItem>
+              <MenuItem onClick={console.log('2번')} value={2}>
+                2번 스터디 이름
+              </MenuItem>
+              <MenuItem onClick={console.log('3번')} value={3}>
+                3번 스터디 이름
+              </MenuItem>
+            </Select>
+          </FormControl> */}
         </div>
       )}
     </div>
