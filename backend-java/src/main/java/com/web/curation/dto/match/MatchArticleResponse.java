@@ -20,8 +20,10 @@ public class MatchArticleResponse {
 	private String content;
 	private Long writerId;
 	private String writerName;
+	private String tempStudyName;
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
 	private Boolean state;
 	private Long studyId;
+	private String studyName;
 }

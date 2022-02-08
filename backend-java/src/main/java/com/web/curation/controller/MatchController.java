@@ -70,8 +70,9 @@ public class MatchController {
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
+    		@RequestParam(required = false) String tempStudyName,
     		@RequestParam(required = false) Boolean state) {
-    	matchService.updateArticle(articleId, loginUserId, title, category, content, state);
+    	matchService.updateArticle(articleId, loginUserId, title, category, content, tempStudyName, state);
     }
     
     
