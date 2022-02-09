@@ -10,14 +10,14 @@ export default function BtnEntrust() {
   // 해당 스터디의 멤버 조회
   const member = () => {
     axios
-      .get(`study/${pk}/member`, {
+      .get(`/study/${pk}/member`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((res) => {
-        console.log(res, '스터디원');
-        setMemberList(res);
+        console.log(res.data, '스터디원');
+        setMemberList(res.data);
       })
       .catch((err) => {
         console.log(err, 'member error');
@@ -63,8 +63,8 @@ export default function BtnEntrust() {
       <div>
         <select onChange={handleSelect} value={selected}>
           {memberList.map((item) => (
-            <option value={item} key={item}>
-              {item}
+            <option value={item.userId} key={item.userId}>
+              {item.userName}
             </option>
           ))}
         </select>

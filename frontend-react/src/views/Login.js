@@ -98,9 +98,18 @@ export default function Login() {
     width: '100%',
   };
 
+  const ourName = {
+    textAlign: 'center',
+    fontSize: '80px',
+    position: 'absolute',
+    left: '100px',
+    top: '300px',
+  };
+
   // ---------------------------- render--------------------------------
   return (
     <div style={background}>
+      <div style={ourName}>개미키우기</div>
       <Paper elevation={5} style={loginPaper}>
         <div style={innerPaper}>
           <h1>Login</h1>

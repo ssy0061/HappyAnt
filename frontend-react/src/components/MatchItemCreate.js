@@ -41,7 +41,7 @@ export default function MatchItemCreate(props) {
 
   const onClickCreate = () => {
     const data = {
-      headcount: memberNum,
+      headCount: memberNum,
       category,
       content,
       tempStudyName: studyName,

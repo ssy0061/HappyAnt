@@ -80,7 +80,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
     handleClickClose();
   };
   const applyStudy = () => {
-    console.log(item.articleId);
+    console.log(item.articleId, yourId);
     axios.post(`/match/join/${item.articleId}`, [], {
       params: {
         joinUserId: yourId,
@@ -104,7 +104,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
           <div>
             <MatchItemDetail item={item} />
             {item.writerId === yourId && (
-              <MatchItemAppliList item={item} articleId={pk} />
+              <MatchItemAppliList item={item} pk={pk} />
             )}
           </div>
         )}
@@ -116,10 +116,10 @@ export default function MatchItemModal({ pk, handleClickClose }) {
           {item.writerId === yourId && mode === 1 && (
             <div>
               {item.state === true && (
-                <Button onClick={setStateFalse}>마감</Button>
+                <Button onClick={setStateFalse}>모집</Button>
               )}
               {item.state === false && (
-                <Button onClick={setStateTrue}>모집</Button>
+                <Button onClick={setStateTrue}>마감</Button>
               )}
               <Button onClick={goUpdate}>수정</Button>
               <Button onClick={deleteItem}>삭제</Button>
