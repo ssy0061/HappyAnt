@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 import StudyItemCreate from '../components/StudyItemCreate';
 import StudyList from './StudyList';
 import BtnEntrust from '../components/BtnEntrust';
 
 export default function Study() {
   const { studyId } = useParams();
+  const userInfo = useSelector((state) => state.user.userInfo);
   const [open3, setOpen3] = useState(false);
+  const [studyInfo, setStudyInfo] = useState('');
   const handleClickOpen3 = () => {
     setOpen3(true);
   };
   const handleClickClose3 = () => {
     setOpen3(false);
   };
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: `/study/${studyId}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
+      .then((response) => {
+        setStudyInfo(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   // ----------------------css-------------------
   const asideDiv = {
@@ -44,7 +64,10 @@ export default function Study() {
         <p>aside6</p>
         <p>aside7</p>
         <p>aside8</p>
-        <BtnEntrust studyId={studyId} />
+        {/* 리더에게만 위임/추방 보여주기 */}
+        {studyInfo.leaderId === userInfo.userId ? (
+          <BtnEntrust studyId={studyId} />
+        ) : null}
       </aside>
       <section style={sectionDiv}>
         <h1>{studyId}번 공간</h1>
