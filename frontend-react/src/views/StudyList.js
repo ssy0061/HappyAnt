@@ -7,35 +7,35 @@ import MatchListSearch from '../components/MatchListSearch';
 function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
   const { studyId } = props;
+  const { refresh } = props;
   // 원본 데이터
   const [articleList, setArticleList] = useState([]);
   // 필터한 데이터
   const [filterList, setFilterList] = useState([]);
 
   // 무한스크롤
-  const [prev, setPrev] = useState(0);
-  const [curr, setCurr] = useState(20);
+  const [prev] = useState(0);
+  const [curr, setCurr] = useState(10);
   const [thisState, setThisState] = useState(false);
-  //
 
   useEffect(() => {
     axios({
       method: 'get',
-      url: `/study/${studyId}`,
+      url: `/study/${studyId}/article`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     })
       .then((res) => {
-        // console.log(res.data.reverse());
+        console.log(res);
         setArticleList(res.data.reverse());
         setFilterList(res.data.slice(prev, curr));
-        // setFilterList(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [refresh]);
+  //
 
   // 검색박스 코드 복사해오기
   //
@@ -54,7 +54,7 @@ function StudyList(props) {
       console.log(event);
       axios({
         method: 'get',
-        url: `/study/${studyId}/search?Keyword=${searchValue}`,
+        url: `/study/${studyId}/article/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -94,15 +94,14 @@ function StudyList(props) {
   };
 
   // 무한스크롤 라이브러리 활용
-  const { ref, inView } = useInView({ threshold: 0 });
+  const { ref, inView } = useInView({ threshold: 0.5 });
   useEffect(() => {
     if (inView && !thisState) {
       console.log(filterList);
-      setPrev(curr);
-      setCurr((current) => current + 20);
       const items = articleList.slice(prev, curr);
-      console.log('hi');
-      setFilterList(filterList.concat(items));
+      setCurr(curr + 10);
+      setFilterList(items);
+      console.log(prev, curr);
     }
   }, [inView]);
   return (
@@ -135,8 +134,8 @@ function StudyList(props) {
           </div>
         ))}
       </div>
-
       <div ref={ref} />
+
       <hr />
     </div>
   );
