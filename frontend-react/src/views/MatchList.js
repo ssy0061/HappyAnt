@@ -5,7 +5,7 @@ import MatchListCheckbox from '../components/MatchListCheckbox';
 import MatchListSearch from '../components/MatchListSearch';
 import MatchItemModal from '../components/MatchItemModal';
 
-function MatchList() {
+function MatchList(refresh) {
   // 원본 데이터
   const [list, setList] = useState([]);
   // 필터한 데이터
@@ -67,7 +67,7 @@ function MatchList() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [refresh]);
 
   // 검색박스에 적힌 값을 저장함으로써 검색 버튼을 눌러도 검색이 가능하다.
   const saveSearchValue = (event) => {

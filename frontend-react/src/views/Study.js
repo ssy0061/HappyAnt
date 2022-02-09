@@ -7,11 +7,13 @@ import BtnEntrust from '../components/BtnEntrust';
 export default function Study() {
   const { studyId } = useParams();
   const [open3, setOpen3] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const handleClickOpen3 = () => {
     setOpen3(true);
   };
   const handleClickClose3 = () => {
     setOpen3(false);
+    setRefresh(!refresh);
   };
 
   // ----------------------css-------------------
@@ -52,7 +54,7 @@ export default function Study() {
         <button type="submit" onClick={handleClickOpen3}>
           스터디 글 작성
         </button>
-        <StudyList studyId={studyId} />
+        <StudyList studyId={studyId} refresh={refresh} />
         {open3 && <StudyItemCreate handleClickClose={handleClickClose3} />}
       </section>
     </div>
