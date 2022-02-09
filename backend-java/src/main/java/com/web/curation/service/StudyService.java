@@ -22,6 +22,7 @@ import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
+import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
@@ -245,6 +246,8 @@ public class StudyService {
     	return response;
     }
     
+    ////// 스터디 관리
+
     @Transactional
     public void delegateLeader(Long studyId, Long userId, Long loginUserId) {
     	checkAndGetStudy(studyId);
@@ -292,6 +295,11 @@ public class StudyService {
 					HttpStatus.BAD_REQUEST, "userId와 loginUserId가 일치하지 않습니다.",
 					new IllegalArgumentException());
     	}
+    }
+    
+    public StudyResponse getStudy(Long studyId) {
+    	StudyResponse response = checkAndGetStudy(studyId).toResponse();
+    	return response;
     }
     
     @Transactional // 변경된 데이터를 DB에 저장
