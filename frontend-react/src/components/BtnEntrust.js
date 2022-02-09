@@ -1,22 +1,22 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function BtnEntrust() {
+export default function BtnEntrust(props) {
   const [memberList, setMemberList] = useState([]);
   const [selected, setSelected] = useState('');
-  // 임의 스터디 pk => 추후 props로 상위 컴포넌트에서 받아 올 것
-  const pk = 1;
-  console.log('멤버axios전');
+  const Info = useSelector((state) => state.user.userInfo);
+
+  const { studyId } = props;
   // 해당 스터디의 멤버 조회
   const member = () => {
     axios
-      .get(`/study/${pk}/member`, {
+      .get(`/study/${studyId}/member`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((res) => {
-        console.log(res.data, '스터디원');
         setMemberList(res.data);
       })
       .catch((err) => {
@@ -26,40 +26,56 @@ export default function BtnEntrust() {
   useEffect(() => {
     member();
   }, []);
-  console.log(memberList);
 
   const handleSelect = (e) => {
     setSelected(e.target.value);
-    console.log(selected);
+    console.log(selected, 'select');
   };
 
   // 위임하기
   const onEntrust = (e) => {
     e.preventDefault();
     console.log('entrust');
-    // axios
-    //   .post(`/study/${pk}/member/${selected}/leader`)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => console.log(err, '위임 error'));
+    axios
+      .post(
+        `/study/${studyId}/member/${selected}/leader?loginUserId=${Info.userId}`,
+        [],
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data, '위임완료');
+      })
+      .catch((err) => console.log(err, '위임 error'));
   };
 
   // 추방하기
   const onDeport = (e) => {
     e.preventDefault();
     console.log('onclick');
-    // axios
-    //   .delete(`/study/${pk}/member/${selected}`)
-    //   .then((res) => {
-    //     console.log(res, '스터디원 추방');
-    //   })
-    //   .catch((err) => console.log(err, '추방 error'));
+    axios
+      .delete(
+        `/study/${studyId}/member/${selected}?loginUserId=${Info.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, '스터디원 추방');
+      })
+      .catch((err) => console.log(err, '추방 error'));
   };
+  console.log(selected);
 
   return (
     <div>
-      <h1>위임 / 추방 기능</h1>
+      <hr />
+      <h4>위임 / 추방 기능</h4>
       <div>
         <select onChange={handleSelect} value={selected}>
           {memberList.map((item) => (
@@ -74,10 +90,6 @@ export default function BtnEntrust() {
         <button type="submit" onClick={onDeport}>
           추방하기
         </button>
-        <hr />
-        <p>
-          Selected: <b>{selected}</b>
-        </p>
       </div>
     </div>
   );

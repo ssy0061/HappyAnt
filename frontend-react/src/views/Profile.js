@@ -15,10 +15,6 @@ function Profile() {
   console.log(study, '스터디');
   const goToPage = (id, e) => {
     navigate(`/study/${id}`);
-    // 30번째 줄 onclick에서 id(스터디 링크)를 받아 Link 이동
-    // 스터디 페이지가 완성될 시 아래 코드 살려서 이동
-    // 스터디 링크에 따라 아래 이동 링크 변경될 예정
-    // document.location.href(`/study/${study[i].id}`);
     console.log(id);
     e.preventDefault();
   };
