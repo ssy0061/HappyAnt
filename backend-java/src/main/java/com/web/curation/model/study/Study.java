@@ -60,6 +60,9 @@ public class Study {
 	private String name;
 	
 	@Column
+	private Long headCount;
+	
+	@Column
 	private String category;
 	
 	@Column
@@ -75,6 +78,17 @@ public class Study {
 	private LocalDateTime createDate;
     
     public StudyResponse toResponse() {
-    	return new StudyResponse(id, name, leader.getId(), category, area, interest, createDate);
+    	return new StudyResponse(id, leader.getId(), name, headCount, category, area, interest, createDate);
+    }
+    
+    public Study(MyUser leader, String name, Long headCount,
+    			String category, String area, String interest) {
+    	super();
+    	this.leader = leader;
+    	this.name = name;
+    	this.headCount = headCount;
+    	this.category = category;
+    	this.area = area;
+    	this.interest = interest;
     }
 }
