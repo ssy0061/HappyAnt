@@ -21,18 +21,15 @@ function StudyList(props) {
   useEffect(() => {
     axios({
       method: 'get',
-      url: `/study/${studyId}`,
+      url: `/study/${studyId}/article`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     })
       .then((res) => {
-        // console.log(res.data.reverse());
         console.log(res);
         setArticleList(res.data.reverse());
         setFilterList(res.data.slice(prev, curr));
-
-        // setFilterList(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -136,8 +133,8 @@ function StudyList(props) {
             <hr />
           </div>
         ))}
-        <div ref={ref} />
       </div>
+      <div ref={ref} />
 
       <hr />
     </div>
