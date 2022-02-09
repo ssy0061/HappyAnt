@@ -26,7 +26,6 @@ export default function BtnEntrust(props) {
   useEffect(() => {
     member();
   }, []);
-  console.log(memberList);
 
   const handleSelect = (e) => {
     setSelected(e.target.value);
