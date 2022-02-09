@@ -43,6 +43,7 @@ export default function MatchItemUpdate(props) {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         params: {
+          headCount: memberNum,
           loginUserId: yourId,
           category: inputCategory,
           title: inputTitle,
