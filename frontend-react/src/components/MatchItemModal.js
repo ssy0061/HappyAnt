@@ -81,15 +81,22 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const applyStudy = () => {
     console.log(item.articleId, yourId);
-    axios.post(`/match/join/${item.articleId}`, [], {
-      params: {
-        joinUserId: yourId,
-        content: '임시',
-      },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-    });
+    axios
+      .post(`/match/join/${item.articleId}`, [], {
+        params: {
+          joinUserId: yourId,
+          content: '임시',
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then(() => {
+        alert('신청되었습니다.');
+      })
+      .catch(() => {
+        alert('이미 신청한 스터디입니다.');
+      });
   };
 
   return (
