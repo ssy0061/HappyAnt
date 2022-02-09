@@ -90,10 +90,6 @@ export default function BtnEntrust(props) {
         <button type="submit" onClick={onDeport}>
           추방하기
         </button>
-        <hr />
-        <p>
-          Selected: <b>{selected}</b>
-        </p>
       </div>
     </div>
   );

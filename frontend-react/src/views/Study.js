@@ -5,6 +5,7 @@ import axios from 'axios';
 import StudyItemCreate from '../components/StudyItemCreate';
 import StudyList from './StudyList';
 import BtnEntrust from '../components/BtnEntrust';
+import BtnDelete from '../components/BtnDelete';
 
 export default function Study() {
   const { studyId } = useParams();
@@ -67,7 +68,9 @@ export default function Study() {
         {/* 리더에게만 위임/추방 보여주기 */}
         {studyInfo.leaderId === userInfo.userId ? (
           <BtnEntrust studyId={studyId} />
-        ) : null}
+        ) : (
+          <BtnDelete studyId={studyId} />
+        )}
       </aside>
       <section style={sectionDiv}>
         <h1>{studyId}번 공간</h1>
