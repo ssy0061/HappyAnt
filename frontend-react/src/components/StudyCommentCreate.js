@@ -1,21 +1,35 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 
-export default function StudyCommentCreate() {
+export default function StudyCommentCreate({ articleId, reRender }) {
+  const yourId = useSelector((state) => state.user.userInfo.userId);
   const [inputContent, setIntputContent] = useState('');
-  const studyId = useParams();
+  const { studyId } = useParams();
   const handleContent = (e) => setIntputContent(e.target.value);
   const submitContent = (e) => {
-    if (e.key === 'enter') {
+    if (e.key === 'Enter') {
       console.log('보냄');
       axios
-        .post(`/study/${studyId}/${`articleId`}`, {
-          content: inputContent,
-          writerId: `userId`,
+        .post(
+          `/study/${studyId}/${articleId}`,
+          {
+            content: inputContent,
+            writerId: yourId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          reRender();
+          setIntputContent('');
         })
-        .then((res) => console.log(res))
         .catch((err) => console.log(err));
     }
   };
@@ -25,8 +39,10 @@ export default function StudyCommentCreate() {
       <TextField
         id="inputForm"
         variant="filled"
+        value={inputContent}
         onChange={handleContent}
-        onKeyUp={submitContent}
+        onKeyPress={submitContent}
+        fullWidth
       />
     </div>
   );

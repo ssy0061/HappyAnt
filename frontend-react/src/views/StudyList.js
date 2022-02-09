@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import MatchListSearch from '../components/MatchListSearch';
+import StudyCommentList from '../components/StudyCommentList';
+import StudyItemDelete from '../components/StudyItemDelete';
+import StudyItemUpdate from '../components/StudyItemUpdate';
 
 function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
@@ -21,7 +24,7 @@ function StudyList(props) {
   useEffect(() => {
     axios({
       method: 'get',
-      url: `/study/${studyId}`,
+      url: `/study/${studyId}/article`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
@@ -54,7 +57,7 @@ function StudyList(props) {
       console.log(event);
       axios({
         method: 'get',
-        url: `/study/${studyId}/search?Keyword=${searchValue}`,
+        url: `/study/${studyId}/article/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -131,6 +134,10 @@ function StudyList(props) {
             <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
               11
             )}`}</p>
+            <StudyItemDelete articleId={item.articleId} />
+            <StudyItemUpdate articleId={item.articleId} />
+            <hr />
+            <StudyCommentList articleId={item.articleId} />
             <hr />
           </div>
         ))}
