@@ -33,10 +33,12 @@ export default function MatchingAppliAccept(props) {
       })
       .then(() => {
         alert('승인되었습니다!');
+        handleClose();
       })
       .catch((err) => {
         console.log(err);
         alert('이미 수락한 인원입니다.');
+        handleClose();
       });
   };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
   Button,
   Dialog,
@@ -19,6 +20,7 @@ import {
 import CommentIcon from '@mui/icons-material/Comment';
 
 export default function StudyItemCreate(props) {
+  const { studyId } = useParams();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [종목기본정보, setBasicInfo] = useState('');
@@ -34,6 +36,7 @@ export default function StudyItemCreate(props) {
 
   const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
+  console.log(종목기본정보, 투자아이디어, 주요제품_서비스, 경쟁사);
 
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -79,10 +82,10 @@ export default function StudyItemCreate(props) {
     const body = {
       title,
       content,
-      종목기본정보,
-      투자아이디어,
-      주요제품_서비스,
-      경쟁사,
+      // 종목기본정보,
+      // 투자아이디어,
+      // 주요제품_서비스,
+      // 경쟁사,
       writerId: userId,
     };
 
@@ -90,7 +93,11 @@ export default function StudyItemCreate(props) {
       console.log('내용을 기입해주세요.');
     } else {
       axios
-        .post(`/study/${1}`, body)
+        .post(`/study/${studyId}`, body, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        })
         .then((res) => {
           console.log(res);
           handleClickClose();
