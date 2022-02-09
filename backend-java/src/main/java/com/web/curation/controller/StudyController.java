@@ -155,12 +155,12 @@ public class StudyController {
     		@PathVariable("studyId") Long studyId,
     		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String name,
+    		@RequestParam(required = false) Long headCount,
     		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String area,
-    		@RequestParam(required = false) String interest,
-    		@RequestParam(required = false) Long headCount) {
-    	studyService.updateStudy(studyId, loginUserId, name, category, 
-    							area, interest, headCount);
+    		@RequestParam(required = false) String interest) {
+    	studyService.updateStudy(studyId, loginUserId, name, headCount, 
+    							category, area, interest);
     }
     
     // 알림 기능 완성 후 구현예정

@@ -299,10 +299,10 @@ public class StudyService {
     		Long studyId,
     		Long loginUserId,
     		String name,
+    		Long headCount,
     		String category,
     		String area,
-    		String interest,
-    		Long headCount) {
+    		String interest) {
     	Study study = checkAndGetStudy(studyId);
     	if (study.getLeader().getId() != loginUserId) {
     		throw new ResponseStatusException(

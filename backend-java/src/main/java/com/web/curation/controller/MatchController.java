@@ -68,13 +68,15 @@ public class MatchController {
     		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String title,
-    		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
+    		@RequestParam(required = false) Boolean state,
     		@RequestParam(required = false) String tempStudyName,
-    		@RequestParam(required = false) Long headCount,
-    		@RequestParam(required = false) Boolean state) {
-    	matchService.updateArticle(articleId, loginUserId, title, category, 
-    								content, tempStudyName, headCount, state);
+    		@RequestParam(required = false) Long tempHeadCount,
+    		@RequestParam(required = false) String tempCategory,
+    		@RequestParam(required = false) String tempArea,
+    		@RequestParam(required = false) String tempInterest) {
+    	matchService.updateArticle(articleId, loginUserId, title, content, state, 
+    			tempStudyName, tempHeadCount, tempCategory, tempArea, tempInterest);
     }
     
     

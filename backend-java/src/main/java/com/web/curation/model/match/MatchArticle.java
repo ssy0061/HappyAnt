@@ -41,16 +41,22 @@ public class MatchArticle {
 	private String title;
 	
 	@Column
-	private String category;
-	
-	@Column
 	private String content;
 	
 	@Column
 	private String tempStudyName;
 	
 	@Column
-	private Long headCount;
+	private Long tempHeadCount;
+	
+	@Column
+	private String tempCategory;
+	
+	@Column
+	private String tempArea;
+	
+	@Column
+	private String tempInterest;
 	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -90,28 +96,43 @@ public class MatchArticle {
 		
 	}
 
-	public MatchArticle(String title, String category, String content, String tempStudyName, Long headCount, Boolean state) {
+	public MatchArticle(String title, String content, 
+						String tempStudyName, Long tempHeadCount, String tempCategory,
+						String tempArea, String tempInterest, Boolean state) {
 		super();
 		this.title = title;
-		this.category = category;
 		this.content = content;
 		this.tempStudyName = tempStudyName;
-		this.headCount = headCount;
+		this.tempHeadCount = tempHeadCount;
+		this.tempCategory = tempCategory;
+		this.tempArea = tempArea;
+		this.tempInterest = tempInterest;
+		this.state = state;
+	}
+	
+	public MatchArticle(String title, String content, Boolean state) {
+		super();
+		this.title = title;
+		this.content = content;
 		this.state = state;
 	}
 
 	public MatchArticle toEntity() {
-		return new MatchArticle(title, category, content, tempStudyName, headCount, state);
+		return new MatchArticle(title, content, tempStudyName, tempHeadCount,
+								tempCategory, tempArea, tempInterest, state);
 	}
 	
 	public MatchArticleResponse toResponse() {
 		if (study != null) {
-			return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), tempStudyName, headCount,
-					createDate, updateDate, state, study.getId(), study.getName());
+			return new MatchArticleResponse(id, title, content, writer.getId(), writer.getName(), createDate, updateDate, state,
+					study.getId(), study.getName(), study.getHeadCount(), study.getCategory(), study.getArea(), study.getInterest());
 		}
-		return new MatchArticleResponse(id, category, title, content, writer.getId(), writer.getName(), tempStudyName, headCount,
-				createDate, updateDate, state, null, null);
+		return new MatchArticleResponse(id, title, content, writer.getId(), writer.getName(), createDate, updateDate, state,
+				null, tempStudyName, tempHeadCount, tempCategory, tempArea, tempInterest);
 	}
-
+	
+	public Study toStudy() {
+		return new Study(writer, tempStudyName, tempHeadCount, tempCategory, tempArea, tempInterest);
+	}
 	
 }

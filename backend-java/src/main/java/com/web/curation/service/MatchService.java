@@ -63,10 +63,18 @@ public class MatchService {
     }
     
     public void addNewArticle(MatchArticleRequest articleForm) {
-    	if (articleForm.getHeadCount() < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
+    	if (articleForm.getTempHeadCount() < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
     	Long writerId = articleForm.getWriterId();
     	// 1. dto를 Entity로 변경
-    	MatchArticle article = articleForm.toEntity();
+    	MatchArticle article = new MatchArticle();
+    	if (articleForm.getStudyId() > 0) {
+    		article = articleForm.toStudyEntity();
+    		Study study = studyRepo.findById(articleForm.getStudyId()).orElseThrow(() ->  
+    					new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다."));
+    		article.setStudy(study);
+    	} else {
+    		article = articleForm.toEntity();
+    	}
     	MyUser writer = userRepo.findById(writerId)
     			.orElseThrow(() -> new ResponseStatusException(
 							HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
@@ -76,16 +84,25 @@ public class MatchService {
     	articleRepo.save(article);
     }
     
+    // 스터디 존재하면 수정 제한
+    public void checkStudy(Study study) {
+    	if (study != null) {
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "스터디에서 수정하세요");
+    	} 
+    }
+    
     @Transactional // 변경된 데이터를 DB에 저장
     public void updateArticle(
     		Long articleId,
     		Long userId,
     		String title,
-    		String category,
     		String content,
+    		Boolean state,
     		String tempStudyName,
-    		Long headCount,
-    		Boolean state) {
+    		Long tempHeadCount,
+    		String tempCategory,
+    		String tempArea,
+    		String tempInterest) {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
@@ -98,33 +115,32 @@ public class MatchService {
     	if (title != null && title.length() > 0 && !Objects.equals(article.getTitle(), title)) {
     		article.setTitle(title);
     	}
-    	
-    	if (category != null && category.length() > 0 && !Objects.equals(article.getCategory(), category)) {
-    		article.setCategory(category);
-    	}
-    	
     	if (content != null && content.length() > 0 && !Objects.equals(article.getContent(), content)) {
     		article.setContent(content);
     	}
-    	
-    	if (tempStudyName != null && tempStudyName.length() > 0 && !Objects.equals(article.getTempStudyName(), tempStudyName)) {
-    		article.setTempStudyName(tempStudyName);
-    	}
-    	
-    	if (headCount != null &&!Objects.equals(article.getHeadCount(), headCount)) {
-    		if (headCount < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
-    		if (article.getStudy() != null && studyJoinRepo.findByjoinStudyId(article.getStudy().getId()).size() > headCount) {
-    			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력한 headCount가 현재 스터디 인원보다 적습니다.");
-    		}
-    		article.setHeadCount(headCount);
-    		article.getStudy().setHeadCount(headCount);
-    		if (article.getStudy() != null && studyJoinRepo.findByjoinStudyId(article.getStudy().getId()).size() == article.getHeadCount()) {
-    			article.setState(true);
-    		}
-    	}
-    	
     	if (state != null && !Objects.equals(article.getState(), state)) {
     		article.setState(state);
+    	}
+    	if (tempStudyName != null && tempStudyName.length() > 0 && !Objects.equals(article.getTempStudyName(), tempStudyName)) {
+        	checkStudy(article.getStudy());
+    		article.setTempStudyName(tempStudyName);
+    	}
+    	if (tempHeadCount != null &&!Objects.equals(article.getTempHeadCount(), tempHeadCount)) {
+    		checkStudy(article.getStudy());
+    		if (tempHeadCount < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
+    		article.setTempHeadCount(tempHeadCount);
+    	}
+    	if (tempCategory != null && tempCategory.length() > 0 && !Objects.equals(article.getTempCategory(), tempCategory)) {
+    		checkStudy(article.getStudy());
+    		article.setTempCategory(tempCategory);
+    	}
+    	if (tempArea != null && tempArea.length() > 0 && !Objects.equals(article.getTempArea(), tempArea)) {
+    		checkStudy(article.getStudy());
+    		article.setTempArea(tempArea);
+    	}
+    	if (tempInterest != null && tempInterest.length() > 0 && !Objects.equals(article.getTempInterest(), tempInterest)) {
+    		checkStudy(article.getStudy());
+    		article.setTempInterest(tempInterest);
     	}
     }
     
@@ -248,10 +264,7 @@ public class MatchService {
 		// 스터디 없으면 생성, 있으면 멤버만 추가
 		if (article.getStudy() == null) {
 			// 스터디 생성
-			Study study = new Study();
-			study.setLeader(leader);
-			study.setName(article.getTempStudyName());
-			study.setHeadCount(article.getHeadCount());
+			Study study = article.toStudy();
 			Study saved = studyRepo.save(study);
 			
 			// 스터디에 유저추가(리더)
@@ -268,7 +281,7 @@ public class MatchService {
 			// matchArticle에 추가
 			article.setStudy(saved);
 			// 인원이 모두 모집되면 자동 마감
-			if (article.getHeadCount() == 2) {
+			if (article.getTempHeadCount() == 2) {
 				article.setState(true);
 			}
 		} else {
