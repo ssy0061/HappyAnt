@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -19,8 +19,8 @@ import {
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 
-export default function StudyItemCreate(props) {
-  const { articleId } = props;
+export default function StudyItemUpdate({ articleId }) {
+  const [modalState, setModalState] = useState(false);
   const { studyId } = useParams();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -35,21 +35,31 @@ export default function StudyItemCreate(props) {
     false,
   ]);
 
+  const modalOpen = () => {
+    setModalState(true);
+  };
+  const modalClose = () => {
+    setModalState(false);
+  };
+
   const [item, setItem] = useState([]);
 
   const getItem = () => {
     axios
-      .get(`/study/${studyId}/${articleId}`)
+      .get(`/study/${studyId}/${articleId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then((res) => {
         setItem(res.data);
         console.log(item);
       })
       .catch((err) => console.log(err));
   };
-  useEffect(getItem(), []);
+  useEffect(() => getItem(), []);
 
-  // const userId = useSelector((state) => state.user.userInfo.userId);
-  const { handleClickClose } = props;
+  const yourId = useSelector((state) => state.user.userInfo.userId);
 
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -91,10 +101,11 @@ export default function StudyItemCreate(props) {
   ];
 
   // 작성 버튼 클릭
-  const onClickCreate = () => {
+  const updateArticle = () => {
     const body = {
       title,
       content,
+      loginUserId: yourId,
       // 종목기본정보,
       // 투자아이디어,
       // 주요제품_서비스,
@@ -106,7 +117,7 @@ export default function StudyItemCreate(props) {
       console.log('내용을 기입해주세요.');
     } else {
       axios
-        .post(`/study/${studyId}/${articleId}`, [], {
+        .put(`/study/${studyId}/${articleId}`, [], {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -114,7 +125,7 @@ export default function StudyItemCreate(props) {
         })
         .then((res) => {
           console.log(res);
-          handleClickClose();
+          modalClose();
         })
         .catch((error) => {
           console.log(error);
@@ -124,7 +135,10 @@ export default function StudyItemCreate(props) {
 
   return (
     <div>
-      <Dialog open fullWidth maxWidth="md">
+      <button type="submit" onClick={modalOpen}>
+        수정
+      </button>
+      <Dialog open={modalState} fullWidth maxWidth="md">
         <DialogTitle>(스터디)글 작성 폼</DialogTitle>
         <DialogContent>
           <TextField
@@ -135,6 +149,7 @@ export default function StudyItemCreate(props) {
             type="title"
             fullWidth
             variant="standard"
+            defaultValue={item.title}
             onChange={handleTitle}
           />
           <TextField
@@ -144,6 +159,7 @@ export default function StudyItemCreate(props) {
             type="text"
             fullWidth
             variant="outlined"
+            defaultValue={item.content}
             multiline
             rows={15}
             onChange={handleContent}
@@ -209,8 +225,8 @@ export default function StudyItemCreate(props) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClickCreate}>작성</Button>
-          <Button onClick={handleClickClose}>닫기</Button>
+          <Button onClick={updateArticle}>작성</Button>
+          <Button onClick={modalClose}>닫기</Button>
         </DialogActions>
       </Dialog>
     </div>
