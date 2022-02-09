@@ -188,7 +188,7 @@ function MatchList(refresh) {
                   {item.title}
                 </button>
               </td>
-              {item.status === true ? <td>모집완료</td> : <td>모집중</td>}
+              {item.state === true ? <td>모집완료</td> : <td>모집중</td>}
             </tr>
           ))}
         </tbody>

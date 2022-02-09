@@ -18,6 +18,8 @@ export default function MatchItemCreate(props) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [studyName, setStudyName] = useState('');
+  const [tempArea, setArea] = useState('');
+  const [tempInterest, setInterest] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
   const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
@@ -27,6 +29,12 @@ export default function MatchItemCreate(props) {
   };
   const handleCategory = (e) => {
     setCategory(e.target.value);
+  };
+  const handleArea = (e) => {
+    setArea(e.target.value);
+  };
+  const handleInterest = (e) => {
+    setInterest(e.target.value);
   };
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -41,9 +49,12 @@ export default function MatchItemCreate(props) {
 
   const onClickCreate = () => {
     const data = {
-      headCount: memberNum,
-      category,
       content,
+      studyId: 0,
+      tempArea,
+      tempCategory: category,
+      tempHeadCount: memberNum,
+      tempInterest,
       tempStudyName: studyName,
       title,
       writerId: userId,
@@ -119,6 +130,26 @@ export default function MatchItemCreate(props) {
                 fullWidth
                 variant="outlined"
                 onChange={handleCategory}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="지역"
+                type="title"
+                fullWidth
+                variant="outlined"
+                onChange={handleArea}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="관심분야"
+                type="title"
+                fullWidth
+                variant="outlined"
+                onChange={handleInterest}
               />
             </div>
             <InputLabel>스터디원 수</InputLabel>

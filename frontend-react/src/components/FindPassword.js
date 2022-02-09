@@ -84,8 +84,12 @@ export default function FindPassword(props) {
     axios
       .post('/account/find_pw', body)
       .then((res) => {
-        console.log(res);
-        setLevel(level + 1);
+        if (res.data === 'Success') {
+          console.log(res);
+          setLevel(level + 1);
+        } else {
+          alert('오류!');
+        }
       })
       .catch((err) => {
         console.log(err);
