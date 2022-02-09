@@ -321,7 +321,11 @@ public class StudyService {
     	if (interest != null && interest.length() > 0 && !Objects.equals(study.getInterest(), interest)) {
     		study.setInterest(interest);
     	}
-    	if (headCount != null && headCount > 1 && !Objects.equals(study.getHeadCount(), headCount)) {
+    	if (headCount != null && !Objects.equals(study.getHeadCount(), headCount)) {
+    		if (headCount < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
+    		if (study.getStudyMembers().size() > headCount) {
+    			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력한 headCount가 현재 스터디 인원보다 적습니다.");
+    		}
     		study.setHeadCount(headCount);
     	}
     }

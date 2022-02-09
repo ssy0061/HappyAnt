@@ -111,8 +111,16 @@ public class MatchService {
     		article.setTempStudyName(tempStudyName);
     	}
     	
-    	if (headCount != null && headCount > 1 &&!Objects.equals(article.getHeadCount(), headCount)) {
+    	if (headCount != null &&!Objects.equals(article.getHeadCount(), headCount)) {
+    		if (headCount < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
+    		if (article.getStudy() != null && studyJoinRepo.findByjoinStudyId(article.getStudy().getId()).size() > headCount) {
+    			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력한 headCount가 현재 스터디 인원보다 적습니다.");
+    		}
     		article.setHeadCount(headCount);
+    		article.getStudy().setHeadCount(headCount);
+    		if (article.getStudy() != null && studyJoinRepo.findByjoinStudyId(article.getStudy().getId()).size() == article.getHeadCount()) {
+    			article.setState(true);
+    		}
     	}
     	
     	if (state != null && !Objects.equals(article.getState(), state)) {
@@ -149,28 +157,40 @@ public class MatchService {
     	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
 																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 																new IllegalArgumentException()));
+
     	MyUser joinUser = userRepo.findById(joinUserId)
     			.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
-    	
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
-    	} 
-		if (article.getStudy() != null) {
-    		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
-    			throw new ResponseStatusException(
-        				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
-        				new IllegalArgumentException());
-    		}
     	} 
 		if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "이미 신청한 모집글입니다.",
     				new IllegalArgumentException());
     	} 
+    	if (article.getState()) {
+			// 1. 모집글 작성자가 임의로 마감 (모집글 수정으로 마감)
+    		// 2. 제한인원만큼 스터디멤버(리더 포함)가 있는 경우 모집 마감
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
+    	} 
+    	
+		if (article.getStudy() != null) {
+			Study study = article.getStudy();
+			// 제한인원만큼 스터디멤버(리더 포함)가 있는 경우 모집 마감
+			if (studyJoinRepo.findByjoinStudyId(study.getId()).size() == study.getHeadCount()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
+			}
+    		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
+    			throw new ResponseStatusException(
+        				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
+        				new IllegalArgumentException());
+    		}
+    	}
+
     	MatchJoin join = new MatchJoin();
     	join.setJoinArticle(article);
     	join.setJoinUser(joinUser);
@@ -231,6 +251,7 @@ public class MatchService {
 			Study study = new Study();
 			study.setLeader(leader);
 			study.setName(article.getTempStudyName());
+			study.setHeadCount(article.getHeadCount());
 			Study saved = studyRepo.save(study);
 			
 			// 스터디에 유저추가(리더)
@@ -255,10 +276,11 @@ public class MatchService {
 			Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
 														HttpStatus.BAD_REQUEST, "모집글의 스터디 정보를 알 수 없습니다.",
 														new IllegalArgumentException()));
-//			// 제한인원만큼 스터디멤버(리더 포함)가 있는 경우 모집 마감
-//			if (studyJoinRepo.findByjoinStudyId(studyId).size() == study.getHeadCount()) {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
-//			}
+
+			// 제한인원만큼 스터디멤버(리더 포함)가 있는 경우 모집 마감
+			if (studyJoinRepo.findByjoinStudyId(studyId).size() == study.getHeadCount()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
+			}
 			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
 	    		throw new ResponseStatusException(
 	    				HttpStatus.BAD_REQUEST, "이미 스터디에 가입한 회원입니다.",
@@ -273,10 +295,10 @@ public class MatchService {
 																	new IllegalArgumentException()));
 				matchJoin.setState(JoinState.APPROVED);
 				
-//				// 인원이 모두 모집되면 자동 마감
-//				if (studyJoinRepo.findByjoinStudyId(studyId).size() == study.getHeadCount()) {
-//					article.setState(true);
-//				}
+				// 인원이 모두 모집되면 자동 마감
+				if (studyJoinRepo.findByjoinStudyId(studyId).size() == study.getHeadCount()) {
+					article.setState(true);
+				}
 			}
 		}
 
