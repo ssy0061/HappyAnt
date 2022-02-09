@@ -15,10 +15,11 @@ import lombok.ToString;
 @ToString
 public class StudyResponse {
 	private Long studyId;
-	private String studyName;
 	private Long leaderId;
-	private String area;
+	private String studyName;
+	private Long headCount;
 	private String category;
+	private String area;
 	private String interest;
 	private LocalDateTime createDate;
 }
