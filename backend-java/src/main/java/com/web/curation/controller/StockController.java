@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,13 +33,13 @@ public class StockController {
 	private final StockService stockService;
 	
 	@GetMapping("/kospi")
-	public List<Stock> getKospiStockList(HttpServletRequest request) {
-		return stockService.getKospiStockList();
+	public ResponseEntity<List<Stock>> getKospiStockList(HttpServletRequest request) {
+		return new ResponseEntity<List<Stock>> (stockService.getKospiStockList(), HttpStatus.OK);
 	
 	}
 	
 	@GetMapping("/kosdaq")
-	public List<Stock> getKosdaqStockList(HttpServletRequest request){
-		return stockService.getKosdaqStockList();
+	public ResponseEntity<List<Stock>> getKosdaqStockList(HttpServletRequest request){
+		return new ResponseEntity<List<Stock>> (stockService.getKosdaqStockList(), HttpStatus.OK);
 	}
 }
