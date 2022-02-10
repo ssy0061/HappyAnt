@@ -1,13 +1,34 @@
+import axios from 'axios';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../redux/userSlice';
 
 function Profile() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // 로그인 확인
   const loginPage = useSelector((state) => state.user.isLogin);
   // 유저 정보 가져오기
   const Info = useSelector((state) => state.user.userInfo);
+  console.log(Info.email);
+  const renewal = () => {
+    axios
+      .get(`/account/{id}?email=${Info.email}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        dispatch(login(response.data));
+      })
+      .catch((err) => console.log(err, 'profile err'));
+  };
+  useEffect(() => {
+    renewal();
+  }, []);
+
   console.log('profile페이지');
   console.log(Info, '유저 정보');
   const study = Info.joinStudy;
