@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.dto.alert.AlertMessage;
+import com.web.curation.dto.alert.AlertRequest;
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
@@ -22,6 +24,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
+import com.web.curation.service.AlertService;
 import com.web.curation.service.MatchService;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +44,6 @@ public class MatchController {
 	@Autowired
     private MatchService matchService;
     
-    
     @GetMapping
     @ApiOperation(value = "모집글 목록 조회")
     public List<MatchArticleResponse> getArticleList() {
@@ -58,7 +60,6 @@ public class MatchController {
     @PostMapping
     @ApiOperation(value = "모집글 작성")
     public void createArticle(@RequestBody MatchArticleRequest articleForm) {
-    	
     	matchService.addNewArticle(articleForm);
     }
     
