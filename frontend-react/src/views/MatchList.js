@@ -87,7 +87,7 @@ function MatchList(refresh) {
   // 제목내용, 작성자로 검색
   const handleSearch = (event) => {
     // 제목,내용 으로 검색
-    if (selected === 'title') {
+    if (selected === 'title' && event.target.value !== '') {
       axios({
         method: 'get',
         url: `/match/search?Keyword=${event.target.value}`,
@@ -102,7 +102,7 @@ function MatchList(refresh) {
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else {
+    } else if (event.target.value !== '') {
       const { value } = event.target;
       let result = [];
 
@@ -111,6 +111,8 @@ function MatchList(refresh) {
       setFilterList(result);
       selectCheckbox();
       setChecked('');
+    } else {
+      alert('검색어를 입력하세요');
     }
   };
   // 검색 엔터키 누를때
@@ -166,6 +168,7 @@ function MatchList(refresh) {
         <tbody>
           <tr>
             <th>작성자</th>
+            <th>제목</th>
             <th>스터디명</th>
             <th>모집상태</th>
           </tr>
@@ -188,6 +191,7 @@ function MatchList(refresh) {
                   {item.title}
                 </button>
               </td>
+              <td>{item.studyName}</td>
               {item.state === true ? <td>모집완료</td> : <td>모집중</td>}
             </tr>
           ))}

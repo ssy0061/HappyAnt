@@ -18,7 +18,7 @@ function StudyList(props) {
 
   // 무한스크롤
   const [prev] = useState(0);
-  const [curr, setCurr] = useState(10);
+  const [curr, setCurr] = useState(5);
   const [thisState, setThisState] = useState(false);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function StudyList(props) {
         console.log(res);
         setArticleList(res.data.reverse());
         setFilterList(res.data.slice(prev, curr));
+        setCurr((cur) => cur + 5);
       })
       .catch((err) => {
         console.log(err);
@@ -102,7 +103,7 @@ function StudyList(props) {
     if (inView && !thisState) {
       console.log(filterList);
       const items = articleList.slice(prev, curr);
-      setCurr(curr + 10);
+      setCurr(curr + 5);
       setFilterList(items);
       console.log(prev, curr);
     }
