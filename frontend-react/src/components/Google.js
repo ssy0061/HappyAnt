@@ -19,10 +19,15 @@ function GoogleLoginBtn() {
 
     const pass = response.profileObj.googleId.substr(0, 8);
     console.log(pass);
+
+    const params = new URLSearchParams();
+    params.append('email', response.profileObj.email);
+    params.append('password', `${pass}Zz!`);
+
     // 회원가입
     axios({
       method: 'post',
-      url: '/account/signUp',
+      url: '/account/signup',
       data: {
         email: response.profileObj.email,
         name: response.profileObj.name,
@@ -38,15 +43,24 @@ function GoogleLoginBtn() {
         axios({
           method: 'post',
           url: '/account/login',
-          data: {
-            email: response.profileObj.email,
-            password: `${pass}Zz!`,
-          },
+          data: params,
         })
           .then((ress) => {
             console.log(ress);
             dispatch(login(ress.data));
             // localStorage.setItem('jwt', res.data.token);
+            localStorage.setItem('accessToken', ress.data.accessToken);
+            localStorage.setItem('refreshToken', ress.data.refreshToken);
+
+            axios({
+              method: 'get',
+              url: `/account/{id}?email=${response.profileObj.email}`,
+              headers: {
+                Authorization: `Bearer ${ress.data.accessToken}`,
+              },
+            })
+              .then((getRes) => dispatch(login(getRes.data)))
+              .catch((getErr) => console.log(getErr));
           })
           .catch((err) => {
             console.log(err);
@@ -59,16 +73,26 @@ function GoogleLoginBtn() {
         axios({
           method: 'post',
           url: '/account/login',
-          data: {
-            email: response.profileObj.email,
-            password: `${pass}Zz!`,
-          },
+          data: params,
         })
           .then((ress) => {
             console.log(ress);
             dispatch(login(ress.data));
             // localStorage.setItem('jwt', res.data.token);
-            navigate('/profile');
+            localStorage.setItem('accessToken', ress.data.accessToken);
+            localStorage.setItem('refreshToken', ress.data.refreshToken);
+            axios({
+              method: 'get',
+              url: `/account/{id}?email=${response.profileObj.email}`,
+              headers: {
+                Authorization: `Bearer ${ress.data.accessToken}`,
+              },
+            })
+              .then((getRes) => {
+                dispatch(login(getRes.data));
+                navigate('/profile');
+              })
+              .catch((getErr) => console.log(getErr));
           })
           .catch((err) => {
             console.log(err);

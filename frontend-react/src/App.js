@@ -6,6 +6,8 @@ import Login from './views/Login';
 import Profile from './views/Profile';
 import Nav from './views/Nav';
 import Match from './views/Match';
+import Study from './views/Study';
+import StudyList from './views/StudyList';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/match" element={<Match />} />
+        <Route path="/study/:studyId" element={<Study />} />
+        <Route path="/studyList" element={<StudyList />} />
       </Routes>
     </div>
   );

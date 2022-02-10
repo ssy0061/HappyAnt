@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.dto.match.MatchArticleRequest;
-import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
-import com.web.curation.service.AlertService;
+import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.service.StudyService;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +39,7 @@ public class StudyController {
 		studyService.addNewStudyMember(studyId, joinUserId);
 	}
 	
-	@GetMapping
+	@GetMapping("article")
     @ApiOperation(value = "게시글 목록 조회")
     public List<StudyArticleResponse> getArticleList(@PathVariable("studyId") Long studyId) {
     	return studyService.getArticleList(studyId);
@@ -83,7 +81,7 @@ public class StudyController {
     }
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
-    @GetMapping("search")
+    @GetMapping("article/search")
     @ApiOperation(value = "게시글 검색")
     public List<StudyArticleResponse> SerachArticle(@PathVariable("studyId") Long studyId,
     												@RequestParam(required = true) String Keyword) {
@@ -147,6 +145,26 @@ public class StudyController {
     						@PathVariable("userId") Long userId,
     						@RequestParam(required = true) Long loginUserId) {
     	studyService.deleteMember(studyId, userId, loginUserId);
+    }
+    
+    @GetMapping
+    @ApiOperation(value = "스터디 조회")
+    public StudyResponse getStudy(@PathVariable("studyId") Long studyId) {
+    	return studyService.getStudy(studyId);
+    }
+    
+    @PutMapping
+    @ApiOperation(value = "스터디 수정")
+    public void updateStudy(
+    		@PathVariable("studyId") Long studyId,
+    		@RequestParam(required = true) Long loginUserId,
+    		@RequestParam(required = false) String name,
+    		@RequestParam(required = false) Long headCount,
+    		@RequestParam(required = false) String category,
+    		@RequestParam(required = false) String area,
+    		@RequestParam(required = false) String interest) {
+    	studyService.updateStudy(studyId, loginUserId, name, headCount, 
+    							category, area, interest);
     }
     
     // 알림 기능 완성 후 구현예정

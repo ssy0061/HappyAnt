@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.web.curation.dto.match.MatchArticleRequest;
@@ -20,6 +22,7 @@ import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
+import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
@@ -249,6 +252,8 @@ public class StudyService {
     	return response;
     }
     
+    ////// 스터디 관리
+
     @Transactional
     public void delegateLeader(Long studyId, Long userId, Long loginUserId) {
     	checkAndGetStudy(studyId);
@@ -298,4 +303,44 @@ public class StudyService {
     	}
     }
     
+    public StudyResponse getStudy(Long studyId) {
+    	StudyResponse response = checkAndGetStudy(studyId).toResponse();
+    	return response;
+    }
+    
+    @Transactional // 변경된 데이터를 DB에 저장
+    public void updateStudy(
+    		Long studyId,
+    		Long loginUserId,
+    		String name,
+    		Long headCount,
+    		String category,
+    		String area,
+    		String interest) {
+    	Study study = checkAndGetStudy(studyId);
+    	if (study.getLeader().getId() != loginUserId) {
+    		throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "leader 권한이 없습니다.",
+					new IllegalArgumentException());
+    	}
+    	if (name != null && name.length() > 0 && !Objects.equals(study.getName(), name)) {
+    		study.setName(name);
+    	}
+    	if (category != null && category.length() > 0 && !Objects.equals(study.getCategory(), category)) {
+    		study.setCategory(category);
+    	}
+    	if (area != null && area.length() > 0 && !Objects.equals(study.getArea(), area)) {
+    		study.setArea(area);
+    	}
+    	if (interest != null && interest.length() > 0 && !Objects.equals(study.getInterest(), interest)) {
+    		study.setInterest(interest);
+    	}
+    	if (headCount != null && !Objects.equals(study.getHeadCount(), headCount)) {
+    		if (headCount < 2) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소인원은 2명입니다.");}
+    		if (study.getStudyMembers().size() > headCount) {
+    			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력한 headCount가 현재 스터디 인원보다 적습니다.");
+    		}
+    		study.setHeadCount(headCount);
+    	}
+    }
 }

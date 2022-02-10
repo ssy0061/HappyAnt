@@ -17,12 +17,24 @@ export default function MatchItemCreate(props) {
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [studyName, setStudyName] = useState('');
+  const [tempArea, setArea] = useState('');
+  const [tempInterest, setInterest] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
-  const userId = useSelector((state) => state.user.userInfo.id);
+  const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
 
+  const handleStudyName = (e) => {
+    setStudyName(e.target.value);
+  };
   const handleCategory = (e) => {
     setCategory(e.target.value);
+  };
+  const handleArea = (e) => {
+    setArea(e.target.value);
+  };
+  const handleInterest = (e) => {
+    setInterest(e.target.value);
   };
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -31,24 +43,32 @@ export default function MatchItemCreate(props) {
   const handleContent = (e) => {
     setContent(e.target.value);
   };
-
   const handleMemberNum = (e) => {
     setMemeberNum(e.target.value);
   };
 
   const onClickCreate = () => {
-    const body = {
-      category,
-      title,
+    const data = {
       content,
+      studyId: 0,
+      tempArea,
+      tempCategory: category,
+      tempHeadCount: memberNum,
+      tempInterest,
+      tempStudyName: studyName,
+      title,
       writerId: userId,
     };
-
+    console.log(localStorage.getItem('accessToken'));
     if (title === '' || content === '' || memberNum === '') {
       console.log('내용을 기입해주세요.');
     } else {
       axios
-        .post('/match', body)
+        .post('/match', data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        })
         .then((response) => {
           console.log(response);
           handleClickClose();
@@ -75,8 +95,17 @@ export default function MatchItemCreate(props) {
               variant="standard"
               onChange={handleTitle}
             />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="스터디 이름"
+              type="title"
+              fullWidth
+              variant="standard"
+              onChange={handleStudyName}
+            />
           </div>
-
           <div>
             <TextField
               autoFocus
@@ -101,6 +130,26 @@ export default function MatchItemCreate(props) {
                 fullWidth
                 variant="outlined"
                 onChange={handleCategory}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="지역"
+                type="title"
+                fullWidth
+                variant="outlined"
+                onChange={handleArea}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="관심분야"
+                type="title"
+                fullWidth
+                variant="outlined"
+                onChange={handleInterest}
               />
             </div>
             <InputLabel>스터디원 수</InputLabel>

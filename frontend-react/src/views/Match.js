@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import MatchItemCreate from '../components/MatchItemCreate';
 import MatchItemModal from '../components/MatchItemModal';
+import StudyItemButton from '../components/StudyItemButton';
 import MatchList from './MatchList';
 
 function Match() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const handleClickCreateOpen = () => {
     setOpen(true);
   };
   const handleClickCreateClose = () => {
     setOpen(false);
+    setRefresh(!refresh);
   };
 
   const handleClickOpen2 = () => {
@@ -23,13 +26,15 @@ function Match() {
   return (
     <div>
       <h1>Match</h1>
-      <MatchList />
+      <MatchList refresh={refresh} />
       <button type="submit" onClick={handleClickCreateOpen}>
         글 작성
       </button>
       <button type="submit" onClick={handleClickOpen2}>
         디테일 임시
       </button>
+      <StudyItemButton />
+
       {open && <MatchItemCreate handleClickClose={handleClickCreateClose} />}
       {open2 && <MatchItemModal pk={1} handleClickClose={handleClickClose2} />}
     </div>

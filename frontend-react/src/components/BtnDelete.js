@@ -1,9 +1,10 @@
+import axios from 'axios';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -17,28 +18,37 @@ const style = {
   p: 4,
 };
 
-export default function MatchingAppliAccept(props) {
-  const { pk, content, userId } = props;
+export default function BtnDelete(props) {
+  const Info = useSelector((state) => state.user.userInfo);
+  const { studyId } = props;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const acceptStudy = (e) => {
+  // 탈퇴하기
+  const onDelete = (e) => {
     e.preventDefault();
-
+    console.log('onclick');
     axios
-      .post(`/match/${pk}/${userId}`)
-      .then(() => {
-        alert('승인되었습니다!');
+      .delete(
+        `/study/${studyId}/member/${Info.userId}?loginUserId=${Info.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, '탈퇴');
       })
-      .catch((err) => {
-        console.log(err);
-        alert('이미 수락한 인원입니다.');
-      });
+      .catch((err) => console.log(err, '탈퇴 error'));
   };
+
   return (
     <div>
-      <Button onClick={handleOpen}>detail</Button>
+      <hr />
+      <h4>탈퇴하기</h4>
+      <Button onClick={handleOpen}>탈퇴하기</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -47,16 +57,16 @@ export default function MatchingAppliAccept(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            신청자 상세 페이지
+            <p>탈퇴 시 재가입이 불가능합니다.</p>
+            <p>탈퇴하시겠습니까?</p>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {content}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <button type="submit" onClick={acceptStudy}>
-              수락
+            <button type="submit" onClick={onDelete}>
+              탈퇴
             </button>
-            <button type="submit">거절</button>
+            <button type="submit" onClick={handleClose}>
+              취소
+            </button>
           </Typography>
         </Box>
       </Modal>
