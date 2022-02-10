@@ -119,7 +119,7 @@ public class StudyService {
     	StudyArticle newArticle = articleRepo.save(article);
     	
     	// 스터디의 모든 멤버에게 게시글 작성 알림
-    	alertService.studyArticleAlert(studyId, newArticle);
+    	alertService.studyArticleToAlert(studyId, newArticle);
     }
     
     @Transactional // 변경된 데이터를 DB에 저장

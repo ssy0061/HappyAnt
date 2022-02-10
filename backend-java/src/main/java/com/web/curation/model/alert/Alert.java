@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.curation.dto.alert.AlertResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.JoinState;
 import com.web.curation.model.study.StudyArticle;
@@ -43,10 +45,13 @@ public class Alert {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id",
 		referencedColumnName = "id")
+	@JsonIgnore
 	private MyUser user;
 	
 	@Enumerated(value = EnumType.STRING)
 	private AlertType type;
+	
+	private String message;
 	
 	private Long studyId;
 	
@@ -63,5 +68,9 @@ public class Alert {
     	this.user = user;
     	this.studyId = studyId;
     	this.articleId = articleId;
+    }
+    
+    public AlertResponse toResponse() {
+    	return new AlertResponse(id, user.getId(), type, message, studyId, articleId, createDate);
     }
 }

@@ -17,7 +17,6 @@ function connect() {
     var socket = new SockJS('/happy-ant-websocket');
     stompClient = Stomp.over(socket);
     console.log('stompClient : ', stompClient);
-    let userId = 1
     // 접속 성공하면 2번째 매개값인 콜백함수 실행
     stompClient.connect({}, function (frame) {
         setConnected(true);
