@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
 
 const style = {
@@ -24,6 +25,7 @@ export default function BtnDelete(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
 
   // 탈퇴하기
   const onDelete = (e) => {
@@ -40,6 +42,7 @@ export default function BtnDelete(props) {
       )
       .then((res) => {
         console.log(res, '탈퇴');
+        navigate('/profile');
       })
       .catch((err) => console.log(err, '탈퇴 error'));
   };
