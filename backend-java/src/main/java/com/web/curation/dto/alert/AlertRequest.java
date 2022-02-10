@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlertMessage {
+public class AlertRequest {
 	private Long alertId;
-	private Long userId;
 	private String content;
 }

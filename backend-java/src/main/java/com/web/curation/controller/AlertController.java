@@ -5,19 +5,23 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.HtmlUtils;
 
+
 import com.web.curation.dto.alert.AlertMessage;
+import com.web.curation.dto.alert.AlertRequest;
 
 @Controller
 public class AlertController {
 
-    
 	@MessageMapping("/{userId}")
 	@SendTo("/alert/{userId}")
-	public AlertMessage alertStudy(@DestinationVariable("userId") Long userId,
-									String message, String alertGroup) throws Exception {
-		Thread.sleep(100); // simulated delay
-		return new AlertMessage(userId, message, alertGroup);
+	public AlertMessage alertStudy(@DestinationVariable("userId") Long userId, AlertRequest message) {
+		System.out.println(userId);
+		System.out.println(message.getContent());
+		return new AlertMessage(message.getAlertId(), userId, message.getContent());
 	}
 }

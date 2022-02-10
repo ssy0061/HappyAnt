@@ -21,6 +21,7 @@ import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
+import com.web.curation.service.AlertService;
 import com.web.curation.service.StudyService;
 
 import io.swagger.annotations.ApiOperation;
@@ -58,7 +59,6 @@ public class StudyController {
     @ApiOperation(value = "게시글 작성")
     public void createArticle(@PathVariable("studyId") Long studyId,
     							@RequestBody StudyArticleRequest articleForm) {
-    	
     	studyService.addNewArticle(studyId, articleForm);
     }
     

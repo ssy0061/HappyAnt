@@ -28,6 +28,7 @@ import com.web.curation.model.study.StudyArticle;
 import com.web.curation.model.study.StudyComment;
 import com.web.curation.model.study.StudyJoin;
 import com.web.curation.repository.account.UserRepo;
+import com.web.curation.repository.alert.AlertRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
 import com.web.curation.repository.study.StudyArticleRepo;
 import com.web.curation.repository.study.StudyCommentRepo;
@@ -51,6 +52,8 @@ public class StudyService {
 	private StudyArticleRepo articleRepo;
 	@Autowired
 	private StudyCommentRepo commentRepo;
+	@Autowired
+	private AlertService alertService;
 
 	
 	// 스터디 존재 확인
@@ -110,7 +113,10 @@ public class StudyService {
     	
     	article.setStudyWriter(writer);
     	article.setStudy(study);
-    	articleRepo.save(article);
+    	StudyArticle newArticle = articleRepo.save(article);
+    	
+    	// 스터디의 모든 멤버에게 게시글 작성 알림
+    	alertService.studyArticleAlert(studyId, newArticle);
     }
     
     @Transactional // 변경된 데이터를 DB에 저장
