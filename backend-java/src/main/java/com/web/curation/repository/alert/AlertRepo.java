@@ -11,4 +11,5 @@ import com.web.curation.model.alert.Alert;
 @Repository
 public interface AlertRepo extends JpaRepository<Alert, Long> {
 	List<Alert> findByUserId(Long userId);
+	Alert findByUserIdAndId(Long userId, Long id);
 }
