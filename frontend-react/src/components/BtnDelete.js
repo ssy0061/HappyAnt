@@ -18,7 +18,7 @@ const style = {
   p: 4,
 };
 
-export default function BtnEntrust(props) {
+export default function BtnDelete(props) {
   const Info = useSelector((state) => state.user.userInfo);
   const { studyId } = props;
   const [open, setOpen] = React.useState(false);
