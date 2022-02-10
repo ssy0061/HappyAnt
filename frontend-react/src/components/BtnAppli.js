@@ -1,9 +1,10 @@
+import axios from 'axios';
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { Button, Input } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -17,49 +18,43 @@ const style = {
   p: 4,
 };
 
-export default function MatchingAppliAccept(props) {
-  const { pk, content, userId } = props;
-  console.log(pk, content, userId);
+export default function BtnAppli(props) {
+  const { item, yourId } = props;
+  const [inputContent, setInputContent] = useState('');
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const acceptStudy = () => {
+  // content 입력
+  const handleInputContent = (e) => {
+    setInputContent(e.target.value);
+  };
+
+  const applyStudy = () => {
+    console.log(item.articleId, yourId);
     axios
-      .post(`/match/${pk}/${userId}`, [], {
+      .post(`/match/join/${item.articleId}`, [], {
+        params: {
+          joinUserId: yourId,
+          content: inputContent,
+        },
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then(() => {
-        alert('승인되었습니다!');
+        alert('신청되었습니다.');
         handleClose();
       })
-      .catch((err) => {
-        console.log(err);
-        alert('이미 수락한 인원입니다.');
+      .catch(() => {
+        alert('이미 신청한 스터디입니다.');
         handleClose();
       });
   };
 
-  const denyStudy = () => {
-    axios
-      .put(`/match/${pk}/${userId}`, [], {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then(() => {
-        alert('거절하였습니다!');
-      })
-      .catch((err) => {
-        console.log(err);
-        alert('이미 거절한 인원입니다.');
-      });
-  };
   return (
     <div>
-      <Button onClick={handleOpen}>detail</Button>
+      <Button onClick={handleOpen}>신청</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -68,17 +63,19 @@ export default function MatchingAppliAccept(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            신청자 상세 페이지
+            <Input
+              placeholder="각오 한 마디"
+              value={inputContent}
+              onChange={handleInputContent}
+              fullwidth
+            />
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            각오 한 마디 : {content}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <button type="submit" onClick={acceptStudy}>
-              수락
+            <button type="submit" onClick={applyStudy}>
+              신청
             </button>
-            <button type="submit" onClick={denyStudy}>
-              거절
+            <button type="submit" onClick={handleClose}>
+              취소
             </button>
           </Typography>
         </Box>
