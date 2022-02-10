@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -21,7 +20,6 @@ const style = {
 export default function BtnEntrust(props) {
   const [memberList, setMemberList] = useState([]);
   const [selected, setSelected] = useState('');
-  const navigate = useNavigate();
   const Info = useSelector((state) => state.user.userInfo);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -72,7 +70,8 @@ export default function BtnEntrust(props) {
       .then((res) => {
         console.log(res.data, '위임완료');
         handleClose();
-        navigate(`/study/${studyId}`);
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
       })
       .catch((err) => console.log(err, '위임 error'));
   };
