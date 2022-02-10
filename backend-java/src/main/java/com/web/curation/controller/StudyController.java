@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.dto.match.MatchArticleRequest;
-import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
@@ -59,7 +57,6 @@ public class StudyController {
     @ApiOperation(value = "게시글 작성")
     public void createArticle(@PathVariable("studyId") Long studyId,
     							@RequestBody StudyArticleRequest articleForm) {
-    	
     	studyService.addNewArticle(studyId, articleForm);
     }
     
