@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-// import BtnEntrust from '../components/BtnEntrust';
 
 function Profile() {
   const navigate = useNavigate();
@@ -55,7 +54,6 @@ function Profile() {
           <h1>안녕하세요 로그인을 해주시겠어요?</h1>
         </div>
       )}
-      {/* <BtnEntrust /> */}
     </div>
   );
 }

@@ -70,9 +70,8 @@ export default function Study() {
         {/* 리더에게만 위임/추방 보여주기 */}
         {studyInfo.leaderId === userInfo.userId ? (
           <BtnEntrust studyId={studyId} />
-        ) : (
-          <BtnDelete studyId={studyId} />
-        )}
+        ) : null}
+        <BtnDelete studyId={studyId} />
       </aside>
       <section style={sectionDiv}>
         <h1>{studyId}번 공간</h1>
