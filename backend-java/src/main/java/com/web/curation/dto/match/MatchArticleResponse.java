@@ -24,8 +24,5 @@ public class MatchArticleResponse {
 	private Boolean state;
 	private Long StudyId;
 	private String StudyName;
-	private Long StudyHeadCount;
-	private String StudyCategory;
-	private String StudyArea;
 	private String StudyInterest;
 }

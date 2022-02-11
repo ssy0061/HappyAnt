@@ -49,7 +49,7 @@ public class Alert {
 	private MyUser user;
 	
 	@Enumerated(value = EnumType.STRING)
-	private AlertType type;
+	private AlertType AlertType;
 	
 	private String message;
 	
@@ -57,6 +57,8 @@ public class Alert {
 	
 	// studyArticle
 	private Long articleId;
+	
+	private Boolean state; 
 	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -71,6 +73,6 @@ public class Alert {
     }
     
     public AlertResponse toResponse() {
-    	return new AlertResponse(id, user.getId(), type, message, studyId, articleId, createDate);
+    	return new AlertResponse(id, user.getId(), AlertType, message, studyId, articleId, createDate, state);
     }
 }
