@@ -129,6 +129,16 @@ public class MatchService {
     	return articleList;
     }
     
+    // 작성자로 검색
+    public List<MatchArticleResponse> searchArticleWithWriter(Long searchId) {
+    	List<MatchArticleResponse> articleList = new ArrayList<>();
+    	articleRepo.findByWriterId(searchId).forEach(article -> {
+    		MatchArticleResponse response = article.toResponse();
+    		articleList.add(response);
+    	});
+    	return articleList;
+    }
+    
     // 스터디 신청
     public void joinStudy(Long articleId, Long joinUserId, String content) {
     	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(

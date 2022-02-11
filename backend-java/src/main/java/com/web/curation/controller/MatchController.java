@@ -58,9 +58,7 @@ public class MatchController {
     }
     
     @PostMapping
-    @ApiOperation(value = "모집글 작성", notes="스터디에서 작성(studyId 필수로 넣어주세요) // "
-								    		+ "개인스터디(sharing: false)면 temp(스터디 정보) 작성 // "
-								    		+ "멤버가 있는 스터디(sharing: true)면 미작성(스터디 정보가 그대로 넘어감)")
+    @ApiOperation(value = "모집글 작성", notes="스터디에서 작성(studyId 필수로 넣어주세요)")
     public void createArticle(@RequestBody MatchArticleRequest articleForm,
     							@RequestParam(required = true) Long loginUserId,
     							@RequestParam(required = true) Long studyId) {
@@ -88,11 +86,16 @@ public class MatchController {
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
     @GetMapping("search")
-    @ApiOperation(value = "모집글 검색")
+    @ApiOperation(value = "모집글 '제목+내용' 검색")
     public List<MatchArticleResponse> SerachArticle(@RequestParam(required = true) String Keyword) {
     	return matchService.searchArticle(Keyword);
     }
     
+    @GetMapping("search/writer")
+    @ApiOperation(value = "모집글 '작성자' 검색")
+    public List<MatchArticleResponse> SerachArticleWithWriter(@RequestParam(required = true) Long searchId) {
+    	return matchService.searchArticleWithWriter(searchId);
+    }
     
     @PostMapping("join/{articleId}")
     @ApiOperation(value = "스터디 신청")

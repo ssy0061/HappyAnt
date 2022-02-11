@@ -164,6 +164,16 @@ public class StudyService {
     	return articleList;
     }
 	
+    // 작성자로 검색
+    public List<StudyArticleResponse> searchArticleWithWriter(Long studyId, Long searchId) {
+    	List<StudyArticleResponse> articleList = new ArrayList<>();
+    	articleRepo.findByStudyWriterIdAndStudyId(searchId, studyId).forEach(article -> {
+    		StudyArticleResponse response = article.toResponse();
+    		articleList.add(response);
+    	});
+    	return articleList;
+    }
+    
     // 아래는 댓글
     // 아래는 댓글
     

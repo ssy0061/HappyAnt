@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentRequest;
@@ -78,10 +79,16 @@ public class StudyController {
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
     @GetMapping("{studyId}/article/search")
-    @ApiOperation(value = "게시글 검색")
+    @ApiOperation(value = "게시글 '제목+내용' 검색")
     public List<StudyArticleResponse> SerachArticle(@PathVariable("studyId") Long studyId,
     												@RequestParam(required = true) String Keyword) {
     	return studyService.searchArticle(studyId, Keyword);
+    }
+    @GetMapping("{studyId}/article/search/writer")
+    @ApiOperation(value = "게시글 '작성자' 검색")
+    public List<StudyArticleResponse> SerachArticleWithWriter(@PathVariable("studyId") Long studyId,
+    															@RequestParam(required = true) Long searchId) {
+    	return studyService.searchArticleWithWriter(studyId, searchId);
     }
     
     //// 댓글
