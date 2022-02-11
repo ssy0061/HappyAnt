@@ -47,9 +47,6 @@ public class MatchArticle {
 	private String tempStudyName;
 	
 	@Column
-	private Long tempHeadCount;
-	
-	@Column
 	private String tempCategory;
 	
 	@Column
@@ -97,13 +94,12 @@ public class MatchArticle {
 	}
 
 	public MatchArticle(String title, String content, 
-						String tempStudyName, Long tempHeadCount, String tempCategory,
+						String tempStudyName, String tempCategory,
 						String tempArea, String tempInterest, Boolean state) {
 		super();
 		this.title = title;
 		this.content = content;
 		this.tempStudyName = tempStudyName;
-		this.tempHeadCount = tempHeadCount;
 		this.tempCategory = tempCategory;
 		this.tempArea = tempArea;
 		this.tempInterest = tempInterest;
@@ -118,21 +114,13 @@ public class MatchArticle {
 	}
 
 	public MatchArticle toEntity() {
-		return new MatchArticle(title, content, tempStudyName, tempHeadCount,
+		return new MatchArticle(title, content, tempStudyName,
 								tempCategory, tempArea, tempInterest, state);
 	}
 	
 	public MatchArticleResponse toResponse() {
-		if (study != null) {
-			return new MatchArticleResponse(id, title, content, writer.getId(), writer.getName(), createDate, updateDate, state,
-					study.getId(), study.getName(), study.getHeadCount(), study.getCategory(), study.getArea(), study.getInterest());
-		}
 		return new MatchArticleResponse(id, title, content, writer.getId(), writer.getName(), createDate, updateDate, state,
-				null, tempStudyName, tempHeadCount, tempCategory, tempArea, tempInterest);
-	}
-	
-	public Study toStudy() {
-		return new Study(writer, tempStudyName, tempHeadCount, tempCategory, tempArea, tempInterest);
+				study.getId(), study.getName(), study.getInterest());
 	}
 	
 }

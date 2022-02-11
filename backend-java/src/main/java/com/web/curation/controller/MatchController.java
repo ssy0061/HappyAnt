@@ -58,26 +58,22 @@ public class MatchController {
     }
     
     @PostMapping
-    @ApiOperation(value = "모집글 작성")
-    public void createArticle(@RequestBody MatchArticleRequest articleForm) {
-    	matchService.addNewArticle(articleForm);
+    @ApiOperation(value = "모집글 작성", notes="스터디에서 작성(studyId 필수로 넣어주세요)")
+    public void createArticle(@RequestBody MatchArticleRequest articleForm,
+    							@RequestParam(required = true) Long loginUserId,
+    							@RequestParam(required = true) Long studyId) {
+    	matchService.addNewArticle(articleForm, loginUserId, studyId);
     }
     
     @PutMapping("{articleId}")
-    @ApiOperation(value = "모집글 수정(마감)", notes="headCount는 2이상일 때 수정됩니다.")
+    @ApiOperation(value = "모집글 수정(마감)", notes="")
     public void updateArticle(
     		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String title,
     		@RequestParam(required = false) String content,
-    		@RequestParam(required = false) Boolean state,
-    		@RequestParam(required = false) String tempStudyName,
-    		@RequestParam(required = false) Long tempHeadCount,
-    		@RequestParam(required = false) String tempCategory,
-    		@RequestParam(required = false) String tempArea,
-    		@RequestParam(required = false) String tempInterest) {
-    	matchService.updateArticle(articleId, loginUserId, title, content, state, 
-    			tempStudyName, tempHeadCount, tempCategory, tempArea, tempInterest);
+    		@RequestParam(required = false) Boolean state) {
+    	matchService.updateArticle(articleId, loginUserId, title, content, state);
     }
     
     
@@ -90,11 +86,16 @@ public class MatchController {
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
     @GetMapping("search")
-    @ApiOperation(value = "모집글 검색")
+    @ApiOperation(value = "모집글 '제목+내용' 검색")
     public List<MatchArticleResponse> SerachArticle(@RequestParam(required = true) String Keyword) {
     	return matchService.searchArticle(Keyword);
     }
     
+    @GetMapping("search/writer")
+    @ApiOperation(value = "모집글 '작성자' 검색")
+    public List<MatchArticleResponse> SerachArticleWithWriter(@RequestParam(required = true) Long searchId) {
+    	return matchService.searchArticleWithWriter(searchId);
+    }
     
     @PostMapping("join/{articleId}")
     @ApiOperation(value = "스터디 신청")

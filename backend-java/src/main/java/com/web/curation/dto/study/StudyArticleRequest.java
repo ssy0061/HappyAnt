@@ -14,7 +14,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class StudyArticleRequest {
-	private Long writerId;
 	private String title;
 	private String content;
 	

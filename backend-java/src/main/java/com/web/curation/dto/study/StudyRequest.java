@@ -1,6 +1,6 @@
 package com.web.curation.dto.study;
 
-import java.time.LocalDateTime;
+import com.web.curation.model.study.Study;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +13,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StudyResponse {
-	private Long studyId;
-	private Long leaderId;
-	private String studyName;
+public class StudyRequest {
+	private String name;
 	private String interest;
-	private LocalDateTime createDate;
+	
+	public Study toEntity() {
+		return new Study(name, interest);
+	}
 }

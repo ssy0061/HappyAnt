@@ -24,4 +24,5 @@ public class AlertResponse {
 	private Long studyId;
 	private Long articleId;
 	private LocalDateTime createDate;
+	private Boolean read;
 }
