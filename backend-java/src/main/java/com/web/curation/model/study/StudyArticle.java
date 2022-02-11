@@ -51,6 +51,9 @@ public class StudyArticle {
 	@JsonBackReference
 	private MyUser studyWriter;
     
+    @Column
+    private String writerName;
+    
     @OneToMany(mappedBy="studyArticle", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<StudyComment> studyComments = new ArrayList<StudyComment>();
@@ -73,19 +76,18 @@ public class StudyArticle {
     		updatable = false)
 	private LocalDateTime updateDate;
 
-	public StudyArticle(String title, String content, LocalDateTime createDate, LocalDateTime updateDate) {
+	public StudyArticle(Study study, MyUser studyWriter, String writerName, String title, String content) {
 		super();
+		this.study = study;
+		this.studyWriter = studyWriter;
+		this.writerName = writerName;
 		this.title = title;
 		this.content = content;
-		this.createDate = createDate;
-		this.updateDate = updateDate;
 	}
     
 	public StudyArticleResponse toResponse() {
 		return new StudyArticleResponse(id, study.getId(), title, content, 
-								studyWriter.getId(), studyWriter.getName(), 
+								studyWriter.getId(), writerName, 
 								createDate, updateDate);
 	}
-    
-    
 }

@@ -16,8 +16,4 @@ import lombok.ToString;
 public class StudyArticleRequest {
 	private String title;
 	private String content;
-	
-	public StudyArticle toEntity() {
-		return new StudyArticle(title, content, null, null);
-	}
 }
