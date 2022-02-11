@@ -12,12 +12,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/happy-ant-websocket").withSockJS();
+		registry.addEndpoint("/happy-ant-websocket")
+				.setAllowedOrigins("http://localhost:3000")
+		        .withSockJS();
 	}
 	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/subscribe");
+		config.enableSimpleBroker("/alert", "/study");
 		config.setApplicationDestinationPrefixes("/app");
 	}
 

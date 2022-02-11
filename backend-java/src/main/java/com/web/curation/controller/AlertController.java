@@ -40,14 +40,14 @@ public class AlertController {
     private AlertService alertService;
 	
 	// WebSocket
-	@MessageMapping("alert/{userId}") // 채팅 기능 용도 (메시지를 보내는 주소: /app/alert/{userId}) (알림 기능에서는 필요없음)
-	@SendTo("/subscribe/alert/{userId}") // (웹소켓 주소: 프론트에서 연결하면 메시지 받을 수 있음)
+	@MessageMapping("/alert/{userId}") // 채팅 기능 용도 (메시지를 보내는 주소: /app/alert/{userId}) (알림 기능에서는 필요없음)
+	@SendTo("/alert/{userId}") // (웹소켓 주소: 프론트에서 연결하면 메시지 받을 수 있음)
 	public AlertMessage alertWithStudy(@DestinationVariable("userId") Long userId, AlertRequest message) {
 		return alertService.alertWithStudy(userId, message);
 	}
 	
-	@MessageMapping("study/{studyId}") // 채팅 기능 용도 (메시지를 보내는 주소: /app/study/{studyId})
-	@SendTo("/subscribe/study/{studyId}") // (웹소켓 주소: 프론트에서 연결하면 메시지 받을 수 있음)
+	@MessageMapping("/study/{studyId}") // 채팅 기능 용도 (메시지를 보내는 주소: /app/study/{studyId})
+	@SendTo("/study/{studyId}") // (웹소켓 주소: 프론트에서 연결하면 메시지 받을 수 있음)
 	public ChatMessage chat(ChatRequest message) {
 		return alertService.chatting(message);
 	}

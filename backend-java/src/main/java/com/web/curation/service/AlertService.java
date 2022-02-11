@@ -49,7 +49,7 @@ public class AlertService {
     	join.forEach(member -> {
     		MyUser user = member.getJoinMember();
         	Alert alert = new Alert(user, studyId, article.getId());
-        	alert.setAlertType(AlertType.STUDY);
+        	alert.setAlertType(AlertType.ARTICLE);
         	alert.setMessage(user.getName() + "님, 스터디에 새 게시글이 작성되었습니다.");
         	Alert newAlert = alertRepo.save(alert);
         	AlertMessage message = new AlertMessage(newAlert.getId(), user.getId(), newAlert.getMessage());

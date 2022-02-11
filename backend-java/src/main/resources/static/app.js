@@ -24,7 +24,7 @@ function connect() {
         setConnected(true);
         console.log('Connected: ' + frame);
         // 서버측에서 메시지가 전달되면 콜백으로 구현
-        stompClient.subscribe('/subscribe/alert/' + $("#userId").val(), function (msg) {
+        stompClient.subscribe('/alert/' + $("#userId").val(), function (msg) {
         	console.log(msg)
         	// JSON.parse: json 문자열을 js객체로 리턴하는 메서드
             showGreeting(JSON.parse(msg.body).content);
@@ -72,7 +72,7 @@ function connect2() {
         setConnected2(true);
         console.log('Connected: ' + frame);
         // 서버측에서 메시지가 전달되면 콜백으로 구현
-        stompClient2.subscribe('/subscribe/study/' + $("#studyId").val(), function (msg) {
+        stompClient2.subscribe('/study/' + $("#studyId").val(), function (msg) {
         	console.log(msg)
         	// JSON.parse: json 문자열을 js객체로 리턴하는 메서드
             showChatting(JSON.parse(msg.body).content);
