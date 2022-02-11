@@ -85,10 +85,10 @@ public class StudyController {
     	return studyService.searchArticle(studyId, Keyword);
     }
     @GetMapping("{studyId}/article/search/writer")
-    @ApiOperation(value = "게시글 '작성자' 검색")
+    @ApiOperation(value = "게시글 '작성자 이름' 검색")
     public List<StudyArticleResponse> SerachArticleWithWriter(@PathVariable("studyId") Long studyId,
-    															@RequestParam(required = true) Long searchId) {
-    	return studyService.searchArticleWithWriter(studyId, searchId);
+    															@RequestParam(required = true) String name) {
+    	return studyService.searchArticleWithWriter(studyId, name);
     }
     
     //// 댓글

@@ -43,18 +43,6 @@ public class MatchArticle {
 	@Column
 	private String content;
 	
-	@Column
-	private String tempStudyName;
-	
-	@Column
-	private String tempCategory;
-	
-	@Column
-	private String tempArea;
-	
-	@Column
-	private String tempInterest;
-	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
     		insertable = false, 
@@ -76,6 +64,9 @@ public class MatchArticle {
 				updatable = false) // 외래키로 조인
 	@JsonBackReference
 	private MyUser writer;
+	
+	@Column
+	private String writerName;
 
 	@OneToMany(mappedBy="joinArticle", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
@@ -92,32 +83,17 @@ public class MatchArticle {
 	public MatchArticle() {
 		
 	}
-
-	public MatchArticle(String title, String content, 
-						String tempStudyName, String tempCategory,
-						String tempArea, String tempInterest, Boolean state) {
-		super();
-		this.title = title;
-		this.content = content;
-		this.tempStudyName = tempStudyName;
-		this.tempCategory = tempCategory;
-		this.tempArea = tempArea;
-		this.tempInterest = tempInterest;
-		this.state = state;
-	}
 	
-	public MatchArticle(String title, String content, Boolean state) {
+	public MatchArticle(String title, String content, Boolean state, MyUser writer, String writerName, Study study) {
 		super();
 		this.title = title;
 		this.content = content;
 		this.state = state;
+		this.writer = writer;
+		this.writerName = writerName;
+		this.study = study;
 	}
 
-	public MatchArticle toEntity() {
-		return new MatchArticle(title, content, tempStudyName,
-								tempCategory, tempArea, tempInterest, state);
-	}
-	
 	public MatchArticleResponse toResponse() {
 		return new MatchArticleResponse(id, title, content, writer.getId(), writer.getName(), createDate, updateDate, state,
 				study.getId(), study.getName(), study.getInterest());

@@ -93,8 +93,8 @@ public class MatchController {
     
     @GetMapping("search/writer")
     @ApiOperation(value = "모집글 '작성자' 검색")
-    public List<MatchArticleResponse> SerachArticleWithWriter(@RequestParam(required = true) Long searchId) {
-    	return matchService.searchArticleWithWriter(searchId);
+    public List<MatchArticleResponse> SerachArticleWithWriter(@RequestParam(required = true) String Keyword) {
+    	return matchService.searchArticleWithWriter(Keyword);
     }
     
     @PostMapping("join/{articleId}")
