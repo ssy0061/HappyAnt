@@ -5,5 +5,6 @@ public enum AlertType {
 	STUDY,
 	ARTICLE,
 	COMMENT,
-	FINANCE
+	FINANCE,
+	INVITE
 }

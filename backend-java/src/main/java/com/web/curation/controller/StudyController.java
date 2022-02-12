@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
-import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
 import com.web.curation.dto.study.StudyRequest;
@@ -50,7 +49,7 @@ public class StudyController {
     }
     
     @PostMapping("{studyId}")
-    @ApiOperation(value = "게시글 작성")
+    @ApiOperation(value = "게시글 작성", notes = "code는 첨부할 주식 종목 번호입니다. (한 개 제한)")
     public void createArticle(@PathVariable("studyId") Long studyId,
     							@RequestParam(required = true) Long loginUserId,
     							@RequestBody StudyArticleRequest articleForm) {
@@ -87,8 +86,14 @@ public class StudyController {
     @GetMapping("{studyId}/article/search/writer")
     @ApiOperation(value = "게시글 '작성자 이름' 검색")
     public List<StudyArticleResponse> SerachArticleWithWriter(@PathVariable("studyId") Long studyId,
-    															@RequestParam(required = true) String name) {
-    	return studyService.searchArticleWithWriter(studyId, name);
+    															@RequestParam(required = true) String Keyword) {
+    	return studyService.searchArticleWithWriter(studyId, Keyword);
+    }
+    @GetMapping("{studyId}/article/search/codeName")
+    @ApiOperation(value = "게시글 '주식 종목' 검색")
+    public List<StudyArticleResponse> SerachArticleWithCodeName(@PathVariable("studyId") Long studyId,
+    															@RequestParam(required = true) String Keyword) {
+    	return studyService.searchArticleWithCodeName(studyId, Keyword);
     }
     
     //// 댓글
@@ -103,9 +108,10 @@ public class StudyController {
     @ApiOperation(value = "댓글 작성")
     public void createComment(@PathVariable("studyId") Long studyId,
     							@PathVariable("articleId") Long articleId,
-    							@RequestBody StudyCommentRequest commentForm) {
+    							@RequestParam(required = true) Long loginUserId,
+    				    		@RequestParam(required = false) String content) {
     	
-    	studyService.addNewComment(studyId, articleId, commentForm);
+    	studyService.addNewComment(studyId, articleId, loginUserId, content);
     }
     
     @PutMapping("{studyId}/{articleId}/{commentId}")
@@ -154,13 +160,15 @@ public class StudyController {
     	studyService.deleteMember(studyId, userId, loginUserId);
     }
     
-    // 알림 기능 완성 후 구현예정
-//  @PostMapping("member/{userId}/invite")
-//  @ApiOperation(value = "스터디 멤버 초대", notes="이메일로 초대합니다. 존재하는 유저의 정확한 이메일이 필요합니다.")
-//  public void 
+    @PostMapping("{studyId}/member/invite")
+    @ApiOperation(value = "스터디 멤버 초대", notes="이메일로 초대합니다. 존재하는 유저의 정확한 이메일이 필요합니다.")
+    public void inviteUser(@PathVariable("studyId") Long studyId,
+			@RequestParam(required = true) String userEmail) {
+    	studyService.inviteUser(studyId, userEmail);
+    }
     
 	@PostMapping("{studyId}/member/{userId}")
-	@ApiOperation(value = "스터디 멤버 추가")
+	@ApiOperation(value = "스터디 멤버 추가 (초대 동의)")
 	public void addNewStudyMember(@PathVariable("studyId") Long studyId,
 									@PathVariable("userId") Long joinUserId) {
 		studyService.addNewStudyMember(studyId, joinUserId);
@@ -187,5 +195,12 @@ public class StudyController {
     		@RequestParam(required = false) String name,
     		@RequestParam(required = false) String interest) {
     	studyService.updateStudy(studyId, loginUserId, name, interest);
+    }
+    
+    @DeleteMapping("{studyId}")
+    @ApiOperation(value = "스터디 폐쇄", notes = "leader 혼자만 남은 스터디만 폐쇄 가능")
+    public void deleteComment(@PathVariable("studyId") Long studyId,
+    							@RequestParam(required = true) Long loginUserId) {
+    	studyService.deleteStudy(studyId, loginUserId);
     }
 }

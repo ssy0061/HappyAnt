@@ -40,6 +40,8 @@ public class MatchService {
 	private StudyRepo studyRepo;
 	@Autowired
 	private StudyJoinRepo studyJoinRepo;
+	@Autowired
+	private AlertService alertService;
     
     public List<MatchArticleResponse> getArticleList() {
     	List<MatchArticleResponse> articleList = new ArrayList<>();
@@ -242,6 +244,7 @@ public class MatchService {
 																HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
 																new IllegalArgumentException()));
 			matchJoin.setState(JoinState.APPROVED);
+			alertService.ApprovedToAlert(study.getId(), joinUser.getId(), joinUser.getName());
 		}
 
 	}

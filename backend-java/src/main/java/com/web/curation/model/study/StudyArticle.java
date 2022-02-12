@@ -64,6 +64,12 @@ public class StudyArticle {
 	@Column(columnDefinition = "LONGTEXT")
 	private String content;
 	
+	@Column
+	private String code;
+	
+	@Column
+	private String codeName;
+	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
     		insertable = false, 
@@ -76,18 +82,20 @@ public class StudyArticle {
     		updatable = false)
 	private LocalDateTime updateDate;
 
-	public StudyArticle(Study study, MyUser studyWriter, String writerName, String title, String content) {
+	public StudyArticle(Study study, MyUser studyWriter, String writerName, String title, String content, String code, String codeName) {
 		super();
 		this.study = study;
 		this.studyWriter = studyWriter;
 		this.writerName = writerName;
 		this.title = title;
 		this.content = content;
+		this.code = code;
+		this.codeName = codeName;
 	}
     
 	public StudyArticleResponse toResponse() {
 		return new StudyArticleResponse(id, study.getId(), title, content, 
 								studyWriter.getId(), writerName, 
-								createDate, updateDate);
+								createDate, updateDate, code, codeName);
 	}
 }

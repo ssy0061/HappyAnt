@@ -18,4 +18,5 @@ public interface StudyArticleRepo extends JpaRepository<StudyArticle, Long>, Jpa
 	void deleteByStudyIdAndId(Long studyId, Long Id);
 	List<StudyArticle> findByStudyWriterIdAndStudyId(Long studyWriterId, Long StudyId);
 	List<StudyArticle> findByStudyWriterNameContains(String studyWriterName);
+	List<StudyArticle> findByCodeNameContains(String codeName);
 }
