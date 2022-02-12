@@ -29,7 +29,6 @@ public class GetUserResponse {
 	private Long userId;
 	private String email;
 	private String userName;
-	private int score;
 	private String question;
 	private String answer;
 	private LocalDateTime createDate;
@@ -39,6 +38,7 @@ public class GetUserResponse {
 	private List<StudyResponse> joinStudy;
 	private List<StudyArticleResponse> studyArticles;
 	private List<StudyCommentResponse> studyComments;
+	private List<StudyResponse> manageStudy;
 	
 	
 }

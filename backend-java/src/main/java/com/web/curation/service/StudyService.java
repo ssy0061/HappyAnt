@@ -106,6 +106,8 @@ public class StudyService {
     	return response;
     }
     
+
+    // 스터디에 게시글 작성하면 alert
     public void addNewArticle(Long studyId, Long writerId, StudyArticleRequest form) {
     	Study study = checkAndGetStudy(studyId);
     	MyUser writer = checkAndGetUser(writerId);
@@ -318,6 +320,9 @@ public class StudyService {
     	MyUser user = checkAndGetUser(userId);
     	Study study = form.toEntity();
     	study.setLeader(user);
+    	if (study.getName() == null) {
+    		study.setName(user.getName() + "의 스터디");
+    	}
     	studyRepo.save(study);
     	// 조인 테이블에도 추가
     	StudyJoin join = new StudyJoin(null, user, study, true);

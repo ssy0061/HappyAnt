@@ -59,13 +59,15 @@ public class MatchService {
     	return response;
     }
     
+    @Transactional
     public void addNewArticle(MatchArticleRequest form, Long userId, Long studyId) {
     	MyUser writer = userRepo.findById(userId).orElseThrow(() -> new ResponseStatusException(
 													HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));
     	// 1. dto를 Entity로 변경
-    	Study study = studyRepo.findById(studyId).orElseThrow(() ->  
+    	Study study = studyRepo.findById(studyId).orElseThrow(() ->
 				new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다."));
+    	
     	if (study.getLeader().getId() != userId) {
     		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "leader 권한이 없습니다.");
     	}
