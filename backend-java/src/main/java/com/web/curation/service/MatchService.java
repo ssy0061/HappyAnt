@@ -60,12 +60,11 @@ public class MatchService {
     }
     
     @Transactional
-    public void addNewArticle(MatchArticleRequest articleForm, Long userId, Long studyId) {
+    public void addNewArticle(MatchArticleRequest form, Long userId, Long studyId) {
     	MyUser writer = userRepo.findById(userId).orElseThrow(() -> new ResponseStatusException(
 													HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 													new IllegalArgumentException()));
     	// 1. dto를 Entity로 변경
-    	MatchArticle article = new MatchArticle();
     	Study study = studyRepo.findById(studyId).orElseThrow(() ->
 				new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다."));
     	
@@ -73,9 +72,8 @@ public class MatchService {
     		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "leader 권한이 없습니다.");
     	}
     	
-    	article = articleForm.toEntityWithStudy();
-    	article.setStudy(study);
-    	article.setWriter(writer);
+    	MatchArticle article = new MatchArticle(form.getTitle(), form.getContent(), false,
+    							writer, writer.getName(), study);
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
     	articleRepo.save(article);
     }
@@ -131,10 +129,10 @@ public class MatchService {
     	return articleList;
     }
     
-    // 작성자로 검색
-    public List<MatchArticleResponse> searchArticleWithWriter(Long searchId) {
+    // 키워드로 작성자 검색
+    public List<MatchArticleResponse> searchArticleWithWriter(String Keyword) {
     	List<MatchArticleResponse> articleList = new ArrayList<>();
-    	articleRepo.findByWriterId(searchId).forEach(article -> {
+    	articleRepo.findByWriterNameContains(Keyword).forEach(article -> {
     		MatchArticleResponse response = article.toResponse();
     		articleList.add(response);
     	});

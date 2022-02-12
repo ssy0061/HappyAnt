@@ -15,4 +15,6 @@ public interface MatchArticleRepo extends JpaRepository<MatchArticle, Long>, Jpa
 	
 	// 작성한 모집글 보기
 	List<MatchArticle> findByWriterId(Long writerId);
+	// 작성자로 검색하기
+	List<MatchArticle> findByWriterNameContains(String writerName);
 }

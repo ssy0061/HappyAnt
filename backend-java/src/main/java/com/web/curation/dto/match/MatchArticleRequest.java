@@ -13,8 +13,4 @@ import lombok.*;
 public class MatchArticleRequest {
 	private String title;
 	private String content;
-	
-	public MatchArticle toEntityWithStudy() {
-		return new MatchArticle(title, content, false);
-	}
 }

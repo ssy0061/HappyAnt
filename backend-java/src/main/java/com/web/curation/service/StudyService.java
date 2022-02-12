@@ -106,17 +106,16 @@ public class StudyService {
     	return response;
     }
     
+
     // 스터디에 게시글 작성하면 alert
-    public void addNewArticle(Long studyId, Long writerId, StudyArticleRequest articleForm) {
+    public void addNewArticle(Long studyId, Long writerId, StudyArticleRequest form) {
     	Study study = checkAndGetStudy(studyId);
     	MyUser writer = checkAndGetUser(writerId);
     	
     	checkStudyMember(studyId, writerId);
     	
-    	StudyArticle article = articleForm.toEntity();
-    	
-    	article.setStudyWriter(writer);
-    	article.setStudy(study);
+    	StudyArticle article = new StudyArticle(study, writer, writer.getName(),
+    							form.getTitle(), form.getContent());
     	StudyArticle newArticle = articleRepo.save(article);
     	
     	// 멤버가 있는 스터디의 모든 멤버에게 게시글 작성 알림
@@ -153,7 +152,7 @@ public class StudyService {
     }
     
     
-    // 검색 키워드 하나로  '특정 스터디'의 제목 & 내용 검색하기
+    // 검색 키워드 하나로  '특정 스터디'의 제목  or 내용 검색하기
     public List<StudyArticleResponse> searchArticle(Long studyId, String keyWord) {
     	checkAndGetStudy(studyId);
     	List<StudyArticleResponse> articleList = new ArrayList<>();
@@ -166,9 +165,9 @@ public class StudyService {
     }
 	
     // 작성자로 검색
-    public List<StudyArticleResponse> searchArticleWithWriter(Long studyId, Long searchId) {
+    public List<StudyArticleResponse> searchArticleWithWriter(Long studyId, String name) {
     	List<StudyArticleResponse> articleList = new ArrayList<>();
-    	articleRepo.findByStudyWriterIdAndStudyId(searchId, studyId).forEach(article -> {
+    	articleRepo.findByStudyWriterNameContains(name).forEach(article -> {
     		StudyArticleResponse response = article.toResponse();
     		articleList.add(response);
     	});

@@ -72,8 +72,7 @@ public class MyUser {
     @Column
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
-
-    private int score;
+    
     private String question;    
     private String answer;
     
@@ -139,12 +138,11 @@ public class MyUser {
 		this.answer = answer;
 	}
 	
-	public MyUser(Long id, String email, String name, int score, String question, String answer) {
+	public MyUser(Long id, String email, String name, String question, String answer) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.name = name;
-		this.score = score;
 		this.question = question;
 		this.answer = answer;
 	}
@@ -166,7 +164,7 @@ public class MyUser {
 	}
 
 	public MyUser(Long id, @NotBlank(message = "이메일은 필수 입력 값입니다.") @Email(message = "이메일 형식에 맞지 않습니다.") String email,
-			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, int score, String question, String answer,
+			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, String question, String answer,
 			Collection<MyRole> roles, LocalDateTime createDate, List<MatchArticle> matchArticles,
 			List<MatchJoin> matchJoinArticles, List<StudyJoin> joinStudy, List<StudyArticle> studyArticles,
 			List<StudyComment> studyComments, List<Study> manageStudy) {
@@ -174,7 +172,6 @@ public class MyUser {
 		this.id = id;
 		this.email = email;
 		this.name = name;
-		this.score = score;
 		this.question = question;
 		this.answer = answer;
 		this.roles = roles;
@@ -202,7 +199,7 @@ public class MyUser {
     	studyComments.forEach(comment -> {scRes.add(comment.toResponse());});
     	List<StudyResponse> smRes = new ArrayList<>();
     	manageStudy.forEach(study -> {smRes.add(study.toResponse());});
-    	return new GetUserResponse(id, email, name, score, question, answer, createDate,
+    	return new GetUserResponse(id, email, name, question, answer, createDate,
     							rRes, maRes, mjaRes, sRes, saRes, scRes, smRes);
     }
     

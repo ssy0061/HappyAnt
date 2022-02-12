@@ -29,7 +29,6 @@ public class GetUserResponse {
 	private Long userId;
 	private String email;
 	private String userName;
-	private int score;
 	private String question;
 	private String answer;
 	private LocalDateTime createDate;
