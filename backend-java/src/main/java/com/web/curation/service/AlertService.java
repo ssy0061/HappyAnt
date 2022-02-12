@@ -48,7 +48,7 @@ public class AlertService {
     	// 스터디의 모든 멤버들에게 게시글 작성 알림
     	join.forEach(member -> {
     		MyUser user = member.getJoinMember();
-        	Alert alert = new Alert(user, studyId, article.getId());
+        	Alert alert = new Alert(user.getId(), studyId, article.getId(), false);
         	alert.setAlertType(AlertType.ARTICLE);
         	alert.setMessage(user.getName() + "님, 스터디에 새 게시글이 작성되었습니다.");
         	Alert newAlert = alertRepo.save(alert);
@@ -87,6 +87,9 @@ public class AlertService {
     
     @Transactional
     public void updateAlert(Long userId, Long alertId) {
-    	alertRepo.findByUserIdAndId(userId, alertId).setState(true);
+    	Alert alert = alertRepo.findByUserIdAndId(userId, alertId).orElseThrow(() -> new ResponseStatusException(
+												HttpStatus.BAD_REQUEST, "알림 또는 유저 id를 확인하세요",
+												new IllegalArgumentException()));
+    	alert.setState(true);
     }
 }

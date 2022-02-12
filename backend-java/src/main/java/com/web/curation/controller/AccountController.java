@@ -187,7 +187,7 @@ public class AccountController {
     }
 
     @DeleteMapping(value ="/{id}")
-    @ApiOperation(value = "삭제")
+    @ApiOperation(value = "회원 탈퇴")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     	accountService.deleteById(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
