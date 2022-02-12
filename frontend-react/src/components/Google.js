@@ -107,7 +107,7 @@ function GoogleLoginBtn() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     // 크기
-    width: 400,
+    width: 300,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -117,7 +117,7 @@ function GoogleLoginBtn() {
     <div>
       <GoogleLogin
         clientId={clientId}
-        buttonText="구글로 로그인 하기"
+        buttonText="Login"
         onSuccess={responseGoogle}
         onFailure={responseGoogle}
         cookiePolicy="single_host_origin"

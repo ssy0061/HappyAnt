@@ -70,16 +70,30 @@ function StudyList(props) {
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else if (event.target.value !== '') {
-      const { value } = event.target;
-      let result = [];
+    } else if (selected === 'writerName' && event.target.value !== '') {
+      axios({
+        method: 'get',
+        url: `/study/${studyId}/article/search/writer?name=${searchValue}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          setFilterList(res.data.reverse());
+          setThisState(true);
+        })
+        .catch((err) => console.log(err));
 
-      result = articleList.filter(
-        (data) => data[selected].search(value) !== -1
-      );
+      // const { value } = event.target;
+      // let result = [];
 
-      setFilterList(result);
-      setThisState(true);
+      // result = articleList.filter(
+      //   (data) => data[selected].search(value) !== -1
+      // );
+
+      // setFilterList(result);
+      // setThisState(true);
     } else {
       alert('검색어를 입력하세요');
     }

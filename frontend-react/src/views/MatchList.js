@@ -4,6 +4,7 @@ import MatchListPagination from '../components/MatchListPagination';
 import MatchListCheckbox from '../components/MatchListCheckbox';
 import MatchListSearch from '../components/MatchListSearch';
 import MatchItemModal from '../components/MatchItemModal';
+import '../css/MatchList.css';
 
 function MatchList(refresh) {
   // 원본 데이터
@@ -21,7 +22,7 @@ function MatchList(refresh) {
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(1);
   // 페이지당 포스트 개수
-  const [postPerPage] = useState(20);
+  const [postPerPage] = useState(10);
   // 마지막 페이지 1*10 = 10
   const indexOfLastPost = currentPage * postPerPage;
   // 첫번째 페이지 10-10 = 0
@@ -61,6 +62,7 @@ function MatchList(refresh) {
       },
     })
       .then((response) => {
+        console.log(response);
         setList(response.data);
         setFilterList(response.data);
       })
@@ -102,15 +104,30 @@ function MatchList(refresh) {
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else if (event.target.value !== '') {
-      const { value } = event.target;
-      let result = [];
+    } else if (selected === 'writerName' && event.target.value !== '') {
+      axios({
+        method: 'get',
+        url: `/match/search/writer?Keyword=${event.target.value}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          setFilterList(res.data);
+          selectCheckbox();
+          setChecked('');
+        })
+        .catch((err) => console.log(err));
 
-      result = list.filter((data) => data[selected].search(value) !== -1);
+      // const { value } = event.target;
+      // let result = [];
 
-      setFilterList(result);
-      selectCheckbox();
-      setChecked('');
+      // result = list.filter((data) => data[selected].search(value) !== -1);
+
+      // setFilterList(result);
+      // selectCheckbox();
+      // setChecked('');
     } else {
       alert('검색어를 입력하세요');
     }
@@ -154,50 +171,44 @@ function MatchList(refresh) {
   }, [checked]);
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '400px',
-        textAlign: 'center',
-      }}
-    >
-      <h1>Match</h1>
-      <MatchListCheckbox handleCheckboxFiltering={handleCheckboxFiltering} />
+    <div className="box">
+      <div className="checkbox">
+        <h1>Match</h1>
+        <MatchListCheckbox handleCheckboxFiltering={handleCheckboxFiltering} />
+      </div>
       {/* 테이블 */}
-      <table>
-        <tbody>
+      <table className="table">
+        <thead className="thead">
           <tr>
-            <th>작성자</th>
-            <th>제목</th>
-            <th>스터디명</th>
-            <th>모집상태</th>
+            <th className="th">작성자</th>
+            <th className="th title">제목</th>
+            <th className="th">스터디명</th>
+            <th className="th">모집상태</th>
           </tr>
+        </thead>
+        <tbody>
           {currentPosts.map((item) => (
-            <tr key={item.articleId}>
-              <td>
-                {item.articleId}
+            <tr
+              key={item.articleId}
+              className="tr"
+              onClick={() => handleClickOpen2(item.articleId)}
+            >
+              <td className="td td2">
+                {/* {item.articleId} */}
                 {item.writerName}
               </td>
-              <td>
-                <button
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleClickOpen2(item.articleId)}
-                  type="button"
-                >
-                  {item.title}
-                </button>
-              </td>
+              <td className="td title">{item.title}</td>
               <td>{item.studyName}</td>
-              {item.state === true ? <td>모집완료</td> : <td>모집중</td>}
+              {/* <td>{item.studyName}</td> */}
+              {item.state === true ? (
+                <td className="td td2 statusTrue">모집완료</td>
+              ) : (
+                <td className="td td2">모집중</td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
-      <hr />
 
       <div>
         <MatchListPagination
@@ -208,7 +219,7 @@ function MatchList(refresh) {
           currentPage={currentPage}
         />
       </div>
-      <hr />
+
       <MatchListSearch
         handleSelect={handleSelect}
         searchValue={searchValue}

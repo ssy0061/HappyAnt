@@ -1,6 +1,6 @@
 import React from 'react';
-import './MatchListPagination.css';
 import Pagination from 'react-js-pagination';
+import '../css/MatchListPagination.css';
 
 function Paginations({ postPerPage, totalPosts, paginate, currentPage }) {
   // const pageNumbers = [];
