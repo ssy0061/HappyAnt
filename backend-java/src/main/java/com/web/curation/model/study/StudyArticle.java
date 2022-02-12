@@ -61,7 +61,7 @@ public class StudyArticle {
 	@Column
 	private String title;
 	
-	@Column(columnDefinition = "TEXT")
+	@Column(columnDefinition = "LONGTEXT")
 	private String content;
 	
     @CreatedDate

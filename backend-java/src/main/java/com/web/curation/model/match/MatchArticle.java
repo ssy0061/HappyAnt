@@ -40,7 +40,7 @@ public class MatchArticle {
 	@Column
 	private String title;
 	
-	@Column(columnDefinition = "TEXT")
+	@Column(columnDefinition = "LONGTEXT")
 	private String content;
 	
     @CreatedDate
