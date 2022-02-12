@@ -97,7 +97,7 @@ public class StudyService {
     	checkStudyMember(studyId, writerId);
     	
     	StudyArticle article = new StudyArticle(study, writer, writer.getName(),
-    							form.getTitle(), form.getContent());
+    							form.getTitle(), form.getContent(), form.getCode(), form.getCodeName());
     	StudyArticle newArticle = articleRepo.save(article);
     	
     	// 멤버가 있는 스터디의 모든 멤버에게 게시글 작성 알림
@@ -147,9 +147,19 @@ public class StudyService {
     }
 	
     // 작성자로 검색
-    public List<StudyArticleResponse> searchArticleWithWriter(Long studyId, String name) {
+    public List<StudyArticleResponse> searchArticleWithWriter(Long studyId, String Keyword) {
     	List<StudyArticleResponse> articleList = new ArrayList<>();
-    	articleRepo.findByStudyWriterNameContains(name).forEach(article -> {
+    	articleRepo.findByStudyWriterNameContains(Keyword).forEach(article -> {
+    		StudyArticleResponse response = article.toResponse();
+    		articleList.add(response);
+    	});
+    	return articleList;
+    }
+    
+    // 주식 종목을 첨부한 게시글 검색
+    public List<StudyArticleResponse> searchArticleWithCodeName(Long studyId, String Keyword) {
+    	List<StudyArticleResponse> articleList = new ArrayList<>();
+    	articleRepo.findByCodeNameContains(Keyword).forEach(article -> {
     		StudyArticleResponse response = article.toResponse();
     		articleList.add(response);
     	});
@@ -363,5 +373,19 @@ public class StudyService {
     	if (interest != null && interest.length() > 0 && !Objects.equals(study.getInterest(), interest)) {
     		study.setInterest(interest);
     	}
+    }
+    
+    @Transactional
+    public void deleteStudy(Long studyId, Long loginUserId) {
+    	Study study = checkAndGetStudy(studyId);
+    	if (study.getLeader().getId() != loginUserId) {
+    		throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "leader 권한이 없습니다.");
+    	}
+    	if (joinRepo.findByjoinStudyId(studyId).size() > 1) {
+    		throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "멤버가 없는 스터디만 폐쇄 가능합니다.");
+    	}
+    	studyRepo.deleteById(studyId);
     }
 }

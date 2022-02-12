@@ -22,4 +22,6 @@ public class StudyArticleResponse {
 	private String writerName;
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
+	private String code;
+	private String codeName;
 }
