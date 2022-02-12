@@ -42,7 +42,8 @@ public class Alert {
 	private Long id;
 	
 	private Long userId;
-
+	
+	private String userName;
 	
 	@Enumerated(value = EnumType.STRING)
 	private AlertType AlertType;
@@ -51,9 +52,12 @@ public class Alert {
 	
 	private Long studyId;
 	
+	private String studyName;
+	
 	// studyArticle
 	private Long articleId;
 	
+	@Column
 	private Boolean state;
 	
     @CreatedDate
@@ -62,14 +66,15 @@ public class Alert {
     		updatable = false)
 	private LocalDateTime createDate;
     
-    public Alert(Long userId, Long studyId, Long articleId, Boolean state) {
+    public Alert(Long userId, String userName, Long studyId, String studyName, Long articleId) {
     	this.userId = userId;
+    	this.userName = userName;
     	this.studyId = studyId;
+    	this.studyName = studyName;
     	this.articleId = articleId;
-    	this.state = state;
     }
     
     public AlertResponse toResponse() {
-    	return new AlertResponse(id, userId, AlertType, message, studyId, articleId, createDate, state);
+    	return new AlertResponse(id, userId, userName, AlertType, message, studyId, studyName, articleId, createDate, state);
     }
 }

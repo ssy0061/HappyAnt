@@ -19,7 +19,6 @@ import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
 import com.web.curation.dto.study.StudyArticleRequest;
 import com.web.curation.dto.study.StudyArticleResponse;
-import com.web.curation.dto.study.StudyCommentRequest;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyJoinUserResponse;
 import com.web.curation.dto.study.StudyRequest;
@@ -71,23 +70,6 @@ public class StudyService {
 				HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.", new IllegalArgumentException()));
 	}
 	
-	// 스터디에서 '초대'로 멤버 추가
-	@Transactional
-	public void addNewStudyMember(Long studyId, Long joinUserId) {
-		Study study = checkAndGetStudy(studyId);
-		MyUser joinUser = checkAndGetUser(joinUserId);
-		if (joinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
-    		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST,
-    				"이미 스터디에 가입한 회원입니다.",
-    				new IllegalArgumentException());
-		} else {
-			// 스터디에 유저추가(멤버)
-			StudyJoin join = new StudyJoin(null, joinUser, study, false);
-			joinRepo.save(join);
-		}
-
-	}
 	
     public List<StudyArticleResponse> getArticleList(Long studyId) {
     	checkAndGetStudy(studyId);
@@ -224,17 +206,18 @@ public class StudyService {
     	return commentList;
     }
 	
-    public void addNewComment(Long studyId, Long articleId, StudyCommentRequest commentForm) {
-    	Long writerId = commentForm.getWriterId();
-    	MyUser writer = checkAndGetUser(writerId);
+    // 스터디 게시글 작성자에게 alert
+    public void addNewComment(Long studyId, Long articleId, Long loginUserId, String content) {
+    	MyUser writer = checkAndGetUser(loginUserId);
     	StudyArticle article = checkAndGetStudyArticle(studyId, articleId);
-    	checkStudyMember(studyId, writerId);
+    	checkStudyMember(studyId, loginUserId);
     	
-    	StudyComment comment = commentForm.toEntity();
-    	
-    	comment.setStudyCommenter(writer);
-    	comment.setStudyArticle(article);
-    	commentRepo.save(comment);
+    	StudyComment comment = new StudyComment(article, writer, content);
+    	StudyComment newComment = commentRepo.save(comment);
+    	// 작성자가 아닌 다른 유저가 댓글 달면 작성자에게 alert
+    	if (article.getStudyWriter().getId() != writer.getId()) {
+    		alertService.studyCommentToAlert(studyId, newComment);
+    	}
     }
     
     @Transactional // 변경된 데이터를 DB에 저장
@@ -315,6 +298,34 @@ public class StudyService {
 					new IllegalArgumentException());
     	}
     }
+    
+    public void inviteUser(Long studyId, String email) {
+    	MyUser user = userRepo.findByEmail(email);
+    	if (user == null) {
+    		throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND, "존재하지 않는 유저 email입니다.");
+    	}
+    	// alert
+    	alertService.inviteToAlert(studyId, user.getId(), user.getName());
+    }
+
+	// 스터디에서 '초대'로 멤버 추가
+	@Transactional
+	public void addNewStudyMember(Long studyId, Long joinUserId) {
+		Study study = checkAndGetStudy(studyId);
+		MyUser joinUser = checkAndGetUser(joinUserId);
+		if (joinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"이미 스터디에 가입한 회원입니다.",
+    				new IllegalArgumentException());
+		} else {
+			// 스터디에 유저추가(멤버)
+			StudyJoin join = new StudyJoin(null, joinUser, study, false);
+			joinRepo.save(join);
+			alertService.ApprovedToAlert(studyId, joinUserId, joinUser.getName());
+		}
+	}
     
     public void createStudy(StudyRequest form, Long userId) {
     	MyUser user = checkAndGetUser(userId);
