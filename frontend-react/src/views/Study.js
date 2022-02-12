@@ -7,6 +7,7 @@ import StudyList from './StudyList';
 import BtnEntrust from '../components/BtnEntrust';
 import BtnDelete from '../components/BtnDelete';
 import BtnInvite from '../components/BtnInvite';
+import BtnChangeStudyInfo from '../components/BtnChangeStudyInfo';
 
 export default function Study() {
   const { studyId } = useParams();
@@ -93,9 +94,13 @@ export default function Study() {
         {studyInfo.leaderId === userInfo.userId ? (
           <BtnInvite studyInfo={studyInfo} studyMember={studyMember} />
         ) : null}
+        {studyInfo.leaderId === userInfo.userId ? (
+          <BtnChangeStudyInfo studyInfo={studyInfo} />
+        ) : null}
         <BtnDelete studyId={studyId} />
       </aside>
       <section style={sectionDiv}>
+        <h1>스터디 이름 : {studyInfo.studyName}</h1>
         <h1>{studyId}번 공간</h1>
         <p>afsfas</p>
         <button type="submit" onClick={handleClickOpen3}>
