@@ -29,6 +29,7 @@ import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.study.StudyArticleResponse;
 import com.web.curation.dto.study.StudyCommentResponse;
 import com.web.curation.dto.study.StudyResponse;
+import com.web.curation.model.alert.Alert;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
 import com.web.curation.model.study.Study;

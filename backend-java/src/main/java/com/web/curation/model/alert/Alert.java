@@ -42,6 +42,7 @@ public class Alert {
 	private Long id;
 	
 	private Long userId;
+
 	
 	@Enumerated(value = EnumType.STRING)
 	private AlertType AlertType;
