@@ -9,20 +9,24 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.web.curation.dto.account.FindPwRequest;
 import com.web.curation.dto.account.FindPwResponse;
 import com.web.curation.dto.account.FindPwSuccessRequest;
 import com.web.curation.model.account.MyRole;
 import com.web.curation.model.account.MyUser;
+import com.web.curation.model.study.Study;
 import com.web.curation.repository.account.RoleRepo;
 import com.web.curation.repository.account.UserRepo;
+import com.web.curation.repository.study.StudyJoinRepo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +40,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
 	@Autowired
 	private UserRepo userRepo;
+	@Autowired
+	private StudyJoinRepo studyJoinRepo;
 
 	private final RoleRepo roleRepo;
 	private final PasswordEncoder passwordEncoder;
@@ -128,7 +134,16 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
 	
 	public void deleteById(Long id) {
-		
+		MyUser user = userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(
+											HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다."));
+		List<Study> manageStudy = user.getManageStudy();
+		if (manageStudy.size() > 0) {
+			manageStudy.forEach(study -> {
+				if (studyJoinRepo.findByjoinStudyId(study.getId()).size() > 1) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "관리하고 있는 스터디가 있습니다. leader 위임을 하세요");
+				}
+			});
+		}
 		userRepo.deleteById(id);
 	}
 	

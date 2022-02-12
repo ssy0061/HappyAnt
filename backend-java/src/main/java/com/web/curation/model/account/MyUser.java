@@ -112,6 +112,13 @@ public class MyUser {
     @JsonManagedReference
     private List<StudyComment> studyComments = new ArrayList<StudyComment>();
     
+    @OneToMany(mappedBy="leader", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<Study> manageStudy = new ArrayList<Study>();
+    
+    
+    
     public MyUser(@NotBlank(message = "이메일은 필수 입력 값입니다.") String email,
 			@NotBlank(message = "비밀번호는 필수 입력 값입니다.") @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.") String password) {
     	super();
@@ -161,7 +168,7 @@ public class MyUser {
 			@NotBlank(message = "이름은 필수 입력 값입니다.") String name, int score, String question, String answer,
 			Collection<MyRole> roles, LocalDateTime createDate, List<MatchArticle> matchArticles,
 			List<MatchJoin> matchJoinArticles, List<StudyJoin> joinStudy, List<StudyArticle> studyArticles,
-			List<StudyComment> studyComments) {
+			List<StudyComment> studyComments, List<Study> manageStudy) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -176,6 +183,7 @@ public class MyUser {
 		this.joinStudy = joinStudy;
 		this.studyArticles = studyArticles;
 		this.studyComments = studyComments;
+		this.manageStudy = manageStudy;
 	}
     
     public GetUserResponse toResponse() {
@@ -191,8 +199,10 @@ public class MyUser {
     	studyArticles.forEach(article -> {saRes.add(article.toResponse());});
     	List<StudyCommentResponse> scRes = new ArrayList<>();
     	studyComments.forEach(comment -> {scRes.add(comment.toResponse());});
+    	List<StudyResponse> smRes = new ArrayList<>();
+    	manageStudy.forEach(study -> {smRes.add(study.toResponse());});
     	return new GetUserResponse(id, email, name, score, question, answer, createDate,
-    							rRes, maRes, mjaRes, sRes, saRes, scRes);
+    							rRes, maRes, mjaRes, sRes, saRes, scRes, smRes);
     }
     
     

@@ -42,6 +42,7 @@ public class Study {
 	@GeneratedValue
 	private Long id;
 	
+	//단방향
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "leader_id",
 		referencedColumnName = "id") // 외래키로 조인

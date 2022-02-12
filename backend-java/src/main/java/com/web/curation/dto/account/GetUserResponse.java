@@ -39,6 +39,7 @@ public class GetUserResponse {
 	private List<StudyResponse> joinStudy;
 	private List<StudyArticleResponse> studyArticles;
 	private List<StudyCommentResponse> studyComments;
+	private List<StudyResponse> manageStudy;
 	
 	
 }
