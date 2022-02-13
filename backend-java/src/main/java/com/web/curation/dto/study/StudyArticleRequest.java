@@ -16,6 +16,7 @@ import lombok.ToString;
 public class StudyArticleRequest {
 	private String title;
 	private String content;
-	private String code;
-	private String codeName;
+	private String stockCode;
+	private String stockName;
+	private Integer stockPrice;
 }

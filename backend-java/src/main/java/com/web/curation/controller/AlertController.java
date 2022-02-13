@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,5 +66,12 @@ public class AlertController {
 	public void updateAlert(@PathVariable("userId") Long userId,
 							@PathVariable("alertId") Long alertId) {
 		alertService.updateAlert(userId, alertId);
+	}
+	
+	@DeleteMapping("{userId}/{alertId}")
+	@ApiOperation(value = "알림 삭제")
+	public void deleteAlert(@PathVariable("userId") Long userId,
+							@PathVariable("alertId") Long alertId) {
+		alertService.deleteAlert(userId, alertId);
 	}
 }
