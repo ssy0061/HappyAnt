@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import StudyItemCreate from '../components/StudyItemCreate';
+import MatchItemCreate from '../components/MatchItemCreate';
 import StudyList from './StudyList';
 import BtnEntrust from '../components/BtnEntrust';
 import BtnDelete from '../components/BtnDelete';
@@ -61,12 +62,7 @@ export default function Study() {
       <aside style={asideDiv}>
         <p>aside content1</p>
         <p>aside2</p>
-        <p>aside3</p>
-        <p>aside4</p>
-        <p>aside5</p>
-        <p>aside6</p>
-        <p>aside7</p>
-        <p>aside8</p>
+
         {/* 리더에게만 위임/추방 보여주기 */}
         {studyInfo.leaderId === userInfo.userId ? (
           <BtnEntrust studyId={studyId} />
@@ -76,7 +72,7 @@ export default function Study() {
       </aside>
       <section style={sectionDiv}>
         <h1>{studyId}번 공간</h1>
-        <p>afsfas</p>
+        <MatchItemCreate />
         <button type="submit" onClick={handleClickOpen3}>
           스터디 글 작성
         </button>

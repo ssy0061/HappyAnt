@@ -24,7 +24,6 @@ export default function StudyCommentList({ articleId }) {
       })
       .then((res) => {
         setComment(res.data);
-        getComment();
       });
   };
 
@@ -58,7 +57,9 @@ export default function StudyCommentList({ articleId }) {
             content: updateCommentContent,
           },
         })
-        .then(setSelectUpdateComment(''))
+        .then(() => {
+          setSelectUpdateComment('');
+        })
         .catch((err) => console.log(err));
     }
   };
@@ -73,7 +74,7 @@ export default function StudyCommentList({ articleId }) {
 
   // -----------------------------------------------------------------------------렌더 ---------------------------------------------------------
   return (
-    <div>
+    <div key={`studyArticleComment${articleId}`}>
       {comment.map((item, idx) => (
         <>
           {/* -------댓글내용(수정하려고 선택된 댓글이면 수정 폼 보여줌)-------- */}
@@ -83,7 +84,7 @@ export default function StudyCommentList({ articleId }) {
               key={`update${item.commentId}`}
               variant="standard"
               defaultValue={item.content}
-              onChange={handleUpdateCommentContent}
+              onChange={() => handleUpdateCommentContent}
               onKeyPress={(e) => {
                 submitUpdateCommentContent(e, item.commentId);
               }}

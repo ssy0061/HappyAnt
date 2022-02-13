@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -18,33 +18,37 @@ import {
   IconButton,
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
+import ContentEditor from './ContentEditor';
 
-export default function StudyItemUpdate({ articleId }) {
-  const [modalState, setModalState] = useState(false);
+export default function StudyItemUpdate({ articleId, refresh }) {
   const { studyId } = useParams();
+  const yourId = useSelector((state) => state.user.userInfo.userId);
+
+  const [modalState, setModalState] = useState(false);
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [종목기본정보, setBasicInfo] = useState('');
   const [투자아이디어, setIdea] = useState('');
   const [주요제품_서비스, setService] = useState('');
   const [경쟁사, setcompetition] = useState('');
-  const [itemChecked, setItemChecked] = React.useState([
-    false,
-    false,
-    false,
-    false,
-  ]);
+
+  const [item, setItem] = useState('');
+
+  // 마운트때는 실행하지 않고 item state가 변경됐을때만 실행 (처음 렌더링때 실행 안 한다)
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (didMount.current) setModalState(true);
+    else didMount.current = true;
+  }, [item]);
+
+  const [itemChecked, setItemChecked] = useState([false, false, false, false]);
+
+  const setText = (val) => {
+    setContent(val);
+  };
 
   const modalOpen = () => {
-    setModalState(true);
-  };
-  const modalClose = () => {
-    setModalState(false);
-  };
-
-  const [item, setItem] = useState([]);
-
-  const getItem = () => {
     axios
       .get(`/study/${studyId}/${articleId}`, {
         headers: {
@@ -53,19 +57,15 @@ export default function StudyItemUpdate({ articleId }) {
       })
       .then((res) => {
         setItem(res.data);
-        console.log(item);
       })
       .catch((err) => console.log(err));
   };
-  useEffect(() => getItem(), []);
-
-  const yourId = useSelector((state) => state.user.userInfo.userId);
+  const modalClose = () => {
+    setModalState(false);
+  };
 
   const handleTitle = (e) => {
     setTitle(e.target.value);
-  };
-  const handleContent = (e) => {
-    setContent(e.target.value);
   };
   const handleBasicInfo = (e) => {
     setBasicInfo(e.target.value);
@@ -113,33 +113,46 @@ export default function StudyItemUpdate({ articleId }) {
     };
     console.log(종목기본정보, 투자아이디어, 주요제품_서비스, 경쟁사);
 
-    if (title === '' || content === '') {
-      console.log('내용을 기입해주세요.');
-    } else {
-      axios
-        .put(`/study/${studyId}/${articleId}`, [], {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-          params: body,
-        })
-        .then((res) => {
-          console.log(res);
-          modalClose();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    axios
+      .put(`/study/${studyId}/${articleId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        params: body,
+      })
+      .then((res) => {
+        console.log(res);
+        refresh();
+        modalClose();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // ----------------------------css ----------------------------
+  const DialogTitleDesign = {
+    backgroundColor: '#001E60',
+    textAlign: 'left',
+    color: 'white',
+    marginLeft: '1.5rem',
+    borderBottomLeftRadius: '1.5rem',
+    fontWeight: 'bold',
   };
 
   return (
     <div>
-      <button type="submit" onClick={modalOpen}>
+      <button
+        key={`updateButton${articleId}`}
+        type="submit"
+        onClick={modalOpen}
+      >
         수정
       </button>
       <Dialog open={modalState} fullWidth maxWidth="md">
-        <DialogTitle>(스터디)글 작성 폼</DialogTitle>
+        <DialogTitle style={DialogTitleDesign}>
+          게시글을 수정해주세요.
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -152,18 +165,7 @@ export default function StudyItemUpdate({ articleId }) {
             defaultValue={item.title}
             onChange={handleTitle}
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            label="내용"
-            type="text"
-            fullWidth
-            variant="outlined"
-            defaultValue={item.content}
-            multiline
-            rows={15}
-            onChange={handleContent}
-          />
+          <ContentEditor setText={setText} initialValue={item.content} />
 
           {/* ------------------체크박스------------------ */}
           <List
@@ -225,7 +227,7 @@ export default function StudyItemUpdate({ articleId }) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={updateArticle}>작성</Button>
+          <Button onClick={updateArticle}>완료</Button>
           <Button onClick={modalClose}>닫기</Button>
         </DialogActions>
       </Dialog>
