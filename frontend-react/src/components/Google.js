@@ -117,7 +117,7 @@ function GoogleLoginBtn() {
     <div>
       <GoogleLogin
         clientId={clientId}
-        buttonText="Login"
+        buttonText="구글로 로그인 하기"
         onSuccess={responseGoogle}
         onFailure={responseGoogle}
         cookiePolicy="single_host_origin"
