@@ -18,6 +18,8 @@ import {
   IconButton,
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
+import { Wysiwyg } from '@mui/icons-material';
+import ContentEditor from './ContentEditor';
 
 export default function StudyItemCreate(props) {
   const { studyId } = useParams();
@@ -36,14 +38,13 @@ export default function StudyItemCreate(props) {
 
   const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
-  console.log(종목기본정보, 투자아이디어, 주요제품_서비스, 경쟁사);
 
   const handleTitle = (e) => {
     setTitle(e.target.value);
   };
-  const handleContent = (e) => {
-    setContent(e.target.value);
-  };
+  // const handleContent = (e) => {
+  //   setContent(e.target.value);
+  // };
   const handleBasicInfo = (e) => {
     setBasicInfo(e.target.value);
   };
@@ -82,11 +83,10 @@ export default function StudyItemCreate(props) {
     const body = {
       title,
       content,
-      // 종목기본정보,
-      // 투자아이디어,
-      // 주요제품_서비스,
-      // 경쟁사,
-      writerId: userId,
+      종목기본정보,
+      투자아이디어,
+      주요제품_서비스,
+      경쟁사,
     };
 
     if (title === '' || content === '') {
@@ -96,6 +96,9 @@ export default function StudyItemCreate(props) {
         .post(`/study/${studyId}`, body, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            loginUserId: userId,
           },
         })
         .then((res) => {
@@ -108,22 +111,51 @@ export default function StudyItemCreate(props) {
     }
   };
 
+  // -----------------------------------css--------------------------------
+  const DialogTitleDesign = {
+    display: 'table',
+    backgroundColor: '#001E60',
+    textAlign: 'left',
+    color: 'white',
+    marginLeft: '1.5rem',
+    borderBottomLeftRadius: '1.5rem',
+    fontWeight: 'bold',
+  };
+
+  const DialogTitleText = {
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    marginTop: '0px',
+    marginBottom: '0px',
+  };
+  const DialogTitleIcon = {
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    marginTop: '3px',
+    marginRight: '-20px',
+    marginBottom: '0px',
+  };
+
   return (
     <div>
       <Dialog open fullWidth maxWidth="md">
-        <DialogTitle>(스터디)글 작성 폼</DialogTitle>
+        <DialogTitle style={DialogTitleDesign}>
+          <Wysiwyg sx={{ fontSize: 25 }} style={DialogTitleIcon} />
+          <p style={DialogTitleText}>Study 글쓰기</p>
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="제목"
+            label="제목을 입력해 주세요."
             type="title"
             fullWidth
             variant="standard"
             onChange={handleTitle}
           />
-          <TextField
+          <ContentEditor setText={setContent} />
+          {/* <TextField
             autoFocus
             margin="dense"
             label="내용"
@@ -133,8 +165,8 @@ export default function StudyItemCreate(props) {
             multiline
             rows={15}
             onChange={handleContent}
-          />
-
+          /> */}
+          <hr />
           {/* ------------------체크박스------------------ */}
           <List
             sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}
@@ -174,7 +206,6 @@ export default function StudyItemCreate(props) {
               );
             })}
           </List>
-
           {/* -------체크박스 상태에 따라 보여지는 인풋 form------- */}
           {[0, 1, 2, 3].map(
             (index) =>

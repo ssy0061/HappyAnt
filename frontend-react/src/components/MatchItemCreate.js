@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import {
@@ -8,81 +9,103 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Select,
-  MenuItem,
-  InputLabel,
 } from '@mui/material';
+import { PersonSearch } from '@mui/icons-material';
+import ContentEditor from './ContentEditor';
 
-export default function MatchItemCreate(props) {
-  const [category, setCategory] = useState('');
+export default function MatchItemCreate() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [studyName, setStudyName] = useState('');
-  const [tempArea, setArea] = useState('');
-  const [tempInterest, setInterest] = useState('');
-  const [memberNum, setMemeberNum] = useState(2);
   const userId = useSelector((state) => state.user.userInfo.userId);
-  const { handleClickClose } = props;
+  const { studyId } = useParams();
+  const [open, setOpen] = useState(false);
 
-  const handleStudyName = (e) => {
-    setStudyName(e.target.value);
-  };
-  const handleCategory = (e) => {
-    setCategory(e.target.value);
-  };
-  const handleArea = (e) => {
-    setArea(e.target.value);
-  };
-  const handleInterest = (e) => {
-    setInterest(e.target.value);
-  };
   const handleTitle = (e) => {
     setTitle(e.target.value);
   };
-
-  const handleContent = (e) => {
-    setContent(e.target.value);
+  const handleContent = (val) => {
+    setContent(val);
+    console.log(val);
   };
-  const handleMemberNum = (e) => {
-    setMemeberNum(e.target.value);
+
+  const modalOpen = () => {
+    setOpen(true);
+  };
+  const modalClose = () => {
+    setOpen(false);
   };
 
   const onClickCreate = () => {
     const data = {
-      content,
-      studyId: 0,
-      tempArea,
-      tempCategory: category,
-      tempHeadCount: memberNum,
-      tempInterest,
-      tempStudyName: studyName,
       title,
-      writerId: userId,
+      content,
     };
     console.log(localStorage.getItem('accessToken'));
-    if (title === '' || content === '' || memberNum === '') {
-      console.log('내용을 기입해주세요.');
+    if (title === '' || content === '') {
+      alert('내용을 기입해주세요.');
     } else {
       axios
         .post('/match', data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
+          params: {
+            studyId,
+            loginUserId: userId,
+          },
         })
         .then((response) => {
           console.log(response);
-          handleClickClose();
+          modalClose();
         })
         .catch((error) => {
           console.log(error);
+          modalClose();
         });
     }
   };
 
+  // -------------------css---------------------------
+  const DialogTitleDesign = {
+    display: 'table',
+    backgroundColor: '#001E60',
+    textAlign: 'left',
+    color: 'white',
+    marginLeft: '1.5rem',
+    borderBottomLeftRadius: '1.5rem',
+    fontWeight: 'bold',
+  };
+
+  const DialogTitleText = {
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    marginTop: '0px',
+    marginBottom: '0px',
+  };
+  const DialogTitleIcon = {
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    marginTop: '2px',
+    marginRight: '-21px',
+    marginBottom: '0px',
+  };
+
+  const BtnStyle = {
+    border: '1px solid',
+    borderColor: '#001E60',
+    color: '#001E60',
+  };
+
   return (
     <div>
-      <Dialog open fullWidth maxWidth="md">
-        <DialogTitle>글 작성 폼</DialogTitle>
+      <button type="submit" onClick={modalOpen}>
+        모집글작성
+      </button>
+      <Dialog open={open} fullWidth maxWidth="md">
+        <DialogTitle style={DialogTitleDesign}>
+          <PersonSearch sx={{ fontSize: 25 }} style={DialogTitleIcon} />
+          <p style={DialogTitleText}>모집글쓰기</p>
+        </DialogTitle>
         <DialogContent>
           <div>
             <TextField
@@ -95,76 +118,16 @@ export default function MatchItemCreate(props) {
               variant="standard"
               onChange={handleTitle}
             />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="스터디 이름"
-              type="title"
-              fullWidth
-              variant="standard"
-              onChange={handleStudyName}
-            />
-          </div>
-          <div>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="내용"
-              type="text"
-              fullWidth
-              variant="outlined"
-              multiline
-              rows={15}
-              onChange={handleContent}
-            />
-            <br />
-            <br />
-            <div>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="카테고리"
-                type="title"
-                fullWidth
-                variant="outlined"
-                onChange={handleCategory}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="지역"
-                type="title"
-                fullWidth
-                variant="outlined"
-                onChange={handleArea}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="관심분야"
-                type="title"
-                fullWidth
-                variant="outlined"
-                onChange={handleInterest}
-              />
-            </div>
-            <InputLabel>스터디원 수</InputLabel>
-            <Select value={memberNum} label="멤버수" onChange={handleMemberNum}>
-              <MenuItem value={2}>2명</MenuItem>
-              <MenuItem value={3}>3명</MenuItem>
-              <MenuItem value={4}>4명</MenuItem>
-              <MenuItem value={5}>5명</MenuItem>
-              <MenuItem value={6}>6명</MenuItem>
-            </Select>
+            <ContentEditor setText={handleContent} />
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClickCreate}>작성</Button>
-          <Button onClick={handleClickClose}>취소</Button>
+          <Button onClick={onClickCreate} style={BtnStyle}>
+            작성
+          </Button>
+          <Button onClick={modalClose} style={BtnStyle}>
+            취소
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
