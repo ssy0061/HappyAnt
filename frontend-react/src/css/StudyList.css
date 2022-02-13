@@ -1,0 +1,26 @@
+.studyDiv {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  box-shadow: 0 5px 10px rgb(177, 177, 177);
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+  margin-top: 1rem;
+  padding: 16px;
+}
+.head {
+  margin-right: auto;
+  margin-left: 15%;
+}
+.cmt {
+  display: flex;
+  /* margin-left: auto; */
+  /* flex-direction: column; */
+  justify-content: space-around;
+  /* align-content: flex-end; */
+}
+
+.content {
+  word-break: break-all;
+  margin-bottom: 3rem;
+}

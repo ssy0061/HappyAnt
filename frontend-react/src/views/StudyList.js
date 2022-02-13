@@ -6,6 +6,7 @@ import MatchListSearch from '../components/MatchListSearch';
 import StudyCommentList from '../components/StudyCommentList';
 import StudyItemDelete from '../components/StudyItemDelete';
 import StudyItemUpdate from '../components/StudyItemUpdate';
+import '../css/StudyList.css';
 import ContentViewer from '../components/ContentViewer';
 
 function StudyList(props) {
@@ -57,10 +58,10 @@ function StudyList(props) {
   };
 
   // 제목내용, 작성자로 검색
-  const handleSearch = (event) => {
+  const handleSearch = () => {
     // 제목,내용 으로 검색
-    if (selected === 'title' && event.target.value !== '') {
-      console.log(event);
+    if (selected === 'title' && searchValue !== '') {
+      // console.log(event);
       axios({
         method: 'get',
         url: `/study/${studyId}/article/search?Keyword=${searchValue}`,
@@ -75,16 +76,30 @@ function StudyList(props) {
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else if (event.target.value !== '') {
-      const { value } = event.target;
-      let result = [];
+    } else if (selected === 'writerName' && searchValue !== '') {
+      axios({
+        method: 'get',
+        url: `/study/${studyId}/article/search/writer?name=${searchValue}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          setFilterList(res.data.reverse());
+          setThisState(true);
+        })
+        .catch((err) => console.log(err));
 
-      result = articleList.filter(
-        (data) => data[selected].search(value) !== -1
-      );
+      // const { value } = event.target;
+      // let result = [];
 
-      setFilterList(result);
-      setThisState(true);
+      // result = articleList.filter(
+      //   (data) => data[selected].search(value) !== -1
+      // );
+
+      // setFilterList(result);
+      // setThisState(true);
     } else {
       alert('검색어를 입력하세요');
     }
@@ -122,34 +137,42 @@ function StudyList(props) {
           alignItems: 'center',
         }}
       >
-        <h1>StudyList</h1>
-        <MatchListSearch
-          handleSelect={handleSelect}
-          searchValue={searchValue}
-          saveSearchValue={saveSearchValue}
-          onKeyPress={onKeyPress}
-          handleSearch={handleSearch}
-        />
+        <div className="head">
+          <h1>StudyList</h1>
+          <MatchListSearch
+            handleSelect={handleSelect}
+            searchValue={searchValue}
+            saveSearchValue={saveSearchValue}
+            onKeyPress={onKeyPress}
+            handleSearch={handleSearch}
+          />
+        </div>
         {filterList.map((item) => (
-          <div style={{ width: '50%' }} key={item.articleId}>
-            <h1>{item.title}</h1>
-            <span>{item.articleId}</span>
-            <p>{item.writerName}</p>
-            <ContentViewer initialValue={item.content} />
-            <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
-              11
-            )}`}</p>
-            <StudyItemDelete
-              articleId={item.articleId}
-              refresh={getStudyArticleList}
-            />
-            <StudyItemUpdate
-              articleId={item.articleId}
-              refresh={getStudyArticleList}
-            />
-            <hr />
-            <StudyCommentList articleId={item.articleId} />
-            <hr />
+          <div className="studyDiv" key={item.articleId}>
+            <div>
+              <h1>{item.title}</h1>
+              <ContentViewer initialValue={item.content} />
+
+              <p>{item.writerName}</p>
+              <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
+                11
+              )}`}</p>
+            </div>
+            <div className="cmt">
+              <StudyItemUpdate
+                articleId={item.articleId}
+                refresh={getStudyArticleList}
+              />
+              <StudyItemDelete
+                articleId={item.articleId}
+                refresh={getStudyArticleList}
+              />
+            </div>
+            <div>
+              <hr />
+              <StudyCommentList articleId={item.articleId} />
+              <hr />
+            </div>
           </div>
         ))}
       </div>
