@@ -7,9 +7,9 @@
 .th {
   padding: 1rem 2rem;
   letter-spacing: 0.1rem;
-  font-size: 0.7rem;
+  /* font-size: 0.7rem; */
   font-weight: 900;
-  background-color: #8cbded;
+  background-color: #28a0ff;
   color: white;
   white-space: nowrap;
 }

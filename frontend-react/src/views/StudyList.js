@@ -6,6 +6,7 @@ import MatchListSearch from '../components/MatchListSearch';
 import StudyCommentList from '../components/StudyCommentList';
 import StudyItemDelete from '../components/StudyItemDelete';
 import StudyItemUpdate from '../components/StudyItemUpdate';
+import '../css/StudyList.css';
 
 function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
@@ -52,10 +53,10 @@ function StudyList(props) {
   };
 
   // 제목내용, 작성자로 검색
-  const handleSearch = (event) => {
+  const handleSearch = () => {
     // 제목,내용 으로 검색
-    if (selected === 'title' && event.target.value !== '') {
-      console.log(event);
+    if (selected === 'title' && searchValue !== '') {
+      // console.log(event);
       axios({
         method: 'get',
         url: `/study/${studyId}/article/search?Keyword=${searchValue}`,
@@ -70,7 +71,7 @@ function StudyList(props) {
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else if (selected === 'writerName' && event.target.value !== '') {
+    } else if (selected === 'writerName' && searchValue !== '') {
       axios({
         method: 'get',
         url: `/study/${studyId}/article/search/writer?name=${searchValue}`,
@@ -131,28 +132,36 @@ function StudyList(props) {
           alignItems: 'center',
         }}
       >
-        <h1>StudyList</h1>
-        <MatchListSearch
-          handleSelect={handleSelect}
-          searchValue={searchValue}
-          saveSearchValue={saveSearchValue}
-          onKeyPress={onKeyPress}
-          handleSearch={handleSearch}
-        />
+        <div className="head">
+          <h1>StudyList</h1>
+          <MatchListSearch
+            handleSelect={handleSelect}
+            searchValue={searchValue}
+            saveSearchValue={saveSearchValue}
+            onKeyPress={onKeyPress}
+            handleSearch={handleSearch}
+          />
+        </div>
         {filterList.map((item) => (
-          <div style={{ width: '50%' }} key={item.articleId}>
-            <h1>{item.title}</h1>
-            <span>{item.articleId}</span>
-            <p>{item.writerName}</p>
-            <p>{item.content}</p>
-            <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
-              11
-            )}`}</p>
-            <StudyItemDelete articleId={item.articleId} />
-            <StudyItemUpdate articleId={item.articleId} />
-            <hr />
-            <StudyCommentList articleId={item.articleId} />
-            <hr />
+          <div className="studyDiv" key={item.articleId}>
+            <div>
+              <h1>{item.title}</h1>
+              <p className="content">{item.content}</p>
+
+              <p>{item.writerName}</p>
+              <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
+                11
+              )}`}</p>
+            </div>
+            <div className="cmt">
+              <StudyItemUpdate articleId={item.articleId} />
+              <StudyItemDelete articleId={item.articleId} />
+            </div>
+            <div>
+              <hr />
+              <StudyCommentList articleId={item.articleId} />
+              <hr />
+            </div>
           </div>
         ))}
       </div>

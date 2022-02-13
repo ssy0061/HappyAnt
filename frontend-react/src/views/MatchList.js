@@ -87,27 +87,29 @@ function MatchList(refresh) {
   };
 
   // 제목내용, 작성자로 검색
-  const handleSearch = (event) => {
+  const handleSearch = () => {
     // 제목,내용 으로 검색
-    if (selected === 'title' && event.target.value !== '') {
+    console.log('실행됨?');
+    if (selected === 'title' && searchValue !== '') {
       axios({
         method: 'get',
-        url: `/match/search?Keyword=${event.target.value}`,
+        url: `/match/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then((res) => {
+          console.log(res);
           setFilterList(res.data);
           selectCheckbox();
           setChecked('');
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else if (selected === 'writerName' && event.target.value !== '') {
+    } else if (selected === 'writerName' && searchValue !== '') {
       axios({
         method: 'get',
-        url: `/match/search/writer?Keyword=${event.target.value}`,
+        url: `/match/search/writer?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -135,7 +137,7 @@ function MatchList(refresh) {
   // 검색 엔터키 누를때
   const onKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleSearch(e);
+      handleSearch();
     }
   };
 
