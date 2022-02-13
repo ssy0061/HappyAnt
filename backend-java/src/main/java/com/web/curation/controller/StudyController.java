@@ -93,7 +93,7 @@ public class StudyController {
     @ApiOperation(value = "게시글 '주식 종목' 검색")
     public List<StudyArticleResponse> SerachArticleWithCodeName(@PathVariable("studyId") Long studyId,
     															@RequestParam(required = true) String Keyword) {
-    	return studyService.searchArticleWithCodeName(studyId, Keyword);
+    	return studyService.searchArticleWithStockName(studyId, Keyword);
     }
     
     //// 댓글

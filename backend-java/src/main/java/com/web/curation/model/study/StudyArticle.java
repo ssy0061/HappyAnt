@@ -65,10 +65,13 @@ public class StudyArticle {
 	private String content;
 	
 	@Column
-	private String code;
+	private String stockCode;
 	
 	@Column
-	private String codeName;
+	private String stockName;
+	
+	@Column
+	private Integer stockPrice;
 	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -82,20 +85,22 @@ public class StudyArticle {
     		updatable = false)
 	private LocalDateTime updateDate;
 
-	public StudyArticle(Study study, MyUser studyWriter, String writerName, String title, String content, String code, String codeName) {
+	public StudyArticle(Study study, MyUser studyWriter, String writerName, String title, String content,
+						String stockCode, String stockName, Integer stockPrice) {
 		super();
 		this.study = study;
 		this.studyWriter = studyWriter;
 		this.writerName = writerName;
 		this.title = title;
 		this.content = content;
-		this.code = code;
-		this.codeName = codeName;
+		this.stockCode = stockCode;
+		this.stockName = stockName;
+		this.stockPrice = stockPrice;
 	}
     
 	public StudyArticleResponse toResponse() {
 		return new StudyArticleResponse(id, study.getId(), title, content, 
 								studyWriter.getId(), writerName, 
-								createDate, updateDate, code, codeName);
+								createDate, updateDate, stockCode, stockName, stockPrice);
 	}
 }

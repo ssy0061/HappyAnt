@@ -22,6 +22,7 @@ public class StudyArticleResponse {
 	private String writerName;
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
-	private String code;
-	private String codeName;
+	private String stockCode;
+	private String stockName;
+	private Integer stockPrice;
 }
