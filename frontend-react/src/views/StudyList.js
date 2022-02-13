@@ -7,6 +7,7 @@ import StudyCommentList from '../components/StudyCommentList';
 import StudyItemDelete from '../components/StudyItemDelete';
 import StudyItemUpdate from '../components/StudyItemUpdate';
 import '../css/StudyList.css';
+import ContentViewer from '../components/ContentViewer';
 
 function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
@@ -22,7 +23,7 @@ function StudyList(props) {
   const [curr, setCurr] = useState(5);
   const [thisState, setThisState] = useState(false);
 
-  useEffect(() => {
+  const getStudyArticleList = () => {
     axios({
       method: 'get',
       url: `/study/${studyId}/article`,
@@ -31,7 +32,7 @@ function StudyList(props) {
       },
     })
       .then((res) => {
-        console.log(res);
+        console.log('리프레시');
         setArticleList(res.data.reverse());
         setFilterList(res.data.slice(prev, curr));
         setCurr((cur) => cur + 5);
@@ -39,6 +40,10 @@ function StudyList(props) {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  useEffect(() => {
+    getStudyArticleList();
   }, [refresh]);
   //
 
@@ -146,7 +151,7 @@ function StudyList(props) {
           <div className="studyDiv" key={item.articleId}>
             <div>
               <h1>{item.title}</h1>
-              <p className="content">{item.content}</p>
+              <ContentViewer initialValue={item.content} />
 
               <p>{item.writerName}</p>
               <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
@@ -154,8 +159,14 @@ function StudyList(props) {
               )}`}</p>
             </div>
             <div className="cmt">
-              <StudyItemUpdate articleId={item.articleId} />
-              <StudyItemDelete articleId={item.articleId} />
+              <StudyItemUpdate
+                articleId={item.articleId}
+                refresh={getStudyArticleList}
+              />
+              <StudyItemDelete
+                articleId={item.articleId}
+                refresh={getStudyArticleList}
+              />
             </div>
             <div>
               <hr />

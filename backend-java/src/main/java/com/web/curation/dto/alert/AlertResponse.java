@@ -19,9 +19,12 @@ public class AlertResponse {
 	
 	private Long AlertId;
 	private Long userId;
+	private String userName;
 	private AlertType type;
 	private String message;
 	private Long studyId;
+	private String studyName;
 	private Long articleId;
 	private LocalDateTime createDate;
+	private Boolean read;
 }

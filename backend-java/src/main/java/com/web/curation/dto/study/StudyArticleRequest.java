@@ -14,11 +14,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class StudyArticleRequest {
-	private Long writerId;
 	private String title;
 	private String content;
-	
-	public StudyArticle toEntity() {
-		return new StudyArticle(title, content, null, null);
-	}
+	private String stockCode;
+	private String stockName;
+	private Integer stockPrice;
 }

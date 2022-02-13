@@ -10,7 +10,7 @@ export default function StudyCommentCreate({ articleId, reRender }) {
   const { studyId } = useParams();
   const handleContent = (e) => setIntputContent(e.target.value);
   const submitContent = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && inputContent !== '') {
       console.log('보냄');
       axios
         .post(

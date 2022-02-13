@@ -41,22 +41,24 @@ public class Alert {
 	@GeneratedValue
 	private Long id;
 	
-	//단방향
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id",
-		referencedColumnName = "id")
-	@JsonIgnore
-	private MyUser user;
+	private Long userId;
+	
+	private String userName;
 	
 	@Enumerated(value = EnumType.STRING)
-	private AlertType type;
+	private AlertType AlertType;
 	
 	private String message;
 	
 	private Long studyId;
 	
+	private String studyName;
+	
 	// studyArticle
 	private Long articleId;
+	
+	@Column
+	private Boolean state;
 	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -64,13 +66,15 @@ public class Alert {
     		updatable = false)
 	private LocalDateTime createDate;
     
-    public Alert(MyUser user, Long studyId, Long articleId) {
-    	this.user = user;
+    public Alert(Long userId, String userName, Long studyId, String studyName, Long articleId) {
+    	this.userId = userId;
+    	this.userName = userName;
     	this.studyId = studyId;
+    	this.studyName = studyName;
     	this.articleId = articleId;
     }
     
     public AlertResponse toResponse() {
-    	return new AlertResponse(id, user.getId(), type, message, studyId, articleId, createDate);
+    	return new AlertResponse(id, userId, userName, AlertType, message, studyId, studyName, articleId, createDate, state);
     }
 }

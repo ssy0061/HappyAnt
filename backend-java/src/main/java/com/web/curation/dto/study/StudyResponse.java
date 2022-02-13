@@ -17,9 +17,6 @@ public class StudyResponse {
 	private Long studyId;
 	private Long leaderId;
 	private String studyName;
-	private Long headCount;
-	private String category;
-	private String area;
 	private String interest;
 	private LocalDateTime createDate;
 }

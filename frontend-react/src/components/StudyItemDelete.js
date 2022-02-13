@@ -3,11 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-export default function StudyItemDelete({ articleId }) {
+export default function StudyItemDelete({ articleId, refresh }) {
   const { studyId } = useParams();
   const yourId = useSelector((state) => state.user.userInfo.userId);
   const deleteArticle = () => {
-    console.log('ㅁㄴ');
     axios
       .delete(`/study/${studyId}/${articleId}`, {
         headers: {
@@ -17,7 +16,10 @@ export default function StudyItemDelete({ articleId }) {
           loginUserId: yourId,
         },
       })
-      .then(console.log('삭제성공'))
+      .then(() => {
+        console.log('삭제성공');
+        refresh();
+      })
       .catch((err) => console.log(err));
   };
 
