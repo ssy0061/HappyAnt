@@ -51,6 +51,9 @@ public class StudyArticle {
 	@JsonBackReference
 	private MyUser studyWriter;
     
+    @Column
+    private String writerName;
+    
     @OneToMany(mappedBy="studyArticle", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<StudyComment> studyComments = new ArrayList<StudyComment>();
@@ -58,8 +61,17 @@ public class StudyArticle {
 	@Column
 	private String title;
 	
-	@Column
+	@Column(columnDefinition = "LONGTEXT")
 	private String content;
+	
+	@Column
+	private String stockCode;
+	
+	@Column
+	private String stockName;
+	
+	@Column
+	private Integer stockPrice;
 	
     @CreatedDate
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", 
@@ -73,19 +85,22 @@ public class StudyArticle {
     		updatable = false)
 	private LocalDateTime updateDate;
 
-	public StudyArticle(String title, String content, LocalDateTime createDate, LocalDateTime updateDate) {
+	public StudyArticle(Study study, MyUser studyWriter, String writerName, String title, String content,
+						String stockCode, String stockName, Integer stockPrice) {
 		super();
+		this.study = study;
+		this.studyWriter = studyWriter;
+		this.writerName = writerName;
 		this.title = title;
 		this.content = content;
-		this.createDate = createDate;
-		this.updateDate = updateDate;
+		this.stockCode = stockCode;
+		this.stockName = stockName;
+		this.stockPrice = stockPrice;
 	}
     
 	public StudyArticleResponse toResponse() {
 		return new StudyArticleResponse(id, study.getId(), title, content, 
-								studyWriter.getId(), studyWriter.getName(), 
-								createDate, updateDate);
+								studyWriter.getId(), writerName, 
+								createDate, updateDate, stockCode, stockName, stockPrice);
 	}
-    
-    
 }

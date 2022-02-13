@@ -49,11 +49,13 @@ import com.web.curation.dto.account.LoginRequest;
 import com.web.curation.dto.account.LoginResponse;
 import com.web.curation.dto.account.SignupRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
+import com.web.curation.dto.study.StudyRequest;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.MyRole;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.service.AccountService;
 import com.web.curation.service.AccountServiceImpl;
+import com.web.curation.service.StudyService;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.repository.account.UserRepo;
 import com.web.curation.repository.match.MatchArticleRepo;
@@ -81,6 +83,8 @@ public class AccountController {
     
 	@Autowired	
 	AccountService accountService;
+	@Autowired	
+	StudyService studyService;
 	
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepo userRepo;
@@ -157,6 +161,11 @@ public class AccountController {
     	
     	accountService.save( user);
     	accountService.addRoleToUser(user.getEmail(), "ROLE_USER");
+    	
+    	// 스터디 생성
+    	MyUser newUser = userRepo.findByEmail(user.getEmail());
+    	StudyRequest form = new StudyRequest();
+    	studyService.createStudy(form, newUser.getId());
     	return new ResponseEntity<String>("Accept", HttpStatus.OK);
     }
     
@@ -178,7 +187,7 @@ public class AccountController {
     }
 
     @DeleteMapping(value ="/{id}")
-    @ApiOperation(value = "삭제")
+    @ApiOperation(value = "회원 탈퇴")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     	accountService.deleteById(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

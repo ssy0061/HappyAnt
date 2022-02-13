@@ -1,6 +1,8 @@
-package com.web.curation.dto.study;
+package com.web.curation.dto.alert;
 
 import java.time.LocalDateTime;
+
+import com.web.curation.model.alert.AlertType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +15,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StudyResponse {
+public class AlertResponse {
+	
+	private Long AlertId;
+	private Long userId;
+	private String userName;
+	private AlertType type;
+	private String message;
 	private Long studyId;
-	private Long leaderId;
 	private String studyName;
-	private String interest;
+	private Long articleId;
 	private LocalDateTime createDate;
+	private Boolean read;
 }

@@ -1,14 +1,50 @@
+import axios from 'axios';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-// import BtnEntrust from '../components/BtnEntrust';
+import { login } from '../redux/userSlice';
+import BtnStudyCreate from '../components/BtnStudyCreate';
 
 function Profile() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // study 생성하기
+  const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
   // 로그인 확인
   const loginPage = useSelector((state) => state.user.isLogin);
+
   // 유저 정보 가져오기
   const Info = useSelector((state) => state.user.userInfo);
+  console.log(Info.email);
+  const renewal = () => {
+    axios
+      .get(`/account/{id}?email=${Info.email}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        dispatch(login(response.data));
+      })
+      .catch((err) => console.log(err, 'profile err'));
+  };
+  useEffect(() => {
+    renewal();
+  }, []);
+
+  // 스터디 생성하기
+  const handleClickCreateOpen = () => {
+    setOpen(true);
+  };
+  const handleClickCreateClose = () => {
+    setOpen(false);
+    setRefresh(!refresh);
+  };
+
   console.log('profile페이지');
   console.log(Info, '유저 정보');
   const study = Info.joinStudy;
@@ -45,6 +81,10 @@ function Profile() {
       {loginPage && (
         <div>
           <h1>{Info.userName}님의 프로필입니다</h1>
+          <button type="submit" onClick={handleClickCreateOpen}>
+            스터디 생성하기
+          </button>
+          {open && <BtnStudyCreate handleClickClose={handleClickCreateClose} />}
           <hr />
           <h3>스터디 목록</h3>
           {studyList()}
@@ -55,7 +95,6 @@ function Profile() {
           <h1>안녕하세요 로그인을 해주시겠어요?</h1>
         </div>
       )}
-      {/* <BtnEntrust /> */}
     </div>
   );
 }

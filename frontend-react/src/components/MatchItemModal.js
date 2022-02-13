@@ -7,6 +7,7 @@ import axios from 'axios';
 import MatchItemUpdate from './MatchItemUpdate';
 import MatchItemDetail from './MatchItemDetail';
 import MatchItemAppliList from './MatchItemAppliList';
+import BtnAppli from './BtnAppli';
 
 // 글작성자 ? 수정/삭제/닫기 : 닫기    || 드랍다운(수정/삭제) 우측 상단 & 닫기 우측하단
 // 수정창에서 닫기버튼 누르면 디테일로
@@ -79,25 +80,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
     });
     handleClickClose();
   };
-  const applyStudy = () => {
-    console.log(item.articleId, yourId);
-    axios
-      .post(`/match/join/${item.articleId}`, [], {
-        params: {
-          joinUserId: yourId,
-          content: '임시',
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then(() => {
-        alert('신청되었습니다.');
-      })
-      .catch(() => {
-        alert('이미 신청한 스터디입니다.');
-      });
-  };
 
   return (
     <div>
@@ -118,7 +100,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
         {mode === 2 && <MatchItemUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
           {item.writerId !== yourId && mode === 1 && (
-            <Button onClick={applyStudy}>신청</Button>
+            <BtnAppli item={item} yourId={yourId} />
           )}
           {item.writerId === yourId && mode === 1 && (
             <div>

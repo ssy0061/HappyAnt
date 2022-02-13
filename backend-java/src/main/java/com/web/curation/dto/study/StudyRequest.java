@@ -1,6 +1,6 @@
 package com.web.curation.dto.study;
 
-import com.web.curation.model.study.StudyComment;
+import com.web.curation.model.study.Study;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,11 +13,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StudyCommentRequest {
-	private Long writerId;
-	private String content;
+public class StudyRequest {
+	private String name;
+	private String interest;
 	
-	public StudyComment toEntity() {
-		return new StudyComment(null, null, content);
+	public Study toEntity() {
+		return new Study(name, interest);
 	}
 }
