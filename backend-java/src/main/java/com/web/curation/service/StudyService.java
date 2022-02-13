@@ -97,7 +97,8 @@ public class StudyService {
     	checkStudyMember(studyId, writerId);
     	
     	StudyArticle article = new StudyArticle(study, writer, writer.getName(),
-    							form.getTitle(), form.getContent(), form.getCode(), form.getCodeName());
+    							form.getTitle(), form.getContent(),
+    							form.getStockName(), form.getStockName(), form.getStockPrice());
     	StudyArticle newArticle = articleRepo.save(article);
     	
     	// 멤버가 있는 스터디의 모든 멤버에게 게시글 작성 알림
@@ -157,9 +158,9 @@ public class StudyService {
     }
     
     // 주식 종목을 첨부한 게시글 검색
-    public List<StudyArticleResponse> searchArticleWithCodeName(Long studyId, String Keyword) {
+    public List<StudyArticleResponse> searchArticleWithStockName(Long studyId, String Keyword) {
     	List<StudyArticleResponse> articleList = new ArrayList<>();
-    	articleRepo.findByCodeNameContains(Keyword).forEach(article -> {
+    	articleRepo.findByStockNameContains(Keyword).forEach(article -> {
     		StudyArticleResponse response = article.toResponse();
     		articleList.add(response);
     	});

@@ -20,6 +20,7 @@ import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.alert.Alert;
 import com.web.curation.model.alert.AlertType;
+import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.study.Study;
 import com.web.curation.model.study.StudyArticle;
 import com.web.curation.model.study.StudyComment;
@@ -132,15 +133,24 @@ public class AlertService {
     
     @Transactional
     public void updateAlert(Long userId, Long alertId) {
-    	Alert alert = alertRepo.findByUserIdAndId(userId, alertId).orElseThrow(() -> new ResponseStatusException(
-												HttpStatus.BAD_REQUEST, "알림 또는 유저 id를 확인하세요",
-												new IllegalArgumentException()));
+    	Alert alert = checkAndGetAlert(alertId, userId);
     	alert.setState(true);
+    }
+    
+    public void deleteAlert(Long alertId, Long userId) {
+    	checkAndGetAlert(alertId, userId);
+    	alertRepo.deleteById(alertId);
     }
     
     /// 객체 확인용
 	public Study checkAndGetStudy(Long studyId) {
 		return studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
 				HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다.", new IllegalArgumentException()));
+	}
+	
+	public Alert checkAndGetAlert(Long alertId, Long userId) {
+		return alertRepo.findByUserIdAndId(userId, alertId)
+							.orElseThrow(() -> new ResponseStatusException(
+							HttpStatus.BAD_REQUEST, "알림 또는 유저 id를 확인하세요"));
 	}
 }
