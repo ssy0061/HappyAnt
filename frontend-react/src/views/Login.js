@@ -3,8 +3,9 @@ import { Button, Paper, Input } from '@mui/material';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import FindPassword from '../components/FindPassword';
-import { login } from '../redux/userSlice';
+import { login, setAlertLength } from '../redux/userSlice';
 import Google from '../components/Google';
 import Kakao from '../components/Kakao';
 
@@ -14,7 +15,7 @@ export default function Login() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { enqueueSnackbar } = useSnackbar();
   // 이벤트 관리
   const handleInputId = (e) => {
     setInputId(e.target.value);
@@ -48,6 +49,7 @@ export default function Login() {
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
         console.log(res.data.accessToken);
+
         // store에 저장할 정보요청
         axios
           .get(`/account/{id}?email=${inputId}`, {
@@ -55,6 +57,21 @@ export default function Login() {
           })
           .then((response) => {
             dispatch(login(response.data));
+            enqueueSnackbar(`${response.data.userName}님 안녕하세요!`, {
+              variant: `success`,
+            });
+            axios
+              .get(`/alert/${response.data.userId}`, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(
+                    'accessToken'
+                  )}`,
+                },
+              })
+              .then((ress) => {
+                dispatch(setAlertLength(ress.data.length));
+              })
+              .catch((errr) => console.log(errr));
           });
       })
       .catch((err) => {
@@ -90,8 +107,8 @@ export default function Login() {
   };
 
   const background = {
-    backgroundColor: 'orange',
-    height: '81vh',
+    backgroundColor: '#0000CD',
+    height: '90vh',
   };
 
   const loginBtn = {
@@ -104,6 +121,7 @@ export default function Login() {
     position: 'absolute',
     left: '100px',
     top: '300px',
+    color: 'white',
   };
 
   // ---------------------------- render--------------------------------
