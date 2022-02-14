@@ -1,0 +1,26 @@
+.Infotable {
+  border-collapse: collapse;
+  /* width: 70%; */
+  /* text-align: left; */
+  letter-spacing: 1px;
+}
+
+.Infotr:hover {
+  background-color: #eeeeee;
+}
+
+.Infotr {
+}
+.Infotd {
+  /* word-break: break-all; */
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.InfoMinus {
+  color: blue;
+}
+
+.InfoPlus {
+  color: red;
+}
