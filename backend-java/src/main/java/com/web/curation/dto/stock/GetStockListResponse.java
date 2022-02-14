@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Stock {
+public class GetStockListResponse {
 
 	private String no;
 	private String stockName;
@@ -25,8 +25,12 @@ public class Stock {
 	private String roe;                  // roe
 	private String discussionRoomUrl;    // 토론방 url
 
+	
 	public String getDiscussionRoomUrl() {
 		return "https://finance.naver.com"+discussionRoomUrl;
 	}
+	
+	
+	
 	
 }
