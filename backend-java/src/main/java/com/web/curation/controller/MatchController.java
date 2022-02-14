@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.dto.alert.AlertMessage;
+import com.web.curation.dto.alert.AlertRequest;
 import com.web.curation.dto.match.MatchArticleRequest;
 import com.web.curation.dto.match.MatchArticleResponse;
 import com.web.curation.dto.match.MatchJoinUserResponse;
@@ -22,6 +24,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.account.MyUser;
 import com.web.curation.model.match.MatchArticle;
 import com.web.curation.model.match.MatchJoin;
+import com.web.curation.service.AlertService;
 import com.web.curation.service.MatchService;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +44,6 @@ public class MatchController {
 	@Autowired
     private MatchService matchService;
     
-    
     @GetMapping
     @ApiOperation(value = "모집글 목록 조회")
     public List<MatchArticleResponse> getArticleList() {
@@ -56,23 +58,22 @@ public class MatchController {
     }
     
     @PostMapping
-    @ApiOperation(value = "모집글 작성")
-    public void createArticle(@RequestBody MatchArticleRequest articleForm) {
-    	
-    	matchService.addNewArticle(articleForm);
+    @ApiOperation(value = "모집글 작성", notes="스터디에서 작성(studyId 필수로 넣어주세요)")
+    public void createArticle(@RequestBody MatchArticleRequest articleForm,
+    							@RequestParam(required = true) Long loginUserId,
+    							@RequestParam(required = true) Long studyId) {
+    	matchService.addNewArticle(articleForm, loginUserId, studyId);
     }
     
     @PutMapping("{articleId}")
-    @ApiOperation(value = "모집글 수정(마감)")
+    @ApiOperation(value = "모집글 수정(마감)", notes="")
     public void updateArticle(
     		@PathVariable("articleId") Long articleId,
     		@RequestParam(required = true) Long loginUserId,
     		@RequestParam(required = false) String title,
-    		@RequestParam(required = false) String category,
     		@RequestParam(required = false) String content,
-    		@RequestParam(required = false) String tempStudyName,
     		@RequestParam(required = false) Boolean state) {
-    	matchService.updateArticle(articleId, loginUserId, title, category, content, tempStudyName, state);
+    	matchService.updateArticle(articleId, loginUserId, title, content, state);
     }
     
     
@@ -85,11 +86,16 @@ public class MatchController {
 
     // 검색 키워드 하나로 제목 or 내용 검색하기
     @GetMapping("search")
-    @ApiOperation(value = "모집글 검색")
+    @ApiOperation(value = "모집글 '제목+내용' 검색")
     public List<MatchArticleResponse> SerachArticle(@RequestParam(required = true) String Keyword) {
     	return matchService.searchArticle(Keyword);
     }
     
+    @GetMapping("search/writer")
+    @ApiOperation(value = "모집글 '작성자' 검색")
+    public List<MatchArticleResponse> SerachArticleWithWriter(@RequestParam(required = true) String Keyword) {
+    	return matchService.searchArticleWithWriter(Keyword);
+    }
     
     @PostMapping("join/{articleId}")
     @ApiOperation(value = "스터디 신청")

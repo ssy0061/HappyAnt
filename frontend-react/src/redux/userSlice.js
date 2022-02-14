@@ -6,6 +6,7 @@ export const userSlice = createSlice({
   initialState: {
     isLogin: false,
     userInfo: {},
+    alertLength: 0,
   },
   reducers: {
     login(state, action) {
@@ -15,13 +16,15 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.isLogin = false;
       state.userInfo = {};
-      // check용
-      console.log(state.userInfo);
+      state.alertLength = 0;
+    },
+    setAlertLength: (state, action) => {
+      state.alertLength = action.payload;
     },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, setAlertLength } = userSlice.actions;
 export default userSlice.reducer;
 
 // import { createSlice } from '@reduxjs/toolkit'

@@ -6,20 +6,25 @@ import Login from './views/Login';
 import Profile from './views/Profile';
 import Nav from './views/Nav';
 import Match from './views/Match';
+import Study from './views/Study';
 import StudyList from './views/StudyList';
+import Main from './views/Main';
+import Alert from './websocket/Alert';
 
 function App() {
   return (
     <div>
       <Nav />
       <Routes>
+        <Route path="/" element={<Main />} />
         <Route path="/join" element={<Join />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/studyList" element={<StudyList />} />
         <Route path="/match" element={<Match />} />
-
+        <Route path="/study/:studyId" element={<Study />} />
+        <Route path="/studyList" element={<StudyList />} />
       </Routes>
+      <Alert />
     </div>
   );
 }

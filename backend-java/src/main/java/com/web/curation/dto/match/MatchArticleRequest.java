@@ -12,13 +12,5 @@ import lombok.*;
 @ToString
 public class MatchArticleRequest {
 	private String title;
-	private String category;
 	private String content;
-	private String tempStudyName;
-	private Long writerId;
-
-	public MatchArticle toEntity() {
-		return new MatchArticle(title, category, content, tempStudyName, false);
-	}
-	
 }

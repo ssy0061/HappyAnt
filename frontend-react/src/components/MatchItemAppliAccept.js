@@ -19,21 +19,42 @@ const style = {
 
 export default function MatchingAppliAccept(props) {
   const { pk, content, userId } = props;
+  console.log(pk, content, userId);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const acceptStudy = (e) => {
-    e.preventDefault();
-
+  const acceptStudy = () => {
     axios
-      .post(`/match/${pk}/${userId}`)
+      .post(`/match/${pk}/${userId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
       .then(() => {
         alert('승인되었습니다!');
+        handleClose();
       })
       .catch((err) => {
         console.log(err);
         alert('이미 수락한 인원입니다.');
+        handleClose();
+      });
+  };
+
+  const denyStudy = () => {
+    axios
+      .put(`/match/${pk}/${userId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then(() => {
+        alert('거절하였습니다!');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('이미 거절한 인원입니다.');
       });
   };
   return (
@@ -50,13 +71,15 @@ export default function MatchingAppliAccept(props) {
             신청자 상세 페이지
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {content}
+            각오 한 마디 : {content}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <button type="submit" onClick={acceptStudy}>
               수락
             </button>
-            <button type="submit">거절</button>
+            <button type="submit" onClick={denyStudy}>
+              거절
+            </button>
           </Typography>
         </Box>
       </Modal>

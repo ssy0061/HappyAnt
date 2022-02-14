@@ -3,39 +3,49 @@ import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import MatchListSearch from '../components/MatchListSearch';
+import StudyCommentList from '../components/StudyCommentList';
+import StudyItemDelete from '../components/StudyItemDelete';
+import StudyItemUpdate from '../components/StudyItemUpdate';
+import '../css/StudyList.css';
+import ContentViewer from '../components/ContentViewer';
 
-function StudyList() {
+function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
-  const [studyId] = useState('1');
+  const { studyId } = props;
+  const { refresh } = props;
   // 원본 데이터
   const [articleList, setArticleList] = useState([]);
   // 필터한 데이터
   const [filterList, setFilterList] = useState([]);
 
   // 무한스크롤
-  const [prev, setPrev] = useState(0);
-  const [curr, setCurr] = useState(20);
+  const [prev] = useState(0);
+  const [curr, setCurr] = useState(5);
   const [thisState, setThisState] = useState(false);
-  //
 
-  useEffect(() => {
+  const getStudyArticleList = () => {
     axios({
       method: 'get',
-      url: `/study/${studyId}`,
+      url: `/study/${studyId}/article`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     })
       .then((res) => {
-        // console.log(res.data.reverse());
+        console.log('리프레시');
         setArticleList(res.data.reverse());
         setFilterList(res.data.slice(prev, curr));
-        // setFilterList(res.data);
+        setCurr((cur) => cur + 5);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+    getStudyArticleList();
+  }, [refresh]);
+  //
 
   // 검색박스 코드 복사해오기
   //
@@ -48,13 +58,13 @@ function StudyList() {
   };
 
   // 제목내용, 작성자로 검색
-  const handleSearch = (event) => {
+  const handleSearch = () => {
     // 제목,내용 으로 검색
-    if (selected === 'title' && event.target.value !== '') {
-      console.log(event);
+    if (selected === 'title' && searchValue !== '') {
+      // console.log(event);
       axios({
         method: 'get',
-        url: `/study/${studyId}/search?Keyword=${searchValue}`,
+        url: `/study/${studyId}/article/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -66,16 +76,30 @@ function StudyList() {
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
-    } else if (event.target.value !== '') {
-      const { value } = event.target;
-      let result = [];
+    } else if (selected === 'writerName' && searchValue !== '') {
+      axios({
+        method: 'get',
+        url: `/study/${studyId}/article/search/writer?name=${searchValue}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          setFilterList(res.data.reverse());
+          setThisState(true);
+        })
+        .catch((err) => console.log(err));
 
-      result = articleList.filter(
-        (data) => data[selected].search(value) !== -1
-      );
+      // const { value } = event.target;
+      // let result = [];
 
-      setFilterList(result);
-      setThisState(true);
+      // result = articleList.filter(
+      //   (data) => data[selected].search(value) !== -1
+      // );
+
+      // setFilterList(result);
+      // setThisState(true);
     } else {
       alert('검색어를 입력하세요');
     }
@@ -92,50 +116,16 @@ function StudyList() {
   const handleSelect = (event) => {
     setSelected(event.target.value);
   };
-  //
-  // 여기까지 검색박스 코드 복사붙여넣기
 
-  // // 무한 스크롤 구현해보기
-  // const [target, setTarget] = useState();
-
-  // const onIntersect = async ([entry], observer) => {
-  //   if (entry.isIntersecting) {
-  //     observer.unobserve(entry.target);
-
-  //     // 가져오는 부분
-  //     setPrev((current) => current + 20);
-  //     setCurr((current) => current + 20);
-  //     console.log('hi');
-  //     console.log(filterList);
-  //     console.log(articleList);
-  //     // 왜 filterList articleList가 비어있지??
-  //     setFilterList(...filterList, articleList.slice(prev, curr));
-
-  //     observer.observe(entry.target);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   console.log(target);
-  //   let observer;
-
-  //   if (target) {
-  //     observer = new IntersectionObserver(onIntersect, {
-  //       threshold: 0.4,
-  //     });
-  //     observer.observe(target);
-  //   }
-  //   return () => observer && observer.disconnect();
-  // }, [target]);
-  const { ref, inView } = useInView({ threshold: 0 });
+  // 무한스크롤 라이브러리 활용
+  const { ref, inView } = useInView({ threshold: 0.5 });
   useEffect(() => {
     if (inView && !thisState) {
       console.log(filterList);
-      setPrev(curr);
-      setCurr((current) => current + 20);
       const items = articleList.slice(prev, curr);
-      console.log('hi');
-      setFilterList(filterList.concat(items));
+      setCurr(curr + 5);
+      setFilterList(items);
+      console.log(prev, curr);
     }
   }, [inView]);
   return (
@@ -147,31 +137,48 @@ function StudyList() {
           alignItems: 'center',
         }}
       >
-        <h1>StudyList</h1>
-        <MatchListSearch
-          handleSelect={handleSelect}
-          searchValue={searchValue}
-          saveSearchValue={saveSearchValue}
-          onKeyPress={onKeyPress}
-          handleSearch={handleSearch}
-        />
+        <div className="head">
+          <h1>StudyList</h1>
+          <MatchListSearch
+            handleSelect={handleSelect}
+            searchValue={searchValue}
+            saveSearchValue={saveSearchValue}
+            onKeyPress={onKeyPress}
+            handleSearch={handleSearch}
+          />
+        </div>
         {filterList.map((item) => (
-          <div style={{ width: '50%' }} key={item.articleId}>
-            <h1>{item.title}</h1>
-            <span>{item.articleId}</span>
-            <p>{item.writerName}</p>
-            <p>{item.content}</p>
-            <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
-              11
-            )}`}</p>
-            <hr />
+          <div className="studyDiv" key={item.articleId}>
+            <div>
+              <h1>{item.title}</h1>
+              <ContentViewer initialValue={item.content} />
+
+              <p>{item.writerName}</p>
+              <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
+                11
+              )}`}</p>
+            </div>
+            <div className="cmt">
+              <StudyItemUpdate
+                articleId={item.articleId}
+                refresh={getStudyArticleList}
+              />
+              <StudyItemDelete
+                articleId={item.articleId}
+                refresh={getStudyArticleList}
+              />
+            </div>
+            <div>
+              <hr />
+              <StudyCommentList articleId={item.articleId} />
+              <hr />
+            </div>
           </div>
         ))}
       </div>
-
       <div ref={ref} />
+
       <hr />
-      {/* <div ref={setTarget} /> */}
     </div>
   );
 }

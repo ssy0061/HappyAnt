@@ -88,9 +88,11 @@ function GoogleLoginBtn() {
                 Authorization: `Bearer ${ress.data.accessToken}`,
               },
             })
-              .then((getRes) => dispatch(login(getRes.data)))
+              .then((getRes) => {
+                dispatch(login(getRes.data));
+                navigate('/profile');
+              })
               .catch((getErr) => console.log(getErr));
-            navigate('/profile');
           })
           .catch((err) => {
             console.log(err);
@@ -105,7 +107,7 @@ function GoogleLoginBtn() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     // 크기
-    width: 400,
+    width: 300,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,

@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+// import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { logout } from '../redux/userSlice';
+import UserDelete from '../components/Userdelete';
+import StudyCreateBtn from '../components/StudyCreateBtn';
+import AlertList from '../components/AlertList';
 
 function nav() {
   // 로그인 상태 체크
@@ -12,26 +16,37 @@ function nav() {
 
   const clickLogout = () => {
     dispatch(logout());
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     navigate('/login');
   };
   // const userName = useSelector((state) => state.user.username);
+  // const clickStudy = () => {
+  //   navigate('/study');
+  // };
+
+  // -----------------------css--------------------------------
+  // const navbarDesign = {
+  //   backgroundColor: '#f0f0f1',
+  // };
+
+  const navleft = {
+    width: '20%',
+  };
 
   return (
-    <div>
-      <h1>Navbar</h1>
+    <nav>
+      {/* <h1>Navbar</h1> */}
       {/* 비로그인 상태일때 보이는 navbar */}
       {!loginPage && (
-        <div>
-          <span>아직 개미키우기 회원이 아니라면 가입해보세요</span>
-          <ul>
-            <li>
-              <Link to="/join">회원가입</Link>
-            </li>
-            <li>
-              <Link to="/login">로그인</Link>
-            </li>
-          </ul>
-        </div>
+        <ul style={navleft}>
+          <li>
+            <Link to="/join">회원가입</Link>
+          </li>
+          <li>
+            <Link to="/login">로그인</Link>
+          </li>
+        </ul>
       )}
       {/* 로그인 상태일때 보이는 navbar */}
       {loginPage && (
@@ -45,14 +60,31 @@ function nav() {
               <Link to="/match">매칭 게시판</Link>
             </li>
             <li>
+              <StudyCreateBtn />
               <button type="submit" onClick={clickLogout}>
                 로그아웃
               </button>
+              <UserDelete />
             </li>
           </ul>
+          {/* <FormControl style={{ width: '256px' }}>
+            <InputLabel id="demo-simple-select-label">내스터디 목록</InputLabel>
+            <Select label="스터디 목록" value={studyId} onChange={clickStudy}>
+              <MenuItem onClick={console.log('1번')} value={1}>
+                1번 스터디 이름
+              </MenuItem>
+              <MenuItem onClick={console.log('2번')} value={2}>
+                2번 스터디 이름
+              </MenuItem>
+              <MenuItem onClick={console.log('3번')} value={3}>
+                3번 스터디 이름
+              </MenuItem>
+            </Select>
+          </FormControl> */}
         </div>
       )}
-    </div>
+      <AlertList />
+    </nav>
   );
 }
 

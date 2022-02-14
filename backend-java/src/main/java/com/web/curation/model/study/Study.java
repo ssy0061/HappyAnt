@@ -60,12 +60,6 @@ public class Study {
 	private String name;
 	
 	@Column
-	private String category;
-	
-	@Column
-	private String area;
-	
-	@Column
 	private String interest;
 	
     @CreatedDate
@@ -74,7 +68,15 @@ public class Study {
     		updatable = false)
 	private LocalDateTime createDate;
     
+    
+    
     public StudyResponse toResponse() {
-    	return new StudyResponse(id, name, leader.getId(), category, area, interest, createDate);
+    	return new StudyResponse(id, leader.getId(), name, interest, createDate);
+    }
+    
+    public Study(String name, String interest) {
+    	super();
+    	this.name = name;
+    	this.interest = interest;
     }
 }

@@ -1,9 +1,7 @@
 package com.web.curation.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.transaction.Transactional;
@@ -28,7 +26,6 @@ import com.web.curation.repository.match.MatchJoinRepo;
 import com.web.curation.repository.study.StudyJoinRepo;
 import com.web.curation.repository.study.StudyRepo;
 import com.web.curation.specification.MatchArticleSpec;
-import com.web.curation.specification.MatchArticleSpec.MartchArticleSearchKey;
 
 @Service
 public class MatchService {
@@ -43,6 +40,8 @@ public class MatchService {
 	private StudyRepo studyRepo;
 	@Autowired
 	private StudyJoinRepo studyJoinRepo;
+	@Autowired
+	private AlertService alertService;
     
     public List<MatchArticleResponse> getArticleList() {
     	List<MatchArticleResponse> articleList = new ArrayList<>();
@@ -62,16 +61,21 @@ public class MatchService {
     	return response;
     }
     
-    public void addNewArticle(MatchArticleRequest articleForm) {
-    	Long writerId = articleForm.getWriterId();
+    @Transactional
+    public void addNewArticle(MatchArticleRequest form, Long userId, Long studyId) {
+    	MyUser writer = userRepo.findById(userId).orElseThrow(() -> new ResponseStatusException(
+													HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
+													new IllegalArgumentException()));
     	// 1. dto를 Entity로 변경
-    	MatchArticle article = articleForm.toEntity();
-    	MyUser writer = userRepo.findById(writerId)
-    			.orElseThrow(() -> new ResponseStatusException(
-							HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
-							new IllegalArgumentException()));
-    	article.setWriter(writer);
-//    	writer.getMatchArticles().add(article);
+    	Study study = studyRepo.findById(studyId).orElseThrow(() ->
+				new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다."));
+    	
+    	if (study.getLeader().getId() != userId) {
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "leader 권한이 없습니다.");
+    	}
+    	
+    	MatchArticle article = new MatchArticle(form.getTitle(), form.getContent(), false,
+    							writer, writer.getName(), study);
     	// 2. Repository를 이용하여 Entity를 DB에 저장함
     	articleRepo.save(article);
     }
@@ -81,9 +85,7 @@ public class MatchService {
     		Long articleId,
     		Long userId,
     		String title,
-    		String category,
     		String content,
-    		String tempStudyName,
     		Boolean state) {
     	MatchArticle article = articleRepo.findById(articleId)
     			.orElseThrow(() -> new ResponseStatusException(
@@ -97,19 +99,9 @@ public class MatchService {
     	if (title != null && title.length() > 0 && !Objects.equals(article.getTitle(), title)) {
     		article.setTitle(title);
     	}
-    	
-    	if (category != null && category.length() > 0 && !Objects.equals(article.getCategory(), category)) {
-    		article.setCategory(category);
-    	}
-    	
     	if (content != null && content.length() > 0 && !Objects.equals(article.getContent(), content)) {
     		article.setContent(content);
     	}
-    	
-    	if (tempStudyName != null && tempStudyName.length() > 0 && !Objects.equals(article.getTempStudyName(), tempStudyName)) {
-    		article.setTempStudyName(tempStudyName);
-    	}
-    	
     	if (state != null && !Objects.equals(article.getState(), state)) {
     		article.setState(state);
     	}
@@ -139,39 +131,53 @@ public class MatchService {
     	return articleList;
     }
     
+    // 키워드로 작성자 검색
+    public List<MatchArticleResponse> searchArticleWithWriter(String Keyword) {
+    	List<MatchArticleResponse> articleList = new ArrayList<>();
+    	articleRepo.findByWriterNameContains(Keyword).forEach(article -> {
+    		MatchArticleResponse response = article.toResponse();
+    		articleList.add(response);
+    	});
+    	return articleList;
+    }
+    
     // 스터디 신청
     public void joinStudy(Long articleId, Long joinUserId, String content) {
     	MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
 																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 																new IllegalArgumentException()));
+
     	MyUser joinUser = userRepo.findById(joinUserId)
     			.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
 						new IllegalArgumentException()));
-    	
-
     	if (article.getWriter().getId() == joinUserId) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "작성한 모집글에 신청할 수 없습니다.",
     				new IllegalArgumentException());
-    	} else if (article.getStudy() != null) {
-    		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
-    			throw new ResponseStatusException(
-        				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
-        				new IllegalArgumentException());
-    		}
-    	} else if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
+    	} 
+		if (joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId).isPresent()) {
     		throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "이미 신청한 모집글입니다.",
     				new IllegalArgumentException());
-    	} else {
-        	MatchJoin join = new MatchJoin();
-        	join.setJoinArticle(article);
-        	join.setJoinUser(joinUser);
-        	join.setContent(content);
-        	
-        	joinRepo.save(join);
-    	}
+    	} 
+    	if (article.getState()) {
+			// 1. 모집글 작성자가 임의로 마감 (모집글 수정으로 마감)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
+    	} 
+
+		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
+			throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
+    				new IllegalArgumentException());
+		}
+
+    	MatchJoin join = new MatchJoin();
+    	join.setJoinArticle(article);
+    	join.setJoinUser(joinUser);
+    	join.setContent(content);
+    	
+    	joinRepo.save(join);
     }
     
     public List<MatchArticleResponse> getJoinArticle(Long userId) {
@@ -203,60 +209,42 @@ public class MatchService {
 	// 모집글에서 '승인'으로 멤버 추가
 	@Transactional
 	public void addNewMatchMember(Long articleId, Long joinUserId) {
+		// 검증
 		MatchArticle article = articleRepo.findById(articleId).orElseThrow(() -> new ResponseStatusException(
 																HttpStatus.NOT_FOUND, "존재하지 않는 게시글 id입니다.",
 																new IllegalArgumentException()));
 
 		MyUser leader = article.getWriter();
 		MyUser joinUser = userRepo.findById(joinUserId).orElseThrow(() -> new ResponseStatusException(
-													HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
-													new IllegalArgumentException()));
+														HttpStatus.NOT_FOUND, "존재하지 않는 유저 id입니다.",
+														new IllegalArgumentException()));
 		if (leader.getId() == joinUserId) {
     		throw new ResponseStatusException(
-    				HttpStatus.BAD_REQUEST, "모집글 작성자는 일반 회원으로 추가할 수 없습니다.",
+    				HttpStatus.BAD_REQUEST, "모집글 작성자는 일반 멤버로 추가할 수 없습니다.",
     				new IllegalArgumentException());
 		}
+		joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
+							.orElseThrow(() -> new ResponseStatusException(
+							HttpStatus.NOT_FOUND, "모집글 신청자가 아닙니다."));
 
-		// 스터디 없으면 생성, 있으면 멤버만 추가
-		if (article.getStudy() == null) {
-			// 스터디 생성
-			Study study = new Study();
-			study.setLeader(leader);
-			study.setName(article.getTempStudyName());
-			Study saved = studyRepo.save(study);
-			
-			// 스터디에 유저추가(리더)
-			StudyJoin join = new StudyJoin(null, leader, saved, true);
+
+		// 스터디에 멤버 추가
+		Study study = article.getStudy();
+
+		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, study.getId()).isPresent()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST, "이미 스터디에 가입한 회원입니다.",
+    				new IllegalArgumentException());
+		} else {
+			// 스터디에 유저(멤버)추가
+			StudyJoin join = new StudyJoin(null, joinUser, study, false);
 			studyJoinRepo.save(join);
-			// 스터디에 유저추가(멤버1)
-			StudyJoin join2 = new StudyJoin(null, joinUser, saved, false);
-			studyJoinRepo.save(join2);
 			MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
 											.orElseThrow(() -> new ResponseStatusException(
 																HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
 																new IllegalArgumentException()));
 			matchJoin.setState(JoinState.APPROVED);
-			// matchArticle에 추가
-			article.setStudy(saved);
-		} else {
-			Long studyId = article.getStudy().getId();
-			Study study = studyRepo.findById(studyId).orElseThrow(() -> new ResponseStatusException(
-														HttpStatus.BAD_REQUEST, "모집글의 스터디 정보를 알 수 없습니다.",
-														new IllegalArgumentException()));
-			if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, studyId).isPresent()) {
-	    		throw new ResponseStatusException(
-	    				HttpStatus.BAD_REQUEST, "이미 스터디에 가입한 회원입니다.",
-	    				new IllegalArgumentException());
-			} else {
-				// 스터디에 유저추가(멤버1)
-				StudyJoin join = new StudyJoin(null, joinUser, study, false);
-				studyJoinRepo.save(join);
-				MatchJoin matchJoin = joinRepo.findByJoinUserIdAndJoinArticleId(joinUserId, articleId)
-												.orElseThrow(() -> new ResponseStatusException(
-																	HttpStatus.BAD_REQUEST, "유저 또는 게시글 id를 확인하세요",
-																	new IllegalArgumentException()));
-				matchJoin.setState(JoinState.APPROVED);
-			}
+			alertService.ApprovedToAlert(study.getId(), joinUser.getId(), joinUser.getName());
 		}
 
 	}

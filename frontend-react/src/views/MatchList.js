@@ -4,8 +4,9 @@ import MatchListPagination from '../components/MatchListPagination';
 import MatchListCheckbox from '../components/MatchListCheckbox';
 import MatchListSearch from '../components/MatchListSearch';
 import MatchItemModal from '../components/MatchItemModal';
+import '../css/MatchList.css';
 
-function MatchList() {
+function MatchList(refresh) {
   // 원본 데이터
   const [list, setList] = useState([]);
   // 필터한 데이터
@@ -21,7 +22,7 @@ function MatchList() {
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(1);
   // 페이지당 포스트 개수
-  const [postPerPage] = useState(20);
+  const [postPerPage] = useState(10);
   // 마지막 페이지 1*10 = 10
   const indexOfLastPost = currentPage * postPerPage;
   // 첫번째 페이지 10-10 = 0
@@ -61,13 +62,14 @@ function MatchList() {
       },
     })
       .then((response) => {
+        console.log(response);
         setList(response.data);
         setFilterList(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [refresh]);
 
   // 검색박스에 적힌 값을 저장함으로써 검색 버튼을 눌러도 검색이 가능하다.
   const saveSearchValue = (event) => {
@@ -85,38 +87,57 @@ function MatchList() {
   };
 
   // 제목내용, 작성자로 검색
-  const handleSearch = (event) => {
+  const handleSearch = () => {
     // 제목,내용 으로 검색
-    if (selected === 'title') {
+    console.log('실행됨?');
+    if (selected === 'title' && searchValue !== '') {
       axios({
         method: 'get',
-        url: `/match/search?Keyword=${event.target.value}`,
+        url: `/match/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then((res) => {
+          console.log(res);
           setFilterList(res.data);
           selectCheckbox();
           setChecked('');
         })
         .catch((err) => console.log(err));
       // 작성자로 검색
+    } else if (selected === 'writerName' && searchValue !== '') {
+      axios({
+        method: 'get',
+        url: `/match/search/writer?Keyword=${searchValue}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          setFilterList(res.data);
+          selectCheckbox();
+          setChecked('');
+        })
+        .catch((err) => console.log(err));
+
+      // const { value } = event.target;
+      // let result = [];
+
+      // result = list.filter((data) => data[selected].search(value) !== -1);
+
+      // setFilterList(result);
+      // selectCheckbox();
+      // setChecked('');
     } else {
-      const { value } = event.target;
-      let result = [];
-
-      result = list.filter((data) => data[selected].search(value) !== -1);
-
-      setFilterList(result);
-      selectCheckbox();
-      setChecked('');
+      alert('검색어를 입력하세요');
     }
   };
   // 검색 엔터키 누를때
   const onKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleSearch(e);
+      handleSearch();
     }
   };
 
@@ -152,48 +173,44 @@ function MatchList() {
   }, [checked]);
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '400px',
-        textAlign: 'center',
-      }}
-    >
-      <h1>Match</h1>
-      <MatchListCheckbox handleCheckboxFiltering={handleCheckboxFiltering} />
+    <div className="box">
+      <div className="checkbox">
+        <h1>Match</h1>
+        <MatchListCheckbox handleCheckboxFiltering={handleCheckboxFiltering} />
+      </div>
       {/* 테이블 */}
-      <table>
-        <tbody>
+      <table className="table">
+        <thead className="thead">
           <tr>
-            <th>작성자</th>
-            <th>스터디명</th>
-            <th>모집상태</th>
+            <th className="th">작성자</th>
+            <th className="th title">제목</th>
+            <th className="th">스터디명</th>
+            <th className="th">모집상태</th>
           </tr>
+        </thead>
+        <tbody>
           {currentPosts.map((item) => (
-            <tr key={item.articleId}>
-              <td>
-                {item.articleId}
+            <tr
+              key={item.articleId}
+              className="tr"
+              onClick={() => handleClickOpen2(item.articleId)}
+            >
+              <td className="td td2">
+                {/* {item.articleId} */}
                 {item.writerName}
               </td>
-              <td>
-                <button
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleClickOpen2(item.articleId)}
-                  type="button"
-                >
-                  {item.title}
-                </button>
-              </td>
-              {item.status === true ? <td>모집완료</td> : <td>모집중</td>}
+              <td className="td title">{item.title}</td>
+              <td>{item.studyName}</td>
+              {/* <td>{item.studyName}</td> */}
+              {item.state === true ? (
+                <td className="td td2 statusTrue">모집완료</td>
+              ) : (
+                <td className="td td2">모집중</td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
-      <hr />
 
       <div>
         <MatchListPagination
@@ -204,7 +221,7 @@ function MatchList() {
           currentPage={currentPage}
         />
       </div>
-      <hr />
+
       <MatchListSearch
         handleSelect={handleSelect}
         searchValue={searchValue}

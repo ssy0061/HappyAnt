@@ -10,6 +10,7 @@ import {
   MenuItem,
   InputLabel,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 export default function MatchItemUpdate(props) {
   const { item, goDetail } = props;
@@ -18,6 +19,7 @@ export default function MatchItemUpdate(props) {
   const [inputContent, setInputContent] = useState('');
   const [inputCategory, setInputCategory] = useState('');
   const [memberNum, setMemeberNum] = useState(2);
+  const yourId = useSelector((state) => state.user.userInfo.userId);
 
   const handleInputTitle = (e) => {
     setInputTitle(e.target.value);
@@ -33,10 +35,21 @@ export default function MatchItemUpdate(props) {
   };
 
   const clickSubmit = () => {
+    console.log(item.articleId);
+    console.log(yourId);
     axios
-      .put(
-        `/match/${item.articleId}?title=${inputTitle}&content=${inputContent}&category=${inputCategory}`
-      )
+      .put(`/match/${item.articleId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        params: {
+          headCount: memberNum,
+          loginUserId: yourId,
+          category: inputCategory,
+          title: inputTitle,
+          content: inputContent,
+        },
+      })
       .then(goDetail)
       .catch((err) => console.log(err));
   };
@@ -97,7 +110,8 @@ export default function MatchItemUpdate(props) {
           </Select>
         </div>
         <DialogActions>
-          <Button onClick={clickSubmit}>완료</Button>
+          <Button onClick={goDetail}>◀이전</Button>
+          <Button onClick={clickSubmit}>완료✔</Button>
         </DialogActions>
       </DialogContent>
     </div>

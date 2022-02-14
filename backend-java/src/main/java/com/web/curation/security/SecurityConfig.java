@@ -74,7 +74,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 "/configuration/security",
                 "/configuration/**",
                 "/swagger-ui.html",
-                "/webjars/**");
+                "/webjars/**",
+                "/happy-ant-websocket/**",
+				// 아래는 index.html 테스트 용
+                "/app.js",
+				"/app.js:**",
+				"/favicon.ico",
+				"/main.css",
+                "/");
 
 	}
 	
