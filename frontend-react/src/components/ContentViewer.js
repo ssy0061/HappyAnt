@@ -24,7 +24,6 @@ export default function ContentViewer({ initialValue }) {
 
   // Viewer가 props에 따라 rerendering이 안돼서 수동으로 initialValue변경을 감지해 instance값을 변경해줌
   useEffect(() => {
-    console.log('test');
     editorRef.current.getInstance().setMarkdown(initialValue);
   }, [initialValue]);
 
