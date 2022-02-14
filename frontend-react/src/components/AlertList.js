@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { Tooltip, ClickAwayListener, Badge, IconButton } from '@mui/material';
+import { Badge, IconButton, ClickAwayListener } from '@mui/material';
 import CampaignIcon from '@mui/icons-material/Campaign';
 
 export default function AlertList() {
@@ -34,6 +34,21 @@ export default function AlertList() {
     setOpen(false);
   };
 
+  const getLink = (item) => {
+    switch (item.alertType) {
+      case 'MATCH':
+        return '/match';
+      case 'INVITE':
+        return '링크';
+      case 'ARTICLE':
+        return `/study/${item.studyId}`;
+      case 'COMMENT':
+        return '링크';
+      default:
+        return '/';
+    }
+  };
+
   function notificationsLabel(cnt) {
     if (cnt === 0) {
       return 'no notifications';
@@ -49,41 +64,50 @@ export default function AlertList() {
     textDecorationLine: 'none',
   };
 
+  const styles = {
+    position: 'absolute',
+    top: 28,
+    right: 0,
+    left: 0,
+    zIndex: 1,
+    border: '1px solid',
+    p: 1,
+    backgroundColor: 'white',
+    width: '400px',
+  };
+
   return (
-    <ClickAwayListener onClickAway={closeTooltip}>
-      <Tooltip
-        PopperProps={{
-          disablePortal: true,
-        }}
-        onClose={closeTooltip}
-        open={open}
-        disableFocusListener
-        disableHoverListener
-        disableTouchListener
-        title={
-          alertList.length >= 1 ? (
-            alertList.map((item) => (
-              <div key={`alertItem${item.articleId}`}>
-                <a style={ItemDesign} href={`/study/${item.studyId}`}>
-                  {item.message}
-                </a>
-                <hr />
-              </div>
-            ))
-          ) : (
-            <div>아무 소식이 없어요</div>
-          )
-        }
-      >
+    <ClickAwayListener
+      mouseEvent="onMouseDown"
+      touchEvent="onTouchStart"
+      onClickAway={closeTooltip}
+    >
+      <div>
         <IconButton
-          onClickAway={closeTooltip}
+          onClick={openTooltip}
           aria-label={notificationsLabel(count)}
         >
-          <Badge color="primary" badgeContent={count} onClick={openTooltip}>
+          <Badge color="primary" badgeContent={count}>
             <CampaignIcon />
           </Badge>
         </IconButton>
-      </Tooltip>
+        {open ? (
+          <div style={styles}>
+            {alertList.length >= 1 ? (
+              alertList.map((item) => (
+                <div key={`alertItem${item.articleId}`}>
+                  <a style={ItemDesign} href={getLink(item)}>
+                    {item.message}
+                  </a>
+                  <hr />
+                </div>
+              ))
+            ) : (
+              <div>아무 소식이 없어요..</div>
+            )}
+          </div>
+        ) : null}
+      </div>
     </ClickAwayListener>
   );
 }
