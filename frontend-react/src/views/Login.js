@@ -8,6 +8,7 @@ import FindPassword from '../components/FindPassword';
 import { login, setAlertLength } from '../redux/userSlice';
 import Google from '../components/Google';
 import Kakao from '../components/Kakao';
+import { onLoginSuccess } from '../utils/Login';
 
 export default function Login() {
   const [inputId, setInputId] = useState('');
@@ -37,23 +38,30 @@ export default function Login() {
   // 로그인 버튼
   const onClickLogin = (e) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    params.append('email', inputId);
-    params.append('password', inputPw);
+    // const params = new URLSearchParams();
+    // params.append('email', inputId);
+    // params.append('password', inputPw);
 
     axios
-      .post('/account/login', params)
+      .post('/account/login', [], {
+        params: {
+          email: inputId,
+          password: inputPw,
+        },
+      })
       .then((res) => {
         alert('안녕하세요!');
         navigate('/profile');
-        localStorage.setItem('accessToken', res.data.accessToken);
+        onLoginSuccess(res);
         localStorage.setItem('refreshToken', res.data.refreshToken);
         console.log(res.data.accessToken);
 
         // store에 저장할 정보요청
         axios
           .get(`/account/{id}?email=${inputId}`, {
-            headers: { Authorization: `Bearer ${res.data.accessToken}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
           })
           .then((response) => {
             dispatch(login(response.data));
