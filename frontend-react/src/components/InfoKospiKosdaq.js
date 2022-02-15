@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import '../css/Info.css';
 
-function InfoKosdaq({ ontr, Infoname }) {
+function InfoKospiKosdaq({ ontr, Infoname }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -16,9 +17,10 @@ function InfoKosdaq({ ontr, Infoname }) {
       });
   }, []);
   console.log(data);
+
   return (
     <div>
-      <h1>KOSDAQ TOP 50</h1>
+      <h2>{Infoname} TOP 50</h2>
       <table className="Infotable">
         <tbody>
           {data.map((item) => (
@@ -54,7 +56,7 @@ function InfoKosdaq({ ontr, Infoname }) {
               ) : null}
 
               {/* <td className="Infotd">{item.diffAmount}</td>
-          <td className="Infotd">{item.dayRange}</td> */}
+            <td className="Infotd">{item.dayRange}</td> */}
             </tr>
           ))}
         </tbody>
@@ -63,4 +65,4 @@ function InfoKosdaq({ ontr, Infoname }) {
   );
 }
 
-export default React.memo(InfoKosdaq);
+export default React.memo(InfoKospiKosdaq);
