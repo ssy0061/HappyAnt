@@ -103,6 +103,7 @@ public class StudyService {
     	
     	// 멤버가 있는 스터디의 모든 멤버에게 게시글 작성 알림
     	// 최초생성 직후 또는 멤버 추방/탈퇴로 혼자가 된 경우 알림 X
+    	// 작성자한테는 알림X
     	if (study.getStudyMembers().size() > 1) {
     		alertService.studyArticleToAlert(studyId, newArticle);
     	}
@@ -311,13 +312,22 @@ public class StudyService {
     }
     
     public void inviteUser(Long studyId, String email) {
+    	checkAndGetStudy(studyId);
     	MyUser user = userRepo.findByEmail(email);
     	if (user == null) {
     		throw new ResponseStatusException(
 					HttpStatus.NOT_FOUND, "존재하지 않는 유저 email입니다.");
     	}
-    	// alert
-    	alertService.inviteToAlert(studyId, user.getId(), user.getName());
+		if (joinRepo.findByJoinMemberIdAndJoinStudyId(user.getId(), studyId).isPresent()) {
+    		throw new ResponseStatusException(
+    				HttpStatus.BAD_REQUEST,
+    				"이미 스터디에 가입한 회원입니다.",
+    				new IllegalArgumentException());
+		} else {
+	    	// alert
+	    	alertService.inviteToAlert(studyId, user.getId(), user.getName());
+		}
+
     }
 
 	// 스터디에서 '초대'로 멤버 추가
@@ -338,17 +348,18 @@ public class StudyService {
 		}
 	}
     
-    public void createStudy(StudyRequest form, Long userId) {
+    public Long createStudy(StudyRequest form, Long userId) {
     	MyUser user = checkAndGetUser(userId);
     	Study study = form.toEntity();
     	study.setLeader(user);
     	if (study.getName() == null) {
     		study.setName(user.getName() + "의 스터디");
     	}
-    	studyRepo.save(study);
+    	Study newStudy = studyRepo.save(study);
     	// 조인 테이블에도 추가
     	StudyJoin join = new StudyJoin(null, user, study, true);
 		joinRepo.save(join);
+		return newStudy.getId();
     }
     
     public StudyResponse getStudy(Long studyId) {
