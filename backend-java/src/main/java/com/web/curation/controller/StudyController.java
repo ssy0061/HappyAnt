@@ -176,9 +176,9 @@ public class StudyController {
 	
 	@PostMapping
 	@ApiOperation(value = "스터디 생성")
-	public void createStudy(@RequestBody StudyRequest studyForm,
+	public Long createStudy(@RequestBody StudyRequest studyForm,
 							@RequestParam(required = true) Long loginUserId) {
-		studyService.createStudy(studyForm, loginUserId);
+		return studyService.createStudy(studyForm, loginUserId);
 	}
 	
     @GetMapping("{studyId}")

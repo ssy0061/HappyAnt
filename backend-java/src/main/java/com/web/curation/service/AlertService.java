@@ -58,12 +58,14 @@ public class AlertService {
     	
     	join.forEach(member -> {
     		MyUser user = member.getJoinMember();
-        	Alert alert = new Alert(user.getId(), user.getName(), studyId, study.getName(), article.getId());
-        	alert.setAlertType(AlertType.ARTICLE);
-        	alert.setMessage(user.getName() + "님, '" + study.getName() + "'에 새 게시글이 작성되었습니다.");
-        	Alert newAlert = alertRepo.save(alert);
-        	AlertMessage message = new AlertMessage(newAlert.getId(), user.getId(), newAlert.getMessage());
-            messagingTemplate.convertAndSend("/alert/" + message.getUserId(), message);
+    		if (user.getId() != article.getStudyWriter().getId()) {
+    			Alert alert = new Alert(user.getId(), user.getName(), studyId, study.getName(), article.getId());
+            	alert.setAlertType(AlertType.ARTICLE);
+            	alert.setMessage(user.getName() + "님, '" + study.getName() + "'에 새 게시글이 작성되었습니다.");
+            	Alert newAlert = alertRepo.save(alert);
+            	AlertMessage message = new AlertMessage(newAlert.getId(), user.getId(), newAlert.getMessage());
+                messagingTemplate.convertAndSend("/alert/" + message.getUserId(), message);
+    		}
     	});
     }
     
@@ -137,8 +139,8 @@ public class AlertService {
     	alert.setState(true);
     }
     
-    public void deleteAlert(Long alertId, Long userId) {
-    	checkAndGetAlert(alertId, userId);
+    public void deleteAlert(Long userId, Long alertId) {
+    	checkAndGetAlert(userId, alertId);
     	alertRepo.deleteById(alertId);
     }
     
@@ -148,7 +150,7 @@ public class AlertService {
 				HttpStatus.NOT_FOUND, "존재하지 않는 스터디 id입니다.", new IllegalArgumentException()));
 	}
 	
-	public Alert checkAndGetAlert(Long alertId, Long userId) {
+	public Alert checkAndGetAlert(Long userId, Long alertId) {
 		return alertRepo.findByUserIdAndId(userId, alertId)
 							.orElseThrow(() -> new ResponseStatusException(
 							HttpStatus.BAD_REQUEST, "알림 또는 유저 id를 확인하세요"));
