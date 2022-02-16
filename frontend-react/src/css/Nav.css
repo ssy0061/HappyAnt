@@ -1,12 +1,18 @@
 .container {
+  position: fixed;
   display: flex;
   width: 97.5vw;
   border-left: rgb(21, 21, 151) solid 0.5vw;
+  background-color: rgb(255, 255, 255);
+  z-index: 2;
+  top: 0;
 }
 
+.flex {
+  display: flex;
+}
 .navbar {
-  /* position: fixed; */
-  height: 12vh;
+  height: 105px;
   padding-left: 1vw;
   padding-right: 1vw;
   border-bottom: 1px solid rgb(170, 170, 170);
@@ -53,13 +59,14 @@
 .memberContainer {
   display: flex;
   justify-content: right;
+  padding-top: 30px;
 }
 
 .active {
   color: rgb(21, 21, 151);
   font-weight: 1000;
   text-decoration-line: none;
-  border-bottom: 2px solid #05266e;
+  border-bottom: 3px solid #05266e;
 }
 
 .inactive {
@@ -72,5 +79,22 @@ a {
   font-size: small;
   margin-left: 5px;
   margin-right: 5px;
+  color: rgb(95, 95, 95);
+}
+
+.studyList {
+  width: 108px;
+  position: fixed;
+  top: 94px;
+  left: 30px;
+  border-radius: 3px;
+  background-color: rgb(252, 252, 252);
+  /* border: 2px solid rgb(77, 75, 75); */
+}
+
+.studyList > a {
+  text-decoration-line: none;
+  font-size: 15px;
+  margin: 10px;
   color: rgb(95, 95, 95);
 }

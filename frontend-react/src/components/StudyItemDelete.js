@@ -6,7 +6,8 @@ import axios from 'axios';
 export default function StudyItemDelete({ articleId, refresh }) {
   const { studyId } = useParams();
   const yourId = useSelector((state) => state.user.userInfo.userId);
-  const deleteArticle = () => {
+  const deleteArticle = (e) => {
+    e.preventDefault();
     axios
       .delete(`/api/study/${studyId}/${articleId}`, {
         headers: {
@@ -24,8 +25,10 @@ export default function StudyItemDelete({ articleId, refresh }) {
   };
 
   return (
-    <button type="submit" onClick={deleteArticle}>
-      삭제
-    </button>
+    <div style={{ marginLeft: '20px' }}>
+      <a href="/" onClick={deleteArticle}>
+        삭제
+      </a>
+    </div>
   );
 }

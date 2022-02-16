@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-// import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import axios from 'axios';
+import { Button } from '@mui/material';
 import { logout } from '../redux/userSlice';
-import UserDelete from '../components/Userdelete';
 import StudyCreateBtn from '../components/StudyCreateBtn';
 import AlertList from '../components/AlertList';
 import '../css/Nav.css';
@@ -13,6 +13,10 @@ function nav() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loginPage = useSelector((state) => state.user.isLogin);
+  const yourId = useSelector((state) => state.user.userInfo.userId);
+  const email = useSelector((state) => state.user.userInfo.email);
+  const [openList, setOpenList] = useState(false);
+  const [studyList, setStudyList] = useState([]);
 
   const clickLogout = (e) => {
     e.preventDefault();
@@ -20,6 +24,28 @@ function nav() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     navigate('/login');
+  };
+
+  const getStudyList = () => {
+    axios
+      .get(`/api/account/${yourId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        params: {
+          email,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        console.log(studyList);
+        setStudyList(res.data.joinStudy);
+        setOpenList(true);
+      })
+      .catch((err) => {
+        alert('다시 시도해주세요.');
+        console.log(err);
+      });
   };
   // const userName = useSelector((state) => state.user.username);
   // const clickStudy = () => {
@@ -36,7 +62,30 @@ function nav() {
       {/* 왼쪽 */}
       <div className="item itemLeft">
         <StudyCreateBtn />
-        <p>스터디목록 넣을예정</p>
+        {/* 스터디 리스트 */}
+        {!openList && (
+          <Button variant="contained" size="small" onClick={getStudyList}>
+            가입 스터디 ▼
+          </Button>
+        )}
+        {openList && (
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => setOpenList(false)}
+          >
+            가입 스터디 ▲
+          </Button>
+        )}
+        <div className="studyList">
+          {openList &&
+            studyList.map((item) => (
+              <>
+                <a href={`/study/${item.studyId}`}>{item.studyName}</a>
+                <hr />
+              </>
+            ))}
+        </div>
       </div>
       {/* 중앙 */}
       <div className="item itemCenter">
@@ -44,7 +93,7 @@ function nav() {
         <ul className="linkContainer">
           <NavLink
             style={{ marginLeft: '25px' }}
-            to="/finance"
+            to="/info"
             className={({ isActive }) =>
               isActive ? 'linkItem active' : 'linkItem inactive'
             }
@@ -82,16 +131,29 @@ function nav() {
           </ul>
         )}
         {loginPage && (
-          <div>
-            <ul className="memberContainer">
-              <div>
-                <a href="/" onClick={clickLogout}>
-                  로그아웃
-                </a>
-              </div>
-              <UserDelete />
-            </ul>
+          <div className="memberContainer">
+            <div
+              style={{
+                position: 'relative',
+                top: '10px',
+                marginLeft: '20px',
+                marginRight: '10px',
+              }}
+            >
+              <a href="/profile">김준하</a>
+            </div>
             <AlertList />
+            <div
+              style={{
+                position: 'relative',
+                top: '10px',
+                marginLeft: '40px',
+              }}
+            >
+              <a href="/" onClick={clickLogout}>
+                로그아웃
+              </a>
+            </div>
             {/* <FormControl style={{ width: '256px' }}>
             <InputLabel id="demo-simple-select-label">내스터디 목록</InputLabel>
             <Select label="스터디 목록" value={studyId} onChange={clickStudy}>

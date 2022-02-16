@@ -22,7 +22,7 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Google from '../components/Google';
 import Kakao from '../components/Kakao';
@@ -44,6 +44,14 @@ function Join() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  const isLogin = useSelector((state) => state.user.isLogin);
+
+  React.useEffect(() => {
+    if (isLogin) {
+      navigate('/profile');
+    }
+  }, []);
 
   // 가입하기 버튼 눌렀을때
   const onSubmit = (event) => {

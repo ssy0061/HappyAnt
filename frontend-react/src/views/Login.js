@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Paper, Input } from '@mui/material';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import FindPassword from '../components/FindPassword';
@@ -17,6 +17,13 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const isLogin = useSelector((state) => state.user.isLogin);
+
+  useEffect(() => {
+    if (isLogin) {
+      navigate('/profile');
+    }
+  }, []);
   // 이벤트 관리
   const handleInputId = (e) => {
     setInputId(e.target.value);
@@ -94,7 +101,7 @@ export default function Login() {
   const loginPaper = {
     position: 'relative',
     left: '55%',
-    top: '150px',
+    top: '250px',
     width: '400px',
     height: '500px',
     textAlign: 'center',
@@ -126,6 +133,9 @@ export default function Login() {
     left: '100px',
     top: '300px',
     color: 'white',
+    width: '800px',
+    height: '500px',
+    background: 'url(../image/login.png)',
   };
 
   // ---------------------------- render--------------------------------

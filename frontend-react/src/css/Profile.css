@@ -1,0 +1,41 @@
+.main {
+  display: flex;
+  height: 90vh;
+  width: 60vw;
+  margin-left: 20vw;
+}
+.back {
+  background-color: rgb(248, 248, 248);
+}
+
+.profile {
+  width: 30vw;
+  height: 600px;
+  margin-top: 20px;
+  margin-right: 10px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 3px;
+}
+
+.right {
+  width: 30vw;
+  margin-top: 20px;
+  margin-left: 10px;
+  background-color: rgb(177, 177, 177);
+  border-radius: 3px;
+  background-color: rgb(248, 248, 248);
+}
+
+.first {
+  background-color: white;
+  padding: 20px;
+  border-radius: 3px;
+}
+
+.second {
+  background-color: white;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 3px;
+}
