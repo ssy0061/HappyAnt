@@ -1,5 +1,7 @@
 package com.web.curation.dto.stock;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +33,8 @@ public class GetStockResponse {
 	private String year3ChartUrl;
 	private String year5ChartUrl;
 	private String year10ChartUrl;
+	
+	private List<GetSubNewsResponse> newsList;
 	
 
 	

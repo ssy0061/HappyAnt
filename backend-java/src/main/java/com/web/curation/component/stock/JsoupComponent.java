@@ -13,13 +13,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
+import com.web.curation.dto.stock.GetNewsResponse;
 import com.web.curation.dto.stock.GetStockListResponse;
 import com.web.curation.dto.stock.GetStockResponse;
+import com.web.curation.dto.stock.GetSubNewsResponse;
 
 @Component
 public class JsoupComponent {
 
-	
+
 	public GetStockResponse getStockInfo(String code) {
 		
 		String Stock = "https://finance.naver.com/item/main.naver?code=" +code;
@@ -56,12 +58,74 @@ public class JsoupComponent {
 			stockInfo.setYear5ChartUrl("https://ssl.pstatic.net/imgfinance/chart/item/area/year5/"+stockInfo.getCode()+".png");
 			stockInfo.setYear10ChartUrl("https://ssl.pstatic.net/imgfinance/chart/item/area/year10/"+stockInfo.getCode()+".png");
 		
+			Elements element2 = document.select(".sub_section.news_section ul li span.txt");
+			
+			List<GetSubNewsResponse> list = new ArrayList<>();
+			
+			
+			for(Element e : element2) {
+				GetSubNewsResponse subNews = new GetSubNewsResponse();
+				
+				String url = "https://finance.naver.com/" + e.select("a").get(0).attr("href");
+				System.out.println(url.toString());
+				String articleSummary = e.select("a").get(0).text();
+				System.out.println(articleSummary.toString());
+				
+				subNews.setUrl(url);
+				subNews.setArticleSummary(articleSummary);
+				list.add(subNews);
+			}
+						
+			stockInfo.setNewsList(list);
+			
 			return stockInfo;
 		} catch(IOException ignored) {			
 		}		
 		return null;
 	}
 
+	public List<GetNewsResponse> getNewsInfo() {
+		
+		String News = "https://finance.naver.com/news/mainnews.naver";
+		
+		Connection conn = Jsoup.connect(News);
+		try {
+			Document document = conn.get();
+			return getNewsList(document);
+		} catch(IOException ignored) {
+			
+		}
+		
+		return null;	
+	}
+	
+	public List<GetNewsResponse> getNewsList(Document document){
+		Elements Table = document.select("div#contentarea div.mainNewsList li.block1 dl");
+		
+		List<GetNewsResponse> list = new ArrayList<>();
+		
+		for(Element element : Table) {
+			GetNewsResponse news = new GetNewsResponse();
+			
+			String url = "https://finance.naver.com/"+element.select("dt.thumb a").attr("href");
+			news.setUrl(url);
+			
+			String img = element.select("dt.thumb img").attr("src");
+			news.setImg(img);
+			
+			String articleSubject = element.select(".articleSubject").text();
+			news.setArticleSubject(articleSubject);
+			
+			String articleSummary = element.select(".articleSummary").text();
+			news.setArticleSummary(articleSummary);
+			
+			list.add(news);
+		}
+		
+		return list;
+		
+	}
+	
 	
 	
 	public List<GetStockListResponse> getKospiStockList() {
@@ -90,13 +154,13 @@ public class JsoupComponent {
 	public List<GetStockListResponse> getStockList(Document document) {
 	    Elements Table = document.select("table.type_2 tbody tr");
 	    List<GetStockListResponse> list = new ArrayList<>();
-	for (Element element : Table) {
-	    if (element.attr("onmouseover").isEmpty()) {
-	    	continue;
-	    }
-	    list.add(createStock(element.select("td")));
-	}
-	    return list;
+		for (Element element : Table) {
+		    if (element.attr("onmouseover").isEmpty()) {
+		    	continue;
+		    }
+		    list.add(createStock(element.select("td")));
+		}
+		return list;
 	}
 
 	public GetStockListResponse createStock(Elements td) {
@@ -107,7 +171,7 @@ public class JsoupComponent {
 	    for (int i = 0; i < td.size(); i++) {
 	    	String text;
 	    	if(td.get(i).select(".center a").attr("href").isEmpty()){
-	        text = td.get(i).text();
+	    		text = td.get(i).text();
 	    	}else{
 	    		text = "https://finance.naver.com" + td.get(i).select(".center a").attr("href");
 	    	}
