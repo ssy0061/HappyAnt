@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useSelector } from 'react-redux';
 
 import MatchListSearch from '../components/MatchListSearch';
 import StudyCommentList from '../components/StudyCommentList';
@@ -11,12 +12,13 @@ import ContentViewer from '../components/ContentViewer';
 
 function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
-  const { studyId } = props;
-  const { refresh } = props;
+  const { studyId, refresh } = props;
   // 원본 데이터
   const [articleList, setArticleList] = useState([]);
   // 필터한 데이터
   const [filterList, setFilterList] = useState([]);
+
+  const yourId = useSelector((state) => state.user.userInfo.userId);
 
   // 무한스크롤
   const [prev] = useState(0);
@@ -26,7 +28,7 @@ function StudyList(props) {
   const getStudyArticleList = () => {
     axios({
       method: 'get',
-      url: `/study/${studyId}/article`,
+      url: `/api/study/${studyId}/article`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
@@ -64,7 +66,7 @@ function StudyList(props) {
       // console.log(event);
       axios({
         method: 'get',
-        url: `/study/${studyId}/article/search?Keyword=${searchValue}`,
+        url: `/api/study/${studyId}/article/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -79,7 +81,7 @@ function StudyList(props) {
     } else if (selected === 'writerName' && searchValue !== '') {
       axios({
         method: 'get',
-        url: `/study/${studyId}/article/search/writer?name=${searchValue}`,
+        url: `/api/study/${studyId}/article/search/writer?name=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -138,7 +140,6 @@ function StudyList(props) {
         }}
       >
         <div className="head">
-          <h1>StudyList</h1>
           <MatchListSearch
             handleSelect={handleSelect}
             searchValue={searchValue}
@@ -158,16 +159,18 @@ function StudyList(props) {
                 11
               )}`}</p>
             </div>
-            <div className="cmt">
-              <StudyItemUpdate
-                articleId={item.articleId}
-                refresh={getStudyArticleList}
-              />
-              <StudyItemDelete
-                articleId={item.articleId}
-                refresh={getStudyArticleList}
-              />
-            </div>
+            {yourId === item.writerId && (
+              <div className="cmt">
+                <StudyItemUpdate
+                  articleId={item.articleId}
+                  refresh={getStudyArticleList}
+                />
+                <StudyItemDelete
+                  articleId={item.articleId}
+                  refresh={getStudyArticleList}
+                />
+              </div>
+            )}
             <div>
               <hr />
               <StudyCommentList articleId={item.articleId} />
@@ -177,7 +180,6 @@ function StudyList(props) {
         ))}
       </div>
       <div ref={ref} />
-
       <hr />
     </div>
   );

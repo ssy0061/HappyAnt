@@ -6,6 +6,7 @@ import axios from 'axios';
 import { setAlertLength } from '../redux/userSlice';
 
 export default function Alert() {
+  const isLogin = useSelector((state) => state.user.isLogin);
   const userId = useSelector((state) => state.user.userInfo.userId);
   const $websocket = useRef(null);
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ export default function Alert() {
     });
 
     axios
-      .get(`/alert/${userId}`, {
+      .get(`/api/alert/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -45,12 +46,14 @@ export default function Alert() {
 
   return (
     <div>
-      <SockJsClient
-        url="http://localhost:8080/happy-ant-websocket"
-        topics={[`/alert/${userId}`]}
-        onMessage={onAlert}
-        ref={$websocket}
-      />
+      {isLogin && (
+        <SockJsClient
+          url="http://i6d207.p.ssafy.io/api/happy-ant-websocket"
+          topics={[`/alert/${userId}`]}
+          onMessage={onAlert}
+          ref={$websocket}
+        />
+      )}
     </div>
   );
 }

@@ -18,7 +18,7 @@ const style = {
 };
 
 export default function MatchingAppliAccept(props) {
-  const { pk, content, userId } = props;
+  const { pk, content, userId, refresh } = props;
   console.log(pk, content, userId);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -26,7 +26,7 @@ export default function MatchingAppliAccept(props) {
 
   const acceptStudy = () => {
     axios
-      .post(`/match/${pk}/${userId}`, [], {
+      .post(`/api/match/${pk}/${userId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -34,27 +34,31 @@ export default function MatchingAppliAccept(props) {
       .then(() => {
         alert('승인되었습니다!');
         handleClose();
+        refresh();
       })
       .catch((err) => {
         console.log(err);
         alert('이미 수락한 인원입니다.');
         handleClose();
+        refresh();
       });
   };
 
   const denyStudy = () => {
     axios
-      .put(`/match/${pk}/${userId}`, [], {
+      .put(`/api/match/${pk}/${userId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then(() => {
         alert('거절하였습니다!');
+        refresh();
       })
       .catch((err) => {
         console.log(err);
         alert('이미 거절한 인원입니다.');
+        refresh();
       });
   };
   return (

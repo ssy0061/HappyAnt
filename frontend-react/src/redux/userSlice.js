@@ -5,6 +5,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
+    loginTime: '',
     userInfo: {},
     alertLength: 0,
   },
@@ -17,35 +18,20 @@ export const userSlice = createSlice({
       state.isLogin = false;
       state.userInfo = {};
       state.alertLength = 0;
+      state.loginTime = '';
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     },
     setAlertLength: (state, action) => {
       state.alertLength = action.payload;
     },
+    setLoginTime: (state) => {
+      const temp = new Date().getTime();
+      state.loginTime = temp;
+    },
   },
 });
 
-export const { login, logout, setAlertLength } = userSlice.actions;
+export const { login, logout, setAlertLength, setLoginTime } =
+  userSlice.actions;
 export default userSlice.reducer;
-
-// import { createSlice } from '@reduxjs/toolkit'
-
-// const todosSlice = createSlice({
-//   name: 'todos',
-//   initialState: [],
-//   reducers: {
-//     addTodo(state, action) {
-//       const { id, text } = action.payload
-//       state.push({ id, text, completed: false })
-//     },
-//     toggleTodo(state, action) {
-//       const todo = state.find(todo => todo.id === action.payload)
-//       if (todo) {
-//         todo.completed = !todo.completed
-//       }
-//     }
-//   }
-// })
-
-// export const { addTodo, toggleTodo } = todosSlice.actions
-
-// export default todosSlice.reducer

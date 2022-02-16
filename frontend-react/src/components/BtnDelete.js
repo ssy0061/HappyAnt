@@ -33,7 +33,7 @@ export default function BtnDelete(props) {
     console.log('onclick');
     axios
       .delete(
-        `/study/${studyId}/member/${Info.userId}?loginUserId=${Info.userId}`,
+        `/api/study/${studyId}/member/${Info.userId}?loginUserId=${Info.userId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

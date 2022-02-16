@@ -38,27 +38,22 @@ export default function Login() {
   // 로그인 버튼
   const onClickLogin = (e) => {
     e.preventDefault();
-    // const params = new URLSearchParams();
-    // params.append('email', inputId);
-    // params.append('password', inputPw);
 
     axios
-      .post('/account/login', [], {
+      .post('/api/account/login', [], {
         params: {
           email: inputId,
           password: inputPw,
         },
       })
       .then((res) => {
-        alert('안녕하세요!');
-        navigate('/profile');
         onLoginSuccess(res);
         localStorage.setItem('refreshToken', res.data.refreshToken);
         console.log(res.data.accessToken);
 
         // store에 저장할 정보요청
         axios
-          .get(`/account/{id}?email=${inputId}`, {
+          .get(`/api/account/{id}?email=${inputId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
@@ -68,8 +63,9 @@ export default function Login() {
             enqueueSnackbar(`${response.data.userName}님 안녕하세요!`, {
               variant: `success`,
             });
+            navigate('/profile');
             axios
-              .get(`/alert/${response.data.userId}`, {
+              .get(`/api/alert/${response.data.userId}`, {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem(
                     'accessToken'
@@ -115,8 +111,8 @@ export default function Login() {
   };
 
   const background = {
-    backgroundColor: '#0000CD',
-    height: '90vh',
+    backgroundColor: 'white',
+    height: '100vh',
   };
 
   const loginBtn = {
@@ -145,6 +141,7 @@ export default function Login() {
             placeholder="E-mail을 입력해주세요"
             value={inputId}
             onChange={handleInputId}
+            onKeyPress={onCheckEnter}
             fullWidth
           />
           <br />

@@ -6,7 +6,7 @@ import MatchListSearch from '../components/MatchListSearch';
 import MatchItemModal from '../components/MatchItemModal';
 import '../css/MatchList.css';
 
-function MatchList(refresh) {
+function MatchList() {
   // 원본 데이터
   const [list, setList] = useState([]);
   // 필터한 데이터
@@ -31,16 +31,8 @@ function MatchList(refresh) {
   const currentPosts = filterList.slice(indexOfFirstPost, indexOfLastPost);
 
   // 글 디테일 모달값
-  const [open2, setOpen2] = useState(false);
+  const [open, setOpen] = useState(false);
   const [detailId, setDetailId] = useState();
-  const handleClickOpen2 = (id) => {
-    setDetailId(id);
-    setOpen2(true);
-    console.log(id);
-  };
-  const handleClickClose2 = () => {
-    setOpen2(false);
-  };
 
   // 필터리스트에 값 변화가 있을때마다 첫번째 페이지로 보게 이동시키기
   useEffect(() => {
@@ -52,11 +44,11 @@ function MatchList(refresh) {
     setCurrentPage(num);
   };
 
-  // 최초 1번 데이터 불러오기
-  useEffect(() => {
+  // 아이템 불러오기
+  const getItem = () => {
     axios({
       method: 'get',
-      url: '/match',
+      url: '/api/match',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
@@ -69,7 +61,11 @@ function MatchList(refresh) {
       .catch((error) => {
         console.log(error);
       });
-  }, [refresh]);
+  };
+  // 최초 1번 데이터 불러오기
+  useEffect(() => {
+    getItem();
+  }, []);
 
   // 검색박스에 적힌 값을 저장함으로써 검색 버튼을 눌러도 검색이 가능하다.
   const saveSearchValue = (event) => {
@@ -93,7 +89,7 @@ function MatchList(refresh) {
     if (selected === 'title' && searchValue !== '') {
       axios({
         method: 'get',
-        url: `/match/search?Keyword=${searchValue}`,
+        url: `/api/match/search?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -109,7 +105,7 @@ function MatchList(refresh) {
     } else if (selected === 'writerName' && searchValue !== '') {
       axios({
         method: 'get',
-        url: `/match/search/writer?Keyword=${searchValue}`,
+        url: `/api/match/search/writer?Keyword=${searchValue}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -154,6 +150,16 @@ function MatchList(refresh) {
     setChecked(element.target.id);
   };
 
+  const openMatchModal = (id) => {
+    setDetailId(id);
+    setOpen(true);
+    console.log(id);
+  };
+  const closeMatchModal = () => {
+    setOpen(false);
+    getItem();
+  };
+
   // 체크박스로 필터링
   useEffect(() => {
     if (checked === 'all') {
@@ -193,7 +199,7 @@ function MatchList(refresh) {
             <tr
               key={item.articleId}
               className="tr"
-              onClick={() => handleClickOpen2(item.articleId)}
+              onClick={() => openMatchModal(item.articleId)}
             >
               <td className="td td2">
                 {/* {item.articleId} */}
@@ -229,8 +235,9 @@ function MatchList(refresh) {
         onKeyPress={onKeyPress}
         handleSearch={handleSearch}
       />
-      {open2 && (
-        <MatchItemModal pk={detailId} handleClickClose={handleClickClose2} />
+      {/* ------------------------ 모집글 모달 열/닫 -------------------------------- */}
+      {open && (
+        <MatchItemModal pk={detailId} handleClickClose={closeMatchModal} />
       )}
     </div>
   );

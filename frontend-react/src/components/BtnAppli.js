@@ -33,7 +33,7 @@ export default function BtnAppli(props) {
   const applyStudy = () => {
     console.log(item.articleId, yourId);
     axios
-      .post(`/match/join/${item.articleId}`, [], {
+      .post(`/api/match/join/${item.articleId}`, [], {
         params: {
           joinUserId: yourId,
           content: inputContent,

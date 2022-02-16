@@ -27,7 +27,7 @@ function GoogleLoginBtn() {
     // 회원가입
     axios({
       method: 'post',
-      url: '/account/signup',
+      url: '/api/account/signup',
       data: {
         email: response.profileObj.email,
         name: response.profileObj.name,
@@ -42,7 +42,7 @@ function GoogleLoginBtn() {
         // 로그인
         axios({
           method: 'post',
-          url: '/account/login',
+          url: '/api/account/login',
           data: params,
         })
           .then((ress) => {
@@ -54,7 +54,7 @@ function GoogleLoginBtn() {
 
             axios({
               method: 'get',
-              url: `/account/{id}?email=${response.profileObj.email}`,
+              url: `/api/account/{id}?email=${response.profileObj.email}`,
               headers: {
                 Authorization: `Bearer ${ress.data.accessToken}`,
               },
@@ -72,7 +72,7 @@ function GoogleLoginBtn() {
         // 이미 존재하는 회원이라면 로그인 시도
         axios({
           method: 'post',
-          url: '/account/login',
+          url: '/api/account/login',
           data: params,
         })
           .then((ress) => {
@@ -83,7 +83,7 @@ function GoogleLoginBtn() {
             localStorage.setItem('refreshToken', ress.data.refreshToken);
             axios({
               method: 'get',
-              url: `/account/{id}?email=${response.profileObj.email}`,
+              url: `/api/account/{id}?email=${response.profileObj.email}`,
               headers: {
                 Authorization: `Bearer ${ress.data.accessToken}`,
               },

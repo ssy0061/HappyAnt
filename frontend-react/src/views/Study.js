@@ -4,10 +4,12 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import StudyItemCreate from '../components/StudyItemCreate';
 import MatchItemCreate from '../components/MatchItemCreate';
+import Chat from '../websocket/Chat';
 import StudyList from './StudyList';
 import BtnEntrust from '../components/BtnEntrust';
 import BtnDelete from '../components/BtnDelete';
 import BtnInvite from '../components/BtnInvite';
+import StudyMemberInvite from '../components/StudyMemberInvite';
 import BtnChangeStudyInfo from '../components/BtnChangeStudyInfo';
 
 export default function Study() {
@@ -28,7 +30,7 @@ export default function Study() {
   useEffect(() => {
     axios({
       method: 'get',
-      url: `/study/${studyId}`,
+      url: `/api/study/${studyId}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
@@ -44,7 +46,7 @@ export default function Study() {
   useEffect(() => {
     axios({
       method: 'get',
-      url: `/study/${studyId}/member`,
+      url: `/api/study/${studyId}/member`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
@@ -79,6 +81,7 @@ export default function Study() {
 
   return (
     <div id="wrapper">
+      <Chat />
       <aside style={asideDiv}>
         <p>aside content1</p>
         <p>aside2</p>
@@ -88,7 +91,10 @@ export default function Study() {
           <BtnEntrust studyId={studyId} />
         ) : null}
         {studyInfo.leaderId === userInfo.userId ? (
-          <BtnInvite studyInfo={studyInfo} studyMember={studyMember} />
+          <div>
+            <BtnInvite studyInfo={studyInfo} studyMember={studyMember} />
+            <StudyMemberInvite />
+          </div>
         ) : null}
         {studyInfo.leaderId === userInfo.userId ? (
           <BtnChangeStudyInfo studyInfo={studyInfo} />

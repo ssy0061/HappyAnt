@@ -22,7 +22,7 @@ function Profile() {
   console.log(Info.email);
   const renewal = () => {
     axios
-      .get(`/account/{id}?email=${Info.email}`, {
+      .get(`/api/account/{id}?email=${Info.email}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -78,6 +78,7 @@ function Profile() {
 
   return (
     <div>
+      <div style={{ height: '15vh' }} />
       {loginPage && (
         <div>
           <h1>{Info.userName}님의 프로필입니다</h1>

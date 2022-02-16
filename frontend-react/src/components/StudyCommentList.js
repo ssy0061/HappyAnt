@@ -10,14 +10,13 @@ import StudyCommentCreate from './StudyCommentCreate';
 export default function StudyCommentList({ articleId }) {
   const { studyId } = useParams();
   const [updateCommentContent, setUpdateCommentContent] = useState('');
-  const [comment, setComment] = useState([]);
   const [selectUpdateComment, setSelectUpdateComment] = useState('');
+  const [comment, setComment] = useState([]);
   const yourId = useSelector((state) => state.user.userInfo.userId);
-  // const clickUpdate = () => {  }
 
   const getComment = () => {
     axios
-      .get(`/study/${studyId}/${articleId}/comment`, {
+      .get(`/api/study/${studyId}/${articleId}/comment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -30,7 +29,7 @@ export default function StudyCommentList({ articleId }) {
   const deleteComment = (commentId) => {
     console.log('삭제 시도');
     axios
-      .delete(`/study/${studyId}/${articleId}/${commentId}`, {
+      .delete(`/api/study/${studyId}/${articleId}/${commentId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -48,7 +47,7 @@ export default function StudyCommentList({ articleId }) {
   const submitUpdateCommentContent = (e, commentId) => {
     if (e.key === 'Enter') {
       axios
-        .put(`/study/${studyId}/${articleId}/${commentId}`, [], {
+        .put(`/api/study/${studyId}/${articleId}/${commentId}`, [], {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -59,6 +58,7 @@ export default function StudyCommentList({ articleId }) {
         })
         .then(() => {
           setSelectUpdateComment('');
+          getComment();
         })
         .catch((err) => console.log(err));
     }
@@ -80,11 +80,10 @@ export default function StudyCommentList({ articleId }) {
           {/* -------댓글내용(수정하려고 선택된 댓글이면 수정 폼 보여줌)-------- */}
           {selectUpdateComment === idx ? (
             <TextField
-              id={`update${item.commentId}`}
               key={`update${item.commentId}`}
               variant="standard"
               defaultValue={item.content}
-              onChange={() => handleUpdateCommentContent}
+              onChange={handleUpdateCommentContent}
               onKeyPress={(e) => {
                 submitUpdateCommentContent(e, item.commentId);
               }}
