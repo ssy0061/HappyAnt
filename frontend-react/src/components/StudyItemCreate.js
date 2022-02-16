@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { Wysiwyg } from '@mui/icons-material';
 import ContentEditor from './ContentEditor';
+// import InfoSearch from './InfoSearch';
 
 export default function StudyItemCreate(props) {
   const { studyId } = useParams();
@@ -102,12 +103,17 @@ export default function StudyItemCreate(props) {
             variant="standard"
             onChange={handleTitle}
           />
+          {/* <InfoSearch /> */}
           <ContentEditor setText={setContent} />
           <hr />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClickCreate}>작성</Button>
-          <Button onClick={handleClickClose}>닫기</Button>
+          <Button variant="contained" onClick={onClickCreate} size="small">
+            작성
+          </Button>
+          <Button variant="contained" onClick={handleClickClose} size="small">
+            닫기
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

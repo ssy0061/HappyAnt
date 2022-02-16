@@ -40,7 +40,7 @@ export default function Chat() {
   const chatIconPosition = {
     position: 'fixed',
     right: '20px',
-    bottom: '20px',
+    bottom: '80px',
   };
   const chatItemViisible = {
     visibility: 'visible',
@@ -50,7 +50,7 @@ export default function Chat() {
     background: 'white',
     position: 'fixed',
     right: '20px',
-    bottom: '80px',
+    bottom: '130px',
     border: '1px solid',
     borderRadius: '10px',
     padding: '10px',
@@ -88,7 +88,7 @@ export default function Chat() {
             </Box>
             <div style={chatInputStyle}>
               <Input
-                placeholder="댓글을 입력해주세요."
+                placeholder=""
                 size="small"
                 autoFocus
                 fullWidth

@@ -16,11 +16,27 @@
   display: flex;
   /* margin-left: auto; */
   /* flex-direction: column; */
-  justify-content: space-around;
+  justify-content: right;
   /* align-content: flex-end; */
 }
 
 .content {
   word-break: break-all;
   margin-bottom: 3rem;
+}
+
+.name {
+  color: rgb(59, 59, 59);
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.date {
+  color: rgb(138, 138, 138);
+  font-size: 14px;
+}
+.underTitle {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import StudyItemCreate from '../components/StudyItemCreate';
 import MatchItemCreate from '../components/MatchItemCreate';
 import Chat from '../websocket/Chat';
@@ -11,6 +13,8 @@ import BtnDelete from '../components/BtnDelete';
 import BtnInvite from '../components/BtnInvite';
 import StudyMemberInvite from '../components/StudyMemberInvite';
 import BtnChangeStudyInfo from '../components/BtnChangeStudyInfo';
+import StudyDelete from '../components/StudyDelete';
+import '../css/Study.css';
 
 export default function Study() {
   const { studyId } = useParams();
@@ -62,12 +66,16 @@ export default function Study() {
   console.log(studyMember, 'studyMember');
   // ----------------------css-------------------
   const asideDiv = {
-    width: '10%',
-    height: '800px',
+    width: '150px',
+    height: '87vh',
+    borderRadius: '7px',
     paddingLeft: '.5rem',
-    marginLeft: '.5rem',
+    marginTop: '115px',
+    marginLeft: '10px',
     float: 'left',
-    backgroundColor: '#f5f5f1',
+    backgroundColor: '#ffffff',
+    position: 'fixed',
+    z: -1,
   };
 
   const sectionDiv = {
@@ -76,15 +84,32 @@ export default function Study() {
     float: 'left',
     margin: '.5rem',
     marginRight: '2rem',
+    marginTop: '105px',
+    marginLeft: '150px',
     padding: '.5rem',
   };
 
+  const createIconPosition = {
+    position: 'fixed',
+    right: '20px',
+    bottom: '20px',
+  };
+
   return (
-    <div id="wrapper">
+    <div className="back">
       <Chat />
-      <aside style={asideDiv}>
+      <Fab
+        color="primary"
+        aria-label="add"
+        style={createIconPosition}
+        size="medium"
+        onClick={handleClickOpen3}
+      >
+        <AddIcon />
+      </Fab>
+      <aside className="shadow" style={asideDiv}>
         <p>aside content1</p>
-        <p>aside2</p>
+        <MatchItemCreate />
 
         {/* 리더에게만 위임/추방 보여주기 */}
         {studyInfo.leaderId === userInfo.userId ? (
@@ -100,14 +125,12 @@ export default function Study() {
           <BtnChangeStudyInfo studyInfo={studyInfo} />
         ) : null}
         <BtnDelete studyId={studyId} />
+        {studyInfo.leaderId === userInfo.userId ? (
+          <StudyDelete studyId={studyId} />
+        ) : null}
       </aside>
       <section style={sectionDiv}>
-        <h1>스터디 이름 : {studyInfo.studyName}</h1>
-        <h1>{studyId}번 공간</h1>
-        <MatchItemCreate />
-        <button type="submit" onClick={handleClickOpen3}>
-          스터디 글 작성
-        </button>
+        <h1 style={{ marginLeft: '22vh' }}>{studyInfo.studyName}</h1>
         <StudyList studyId={studyId} refresh={refresh} />
         {open3 && <StudyItemCreate handleClickClose={handleClickClose3} />}
       </section>
