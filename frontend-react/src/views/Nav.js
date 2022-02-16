@@ -46,6 +46,9 @@ function nav() {
           <li>
             <Link to="/login">로그인</Link>
           </li>
+          <li>
+            <Link to="/info">주식정보</Link>
+          </li>
         </ul>
       )}
       {/* 로그인 상태일때 보이는 navbar */}
@@ -58,6 +61,9 @@ function nav() {
             </li>
             <li>
               <Link to="/match">매칭 게시판</Link>
+            </li>
+            <li>
+              <Link to="/info">주식정보</Link>
             </li>
             <li>
               <StudyCreateBtn />
