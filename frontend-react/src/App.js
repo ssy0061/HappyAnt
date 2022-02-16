@@ -10,6 +10,7 @@ import Study from './views/Study';
 import StudyList from './views/StudyList';
 import Main from './views/Main';
 import Alert from './websocket/Alert';
+import Info from './views/Info';
 import { onSilentRefresh } from './utils/Login';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/match" element={<Match />} />
         <Route path="/study/:studyId" element={<Study />} />
         <Route path="/studyList" element={<StudyList />} />
+        <Route path="/Info" element={<Info />} />
       </Routes>
       <Alert />
     </div>
