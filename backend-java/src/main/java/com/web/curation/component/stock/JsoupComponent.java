@@ -15,13 +15,74 @@ import org.springframework.stereotype.Component;
 
 import com.web.curation.dto.stock.GetNewsResponse;
 import com.web.curation.dto.stock.GetStockListResponse;
+import com.web.curation.dto.stock.GetStockMarket;
+import com.web.curation.dto.stock.GetStockMarketResponse;
 import com.web.curation.dto.stock.GetStockResponse;
 import com.web.curation.dto.stock.GetSubNewsResponse;
 
 @Component
 public class JsoupComponent {
 
+	public GetStockMarketResponse getTodayStockInfo() {
+		
+		String stock = "https://finance.naver.com/";
+		
+		Connection conn = Jsoup.connect(stock);
+		
+		try {
+			Document document = conn.get();
+			Elements element = document.select(".ly_realtime #time");
+			Elements kospiE = document.select(".kospi_area.group_quot.quot_opn");
+			Elements kosdaqE = document.select(".kosdaq_area.group_quot");
+			Elements kospi200E = document.select(".kospi200_area.group_quot");
+			
+			GetStockMarketResponse stockInfo = new GetStockMarketResponse();
+			GetStockMarket kospiInfo = new GetStockMarket();
+			GetStockMarket kosdaqInfo = new GetStockMarket();
+			GetStockMarket kospi200Info = new GetStockMarket();
+			
+			String time = element.text();
+			stockInfo.setTime(time);
+			
+			String name = kospiE.select(".heading_area .h_opn a em").text();
+			String price = kospiE.select(".num").text();
+			String variablePrice = kospiE.select(".num2").text();
+			String dayRange = kospiE.select(".num3").text();
+			String img = kospiE.select(".chart_area a img").attr("src");
+			
+			kospiInfo.setName(name);
+			kospiInfo.setPrice(price);
+			kospiInfo.setVariablePrice(variablePrice);
+			kospiInfo.setDayRange(dayRange);
+			kospiInfo.setImg(img);
+			
+			stockInfo.setKospi(kospiInfo);
+			
+			kosdaqInfo.setName(kosdaqE.select(".heading_area h4 a em").text());
+			kosdaqInfo.setPrice(kosdaqE.select(".num").text());
+			kosdaqInfo.setVariablePrice(kosdaqE.select(".num2").text());
+			kosdaqInfo.setDayRange(kosdaqE.select(".num3").text());
+			kosdaqInfo.setImg(kosdaqE.select(".chart_area a img").attr("src"));
+			
+			stockInfo.setKosdaq(kosdaqInfo);
+			
+			kospi200Info.setName(kospi200E.select(".heading_area h4 a em").text());
+			kospi200Info.setPrice(kospi200E.select(".num").text());
+			kospi200Info.setVariablePrice(kospi200E.select(".num2").text());
+			kospi200Info.setDayRange(kospi200E.select(".num3").text());
+			kospi200Info.setImg(kospi200E.select(".chart_area a img").attr("src"));
+			
+			stockInfo.setKospi200(kospi200Info);
 
+			return stockInfo;
+			
+		} catch (Exception ignored) {
+		}
+		
+		return null;
+		
+	}
+	
 	public GetStockResponse getStockInfo(String code) {
 		
 		String Stock = "https://finance.naver.com/item/main.naver?code=" +code;
@@ -60,16 +121,13 @@ public class JsoupComponent {
 		
 			Elements element2 = document.select(".sub_section.news_section ul li span.txt");
 			
-			List<GetSubNewsResponse> list = new ArrayList<>();
-			
+			List<GetSubNewsResponse> list = new ArrayList<>();			
 			
 			for(Element e : element2) {
 				GetSubNewsResponse subNews = new GetSubNewsResponse();
 				
 				String url = "https://finance.naver.com/" + e.select("a").get(0).attr("href");
-				System.out.println(url.toString());
 				String articleSummary = e.select("a").get(0).text();
-				System.out.println(articleSummary.toString());
 				
 				subNews.setUrl(url);
 				subNews.setArticleSummary(articleSummary);
