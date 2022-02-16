@@ -6,19 +6,15 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Select,
-  MenuItem,
-  InputLabel,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
+import ContentEditor from './ContentEditor';
 
 export default function MatchItemUpdate(props) {
   const { item, goDetail } = props;
 
   const [inputTitle, setInputTitle] = useState('');
   const [inputContent, setInputContent] = useState('');
-  const [inputCategory, setInputCategory] = useState('');
-  const [memberNum, setMemeberNum] = useState(2);
   const yourId = useSelector((state) => state.user.userInfo.userId);
 
   const handleInputTitle = (e) => {
@@ -27,25 +23,17 @@ export default function MatchItemUpdate(props) {
   const handleInputContent = (e) => {
     setInputContent(e.target.value);
   };
-  const handleMemberNum = (e) => {
-    setMemeberNum(e.target.value);
-  };
-  const handleInputCategory = (e) => {
-    setInputCategory(e.target.value);
-  };
 
   const clickSubmit = () => {
     console.log(item.articleId);
     console.log(yourId);
     axios
-      .put(`/match/${item.articleId}`, [], {
+      .put(`/api/match/${item.articleId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         params: {
-          headCount: memberNum,
           loginUserId: yourId,
-          category: inputCategory,
           title: inputTitle,
           content: inputContent,
         },
@@ -54,63 +42,38 @@ export default function MatchItemUpdate(props) {
       .catch((err) => console.log(err));
   };
 
+  // ------------------------------css--------------------------------
+  const DialogTitleDesign = {
+    backgroundColor: '#001E60',
+    textAlign: 'left',
+    color: 'white',
+    marginLeft: '1.5rem',
+    borderBottomLeftRadius: '1.5rem',
+    fontWeight: 'bold',
+  };
+
   return (
     <div>
-      <h1>update</h1>
-      <DialogTitle>글 수정 폼</DialogTitle>
+      <DialogTitle style={DialogTitleDesign}>
+        게시글을 수정해주세요.
+      </DialogTitle>
       <DialogContent>
-        <div>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="제목"
-            type="title"
-            fullWidth
-            defaultValue={item.title}
-            variant="standard"
-            onChange={handleInputTitle}
-          />
-        </div>
-        <div>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="카테고리"
-            type="text"
-            fullWidth
-            variant="outlined"
-            defaultValue={item.category}
-            multiline
-            onChange={handleInputCategory}
-          />
-        </div>
-        <div>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="내용"
-            type="text"
-            fullWidth
-            variant="outlined"
-            defaultValue={item.content}
-            multiline
-            rows={15}
-            onChange={handleInputContent}
-          />
-          <br />
-          <br />
-          <InputLabel>스터디원 수</InputLabel>
-          <Select value={memberNum} label="멤버수" onChange={handleMemberNum}>
-            <MenuItem value={2}>2명</MenuItem>
-            <MenuItem value={3}>3명</MenuItem>
-            <MenuItem value={4}>4명</MenuItem>
-            <MenuItem value={5}>5명</MenuItem>
-            <MenuItem value={6}>6명</MenuItem>
-          </Select>
-        </div>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="name"
+          label="제목"
+          type="title"
+          fullWidth
+          defaultValue={item.title}
+          variant="standard"
+          onChange={handleInputTitle}
+        />
+        <ContentEditor
+          setText={handleInputContent}
+          initialValue={item.content}
+        />
         <DialogActions>
-          <Button onClick={goDetail}>◀이전</Button>
           <Button onClick={clickSubmit}>완료✔</Button>
         </DialogActions>
       </DialogContent>

@@ -58,7 +58,7 @@ export default function FindPassword(props) {
       alert('email을 입력해주세요');
     } else {
       axios
-        .get(`account/search?email=${email}`)
+        .get(`/api/account/search?email=${email}`)
         // .get(`/account/{id}?email=${email}`)
         .then((res) => {
           if (res.data !== 'none') {
@@ -82,7 +82,7 @@ export default function FindPassword(props) {
     };
     console.log(body);
     axios
-      .post('/account/find_pw', body)
+      .post('/api/account/find_pw', body)
       .then((res) => {
         if (res.data === 'Success') {
           console.log(res);
@@ -111,7 +111,7 @@ export default function FindPassword(props) {
       // test용
       console.log(body);
       axios
-        .post('/account/find_pw/success', body)
+        .post('/api/account/find_pw/success', body)
         .then((res) => {
           // 비번 변경 성공 메시지
           alert('비밀번호 변경이 완료되었습니다! 다시 로그인해주세요!');

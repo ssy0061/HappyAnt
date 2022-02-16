@@ -36,7 +36,7 @@ export default function BtnChangeStudyInfo(props) {
   const onClickChange = () => {
     axios
       .put(
-        `/study/${studyInfo.studyId}?interest=${interest}&loginUserId=${userId}&name=${name}`,
+        `/api/study/${studyInfo.studyId}?interest=${interest}&loginUserId=${userId}&name=${name}`,
         [],
         {
           headers: {

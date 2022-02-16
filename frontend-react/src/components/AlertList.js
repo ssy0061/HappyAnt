@@ -12,7 +12,7 @@ export default function AlertList() {
 
   const getAlert = () => {
     axios
-      .get(`/alert/${yourId}`, {
+      .get(`/api/alert/${yourId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -34,16 +34,17 @@ export default function AlertList() {
     setOpen(false);
   };
 
+  // 링크 연결중 (시간되면 article 바로 띄워주는걸로)
   const getLink = (item) => {
-    switch (item.alertType) {
+    switch (item.type) {
       case 'MATCH':
-        return '/match';
+        return `/study/${item.studyId}`;
       case 'INVITE':
         return '링크';
       case 'ARTICLE':
         return `/study/${item.studyId}`;
       case 'COMMENT':
-        return '링크';
+        return `/study/${item.studyId}`;
       default:
         return '/';
     }
@@ -58,6 +59,34 @@ export default function AlertList() {
     }
     return `${cnt} notifications`;
   }
+
+  const studyAccept = (studyId) => {
+    axios
+      .post(`/api/study/${studyId}/member/${yourId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then();
+  };
+
+  const studyReject = () => {
+    axios.post(`/api/`);
+  };
+
+  const deleteAlert = (alertId) => {
+    axios
+      .delete(`/api/alert/${yourId}/${alertId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then(() => {
+        getAlert();
+        alert('수락되었어요!');
+      })
+      .catch(alert('요청에 실패하였습니다.'));
+  };
 
   // ---------------------------css----------------------------------
   const ItemDesign = {
@@ -95,10 +124,35 @@ export default function AlertList() {
           <div style={styles}>
             {alertList.length >= 1 ? (
               alertList.map((item) => (
-                <div key={`alertItem${item.articleId}`}>
+                <div key={`alertItem${item.alertId}`}>
                   <a style={ItemDesign} href={getLink(item)}>
                     {item.message}
                   </a>
+                  <button
+                    key={`delete${item.alertId}`}
+                    onClick={deleteAlert}
+                    type="submit"
+                  >
+                    삭제
+                  </button>
+                  {item.type === 'INVITE' && (
+                    <div>
+                      <button
+                        key={`accept${item.alertId}`}
+                        onClick={() => studyAccept(item.studyId)}
+                        type="submit"
+                      >
+                        수락
+                      </button>
+                      <button
+                        key={`reject${item.alertId}`}
+                        onClick={() => studyReject(item.studyId)}
+                        type="submit"
+                      >
+                        거부
+                      </button>
+                    </div>
+                  )}
                   <hr />
                 </div>
               ))

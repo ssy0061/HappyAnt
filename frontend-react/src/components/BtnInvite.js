@@ -43,7 +43,7 @@ export default function BtnInvite(props) {
     };
     axios
       .post(
-        `/match?loginUserId=${Info.userId}&studyId=${studyInfo.studyId}`,
+        `/api/match?loginUserId=${Info.userId}&studyId=${studyInfo.studyId}`,
         data,
         {
           headers: {

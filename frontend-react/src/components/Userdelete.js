@@ -8,14 +8,15 @@ function Userdelete() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.userInfo);
-  const onClick = () => {
+  const onClick = (e) => {
+    e.preventDefault();
     if (window.confirm('회원 탈퇴를 하시겠습니까?')) {
       // 여기서 삭제
       console.log(user);
       console.log('유저유저');
       axios({
         method: 'delete',
-        url: `/account/${user.userId}`,
+        url: `/api/account/${user.userId}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -37,9 +38,9 @@ function Userdelete() {
 
   return (
     <div>
-      <button type="button" onClick={onClick}>
+      <a href="/" onClick={onClick}>
         회원 탈퇴
-      </button>
+      </a>
     </div>
   );
 }

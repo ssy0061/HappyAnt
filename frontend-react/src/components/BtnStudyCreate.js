@@ -32,7 +32,7 @@ export default function MatchItemCreate(props) {
       console.log('내용을 기입해주세요.');
     } else {
       axios
-        .post(`/study?loginUserId=${userId}`, data, {
+        .post(`/api/study?loginUserId=${userId}`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },

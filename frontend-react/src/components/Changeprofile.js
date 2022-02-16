@@ -29,7 +29,7 @@ function Changeprofile() {
     } else {
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/accounts/signup',
+        url: '/api/accounts/signup',
         data: {
           password: pwd,
         },

@@ -6,11 +6,11 @@ export default function MatchItemDetail(props) {
   console.log(item);
   return (
     <div>
-      <h1>제목 : {item.title}</h1>
-      <h1>스터디이름 : {item.studyName}</h1>
+      <h1>{item.title}</h1>
+      <h3>{item.studyName}</h3>
+      {item.state ? <span>마감</span> : <span>모집중</span>}
       <p>관심분야 : {item.studyInterest}</p>
       <ContentViewer initialValue={item.content} />
-      {item.state ? <p>상태 : 마감</p> : <p>상태 : 모집중</p>}
     </div>
   );
 }
