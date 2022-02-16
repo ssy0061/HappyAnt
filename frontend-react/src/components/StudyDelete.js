@@ -19,8 +19,8 @@ const style = {
   p: 4,
 };
 
-export default function BtnDelete(props) {
-  const Info = useSelector((state) => state.user.userInfo);
+export default function StudyDelete(props) {
+  const yourId = useSelector((state) => state.user.userInfo.userId);
   const { studyId } = props;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -32,24 +32,24 @@ export default function BtnDelete(props) {
     e.preventDefault();
     console.log('onclick');
     axios
-      .delete(
-        `/api/study/${studyId}/member/${Info.userId}?loginUserId=${Info.userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-        }
-      )
+      .delete(`/api/study/${studyId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        params: {
+          loginUserId: yourId,
+        },
+      })
       .then((res) => {
         console.log(res, '탈퇴');
         navigate('/profile');
       })
-      .catch((err) => console.log(err, '탈퇴 error'));
+      .catch(alert('멤버가 있는 상태에선 폐쇄할 수 없어요.'));
   };
 
   return (
     <div>
-      <Button onClick={handleOpen}>탈퇴하기</Button>
+      <Button onClick={handleOpen}>폐쇄하기</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -58,12 +58,11 @@ export default function BtnDelete(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <p>탈퇴 시 재가입이 불가능합니다.</p>
-            <p>탈퇴하시겠습니까?</p>
+            <p>스터디를 정말 폐쇄하시겠어요?</p>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <button type="submit" onClick={onDelete}>
-              탈퇴
+              폐쇄
             </button>
             <button type="submit" onClick={handleClose}>
               취소

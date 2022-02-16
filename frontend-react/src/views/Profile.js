@@ -1,18 +1,24 @@
 import axios from 'axios';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../redux/userSlice';
-import BtnStudyCreate from '../components/BtnStudyCreate';
+import UserDelete from '../components/Userdelete';
+import '../css/Profile.css';
 
 function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLogin = useSelector((state) => state.user.isLogin);
+  useEffect(() => {
+    if (!isLogin) {
+      navigate('/login');
+      alert('로그인 후 이용해주세요.');
+    }
+  }, []);
 
   // study 생성하기
-  const [open, setOpen] = useState(false);
-  const [refresh, setRefresh] = useState(false);
 
   // 로그인 확인
   const loginPage = useSelector((state) => state.user.isLogin);
@@ -36,16 +42,6 @@ function Profile() {
     renewal();
   }, []);
 
-  // 스터디 생성하기
-  const handleClickCreateOpen = () => {
-    setOpen(true);
-  };
-  const handleClickCreateClose = () => {
-    setOpen(false);
-    setRefresh(!refresh);
-  };
-
-  console.log('profile페이지');
   console.log(Info, '유저 정보');
   const study = Info.joinStudy;
   console.log(study, '스터디');
@@ -77,18 +73,27 @@ function Profile() {
   };
 
   return (
-    <div>
-      <div style={{ height: '15vh' }} />
+    <div className="back">
+      <div style={{ height: '145px' }} />
       {loginPage && (
-        <div>
-          <h1>{Info.userName}님의 프로필입니다</h1>
-          <button type="submit" onClick={handleClickCreateOpen}>
-            스터디 생성하기
-          </button>
-          {open && <BtnStudyCreate handleClickClose={handleClickCreateClose} />}
-          <hr />
-          <h3>스터디 목록</h3>
-          {studyList()}
+        <div className="main">
+          {/* 왼쪽 공간 */}
+          <div className="profile">
+            <h1>{Info.userName}님의 프로필</h1>
+          </div>
+          {/* 오른쪽 공간 */}
+          <div className="right">
+            {/* 오른 위 */}
+            <div className="first">
+              <h3>스터디 목록</h3>
+              {studyList()}
+            </div>
+            {/* 오른 아래 */}
+            <div className="second">
+              <h3>공간3</h3>
+              <UserDelete />
+            </div>
+          </div>
         </div>
       )}
       {!loginPage && (

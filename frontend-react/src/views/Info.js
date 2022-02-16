@@ -22,6 +22,7 @@ function Info() {
     <div>
       <div
         style={{
+          marginTop: '105px',
           display: 'flex',
           flexDirection: 'column',
         }}

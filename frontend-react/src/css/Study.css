@@ -1,0 +1,10 @@
+.back {
+  background-color: rgb(87, 78, 78);
+  height: 100%;
+  width: 100vw;
+}
+
+.shadow {
+  box-shadow: 0 5px 10px rgb(177, 177, 177);
+  border-radius: 0.25rem;
+}

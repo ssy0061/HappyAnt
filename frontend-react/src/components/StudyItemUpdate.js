@@ -34,7 +34,8 @@ export default function StudyItemUpdate({ articleId, refresh }) {
     setContent(val);
   };
 
-  const modalOpen = () => {
+  const modalOpen = (e) => {
+    e.preventDefault();
     axios
       .get(`/api/study/${studyId}/${articleId}`, {
         headers: {
@@ -91,13 +92,9 @@ export default function StudyItemUpdate({ articleId, refresh }) {
 
   return (
     <div>
-      <button
-        key={`updateButton${articleId}`}
-        type="submit"
-        onClick={modalOpen}
-      >
+      <a key={`updateButton${articleId}`} href="/" onClick={modalOpen}>
         수정
-      </button>
+      </a>
       <Dialog open={modalState} fullWidth maxWidth="md">
         <DialogTitle style={DialogTitleDesign}>
           게시글을 수정해주세요.

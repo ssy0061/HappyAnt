@@ -151,13 +151,15 @@ function StudyList(props) {
         {filterList.map((item) => (
           <div className="studyDiv" key={item.articleId}>
             <div>
-              <h1>{item.title}</h1>
+              <h1 style={{ marginBottom: '7px' }}>{item.title}</h1>
+              <div className="underTitle">
+                <span className="name">{item.writerName}</span>
+                <p className="date">{`${item.createDate.slice(
+                  0,
+                  10
+                )} ${item.createDate.slice(11)}`}</p>
+              </div>
               <ContentViewer initialValue={item.content} />
-
-              <p>{item.writerName}</p>
-              <p>{`${item.createDate.slice(0, 10)} ${item.createDate.slice(
-                11
-              )}`}</p>
             </div>
             {yourId === item.writerId && (
               <div className="cmt">
@@ -174,7 +176,6 @@ function StudyList(props) {
             <div>
               <hr />
               <StudyCommentList articleId={item.articleId} />
-              <hr />
             </div>
           </div>
         ))}

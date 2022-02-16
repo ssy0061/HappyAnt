@@ -25,27 +25,31 @@ export default function StudyCreateBtn() {
   };
 
   const clickSubmitBtn = () => {
-    const body = {
-      interest,
-      name,
-    };
-    axios
-      .post('/api/study', body, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        params: {
-          loginUserId: yourId,
-        },
-      })
-      .then(() => {
-        alert(`${name}이 만들어졌어요.`);
-        setOpen(false);
-      })
-      .catch(() => {
-        alert(`${name}(이)가 만들어지지 않았어요`);
-        setOpen(false);
-      });
+    if (name === '') {
+      alert('스터디 이름을 입력해주세요');
+    } else {
+      const body = {
+        interest,
+        name,
+      };
+      axios
+        .post('/api/study', body, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            loginUserId: yourId,
+          },
+        })
+        .then(() => {
+          alert(`${name}이 만들어졌어요.`);
+          setOpen(false);
+        })
+        .catch(() => {
+          alert(`${name}(이)가 만들어지지 않았어요`);
+          setOpen(false);
+        });
+    }
   };
 
   // -------------------------------- css------------------------------
@@ -76,7 +80,7 @@ export default function StudyCreateBtn() {
   return (
     <div>
       <Button
-        style={{ marginTop: '10px' }}
+        style={{ marginTop: '10px', marginBottom: '10px' }}
         variant="contained"
         onClick={() => setOpen(true)}
         size="small"

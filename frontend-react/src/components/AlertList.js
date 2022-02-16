@@ -40,13 +40,13 @@ export default function AlertList() {
       case 'MATCH':
         return `/study/${item.studyId}`;
       case 'INVITE':
-        return '링크';
+        return '/profile';
       case 'ARTICLE':
         return `/study/${item.studyId}`;
       case 'COMMENT':
         return `/study/${item.studyId}`;
       default:
-        return '/';
+        return '/profile';
     }
   };
 
@@ -60,20 +60,6 @@ export default function AlertList() {
     return `${cnt} notifications`;
   }
 
-  const studyAccept = (studyId) => {
-    axios
-      .post(`/api/study/${studyId}/member/${yourId}`, [], {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then();
-  };
-
-  const studyReject = () => {
-    axios.post(`/api/`);
-  };
-
   const deleteAlert = (alertId) => {
     axios
       .delete(`/api/alert/${yourId}/${alertId}`, {
@@ -83,9 +69,25 @@ export default function AlertList() {
       })
       .then(() => {
         getAlert();
-        alert('수락되었어요!');
       })
-      .catch(alert('요청에 실패하였습니다.'));
+      .catch((err) => console.log(err));
+  };
+
+  const studyAccept = (studyId) => {
+    axios
+      .post(`/api/study/${studyId}/member/${yourId}`, [], {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then(() => {
+        deleteAlert(studyId);
+        alert('스터디에 가입되었어요!');
+      });
+  };
+
+  const studyReject = () => {
+    axios.post(`/api/`);
   };
 
   // ---------------------------css----------------------------------
@@ -95,14 +97,14 @@ export default function AlertList() {
 
   const styles = {
     position: 'absolute',
-    top: 28,
-    right: 0,
-    left: 0,
+    top: '90px',
+    right: '15px',
     zIndex: 1,
-    border: '1px solid',
+    border: '1px solid #010101',
     p: 1,
     backgroundColor: 'white',
     width: '400px',
+    borderRadius: '5px',
   };
 
   return (
@@ -130,11 +132,12 @@ export default function AlertList() {
                   </a>
                   <button
                     key={`delete${item.alertId}`}
-                    onClick={deleteAlert}
+                    onClick={() => deleteAlert(item.alertId)}
                     type="submit"
                   >
                     삭제
                   </button>
+                  {/* 초대 알람이면 [수락 / 거부] 버튼 표시 */}
                   {item.type === 'INVITE' && (
                     <div>
                       <button
