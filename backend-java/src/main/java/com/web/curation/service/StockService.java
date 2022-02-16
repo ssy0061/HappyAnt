@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.component.stock.JsoupComponent;
+import com.web.curation.dto.stock.GetNewsResponse;
 import com.web.curation.dto.stock.GetStockListResponse;
 import com.web.curation.dto.stock.GetStockResponse;
 import com.web.curation.model.stock.Stock;
@@ -62,6 +63,10 @@ private final StockRepo stockRepo;
 	  
 	public GetStockResponse getStock(String code) {
 		return jsoupComponent.getStockInfo(code);
+	}
+	
+	public List<GetNewsResponse> getNewsInfo(){
+		return jsoupComponent.getNewsInfo();
 	}
 
 
