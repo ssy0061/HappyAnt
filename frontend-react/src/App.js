@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Join from './views/Join';
@@ -11,8 +11,13 @@ import StudyList from './views/StudyList';
 import Main from './views/Main';
 import Alert from './websocket/Alert';
 import Info from './views/Info';
+import { onSilentRefresh } from './utils/Login';
 
 function App() {
+  useEffect(() => {
+    onSilentRefresh();
+  }, []);
+
   return (
     <div>
       <Nav />
