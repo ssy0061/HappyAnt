@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.dto.stock.GetNewsResponse;
 import com.web.curation.dto.stock.GetStockListResponse;
+import com.web.curation.dto.stock.GetStockMarketResponse;
 import com.web.curation.dto.stock.GetStockResponse;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.stock.Stock;
@@ -38,6 +39,12 @@ import lombok.RequiredArgsConstructor;
 public class StockController {
 
 	private final StockService stockService;
+	
+	@GetMapping("/today/stock")
+	@ApiOperation(value = "오늘의 증시 정보 조회")
+	public ResponseEntity<GetStockMarketResponse> getTodayKospiInfo(){
+		return new ResponseEntity<GetStockMarketResponse> (stockService.getTodayStockInfo(), HttpStatus.OK);
+	}
 	
 	@GetMapping("/news")
 	@ApiOperation(value = "뉴스 정보 조회(https://finance.naver.com/news/mainnews.naver)")
