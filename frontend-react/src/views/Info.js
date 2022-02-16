@@ -20,8 +20,15 @@ function Info() {
   };
   return (
     <div>
-      <InfoSearch getData={getData} />
-      <InfoDetail detailData={code} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <InfoSearch getData={getData} />
+        <InfoDetail detailData={code} />
+      </div>
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
         <InfoKospiKosdaq Infoname="kospi" ontr={handletr} />
         <InfoKospiKosdaq Infoname="kosdaq" ontr={handletr} />

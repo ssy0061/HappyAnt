@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 
 function InfoSearch({ getData }) {
   const [allData, setAllData] = useState([]);
@@ -38,17 +39,23 @@ function InfoSearch({ getData }) {
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex' }}>
+    <div style={{ margin: 'auto' }}>
+      <div className="div">
         <input
+          className="input"
           onKeyPress={handleSearch}
           onChange={saveSearch}
           list="depList"
           type="text"
           autoComplete="off"
         />
-        <button onClick={findSearch} value={searchValue} type="button">
-          검색
+        <button
+          className="button"
+          onClick={findSearch}
+          value={searchValue}
+          type="button"
+        >
+          <SearchIcon style={{ cursor: 'pointer' }} />
         </button>
       </div>
       <datalist onChange={handleSearch} id="depList">

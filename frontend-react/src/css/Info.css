@@ -22,3 +22,8 @@
 .InfoPlus {
   color: red;
 }
+
+.InfoBack {
+  background-color: #eeeeee;
+  border-radius: 10px;
+}
