@@ -8,7 +8,7 @@ export default function StudyItemDelete({ articleId, refresh }) {
   const yourId = useSelector((state) => state.user.userInfo.userId);
   const deleteArticle = () => {
     axios
-      .delete(`/study/${studyId}/${articleId}`, {
+      .delete(`/api/study/${studyId}/${articleId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

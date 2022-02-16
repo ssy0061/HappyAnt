@@ -40,12 +40,13 @@ export default function MatchItemCreate() {
       title,
       content,
     };
-    console.log(localStorage.getItem('accessToken'));
-    if (title === '' || content === '') {
+    if (title === '') {
+      alert('제목을 기입해주세요.');
+    } else if (content === '') {
       alert('내용을 기입해주세요.');
     } else {
       axios
-        .post('/match', data, {
+        .post('/api/match', data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },

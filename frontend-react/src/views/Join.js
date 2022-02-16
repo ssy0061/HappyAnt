@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 import {
   Modal,
@@ -22,11 +23,13 @@ import {
   FormControl,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Google from '../components/Google';
 import Kakao from '../components/Kakao';
 
 import Guideline from '../components/Guideline';
 import { login } from '../redux/userSlice';
+import { onLoginSuccess } from '../utils/Login';
 
 const theme = createTheme();
 function Join() {
@@ -39,6 +42,8 @@ function Join() {
   const [hint, setHint] = useState('');
   const [hintAnswer, setHintAnswer] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   // 가입하기 버튼 눌렀을때
   const onSubmit = (event) => {
@@ -50,7 +55,7 @@ function Join() {
     } else {
       axios({
         method: 'post',
-        url: '/account/signup',
+        url: '/api/account/signup',
         data: {
           answer: hintAnswer,
           email,
@@ -70,20 +75,23 @@ function Join() {
           // 로그인
           axios({
             method: 'post',
-            url: '/account/login',
+            url: '/api/account/login',
             data: params,
           })
             .then((ress) => {
-              console.log(ress);
-              dispatch(login(ress.data));
-              localStorage.setItem('accessToken', ress.data.accessToken);
+              onLoginSuccess(ress);
               localStorage.setItem('refreshToken', ress.data.refreshToken);
+              console.log(ress);
               axios
-                .get(`/account/{id}?email=${email}`, {
+                .get(`/api/account/{id}?email=${email}`, {
                   headers: { Authorization: `Bearer ${ress.data.accessToken}` },
                 })
                 .then((res) => {
                   dispatch(login(res.data));
+                  enqueueSnackbar(`${response.data.userName}님 안녕하세요!`, {
+                    variant: `success`,
+                  });
+                  navigate('/profile');
                 });
             })
             .catch((err) => {

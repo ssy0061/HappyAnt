@@ -11,20 +11,16 @@ export default function StudyCommentCreate({ articleId, reRender }) {
   const handleContent = (e) => setIntputContent(e.target.value);
   const submitContent = (e) => {
     if (e.key === 'Enter' && inputContent !== '') {
-      console.log('보냄');
       axios
-        .post(
-          `/study/${studyId}/${articleId}`,
-          {
+        .post(`/api/study/${studyId}/${articleId}`, [], {
+          params: {
             content: inputContent,
-            writerId: yourId,
+            loginUserId: yourId,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-          }
-        )
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        })
         .then((res) => {
           console.log(res);
           reRender();

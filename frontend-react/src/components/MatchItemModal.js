@@ -20,7 +20,7 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
   const getItem = () => {
     axios
-      .get(`/match/${pk}`, {
+      .get(`/api/match/${pk}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -43,22 +43,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
     setMode(1);
     // item을 다시 가져옴
   };
+  // 마감
   const setStateTrue = () => {
     axios
-      .put(`/match/${item.articleId}?state=${true}&loginUserId=${yourId}`, [], {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then(() => {
-        getItem();
-      })
-      .catch((err) => console.log(err));
-  };
-  const setStateFalse = () => {
-    axios
       .put(
-        `/match/${item.articleId}?state=${false}&loginUserId=${yourId}`,
+        `/api/match/${item.articleId}?state=${true}&loginUserId=${yourId}`,
         [],
         {
           headers: {
@@ -71,8 +60,26 @@ export default function MatchItemModal({ pk, handleClickClose }) {
       })
       .catch((err) => console.log(err));
   };
+  // 모집
+  const setStateFalse = () => {
+    axios
+      .put(
+        `/api/match/${item.articleId}?state=${false}&loginUserId=${yourId}`,
+        [],
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then(() => {
+        getItem();
+      })
+      .catch((err) => console.log(err));
+  };
+  // 삭제
   const deleteItem = () => {
-    axios.delete(`/match/${item.articleId}`, {
+    axios.delete(`/api/match/${item.articleId}`, {
       params: { loginUserId: yourId },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -81,14 +88,16 @@ export default function MatchItemModal({ pk, handleClickClose }) {
     handleClickClose();
   };
 
+  // ---------------------------css-------------------------------
+  const tempStyle = {
+    position: 'fixed',
+    right: '20px',
+    bottom: '20px',
+  };
+
   return (
     <div>
-      <Dialog
-        fullWidth
-        maxWidth="md"
-        open
-        aria-describedby="alert-dialog-slide-description"
-      >
+      <Dialog fullWidth maxWidth="md" open>
         {mode === 1 && (
           <div>
             <MatchItemDetail item={item} />
@@ -99,9 +108,11 @@ export default function MatchItemModal({ pk, handleClickClose }) {
         )}
         {mode === 2 && <MatchItemUpdate item={item} goDetail={goDetail} />}
         <DialogActions>
+          {/* ---------------------------작성자아닐때 버튼(신청버튼)--------------------------- */}
           {item.writerId !== yourId && mode === 1 && (
             <BtnAppli item={item} yourId={yourId} />
           )}
+          {/* ---------------------------작성자일 때 보여지는 버튼--------------------------- */}
           {item.writerId === yourId && mode === 1 && (
             <div>
               {item.state === true && (
@@ -114,8 +125,16 @@ export default function MatchItemModal({ pk, handleClickClose }) {
               <Button onClick={deleteItem}>삭제</Button>
             </div>
           )}
+          {mode === 2 && (
+            <div>
+              <Button onClick={goDetail}>이전</Button>
+            </div>
+          )}
           <Button onClick={handleClickClose}>닫기</Button>
         </DialogActions>
+        <button type="submit" style={tempStyle}>
+          aa
+        </button>
       </Dialog>
     </div>
   );

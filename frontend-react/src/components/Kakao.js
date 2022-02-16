@@ -30,7 +30,7 @@ function KakaoLogin() {
             // 회원가입
             axios({
               method: 'post',
-              url: '/account/signup',
+              url: '/api/account/signup',
               data: {
                 email: response.kakao_account.email,
                 name: response.kakao_account.profile.nickname,
@@ -46,7 +46,7 @@ function KakaoLogin() {
 
                 axios({
                   method: 'post',
-                  url: '/account/login',
+                  url: '/api/account/login',
                   data: params,
                 })
                   .then((ress) => {
@@ -60,7 +60,7 @@ function KakaoLogin() {
 
                     axios({
                       method: 'get',
-                      url: `/account/{id}?email=${response.kakao_account.email}`,
+                      url: `/api/account/{id}?email=${response.kakao_account.email}`,
                       headers: {
                         Authorization: `Bearer ${ress.data.accessToken}`,
                       },
@@ -82,7 +82,7 @@ function KakaoLogin() {
 
                 axios({
                   method: 'post',
-                  url: '/account/login',
+                  url: '/api/account/login',
                   data: params,
                 })
                   .then((ress) => {
@@ -97,7 +97,7 @@ function KakaoLogin() {
 
                     axios({
                       method: 'get',
-                      url: `/account/{id}?email=${response.kakao_account.email}`,
+                      url: `/api/account/{id}?email=${response.kakao_account.email}`,
                       headers: {
                         Authorization: `Bearer ${ress.data.accessToken}`,
                       },

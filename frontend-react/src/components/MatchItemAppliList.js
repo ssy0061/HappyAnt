@@ -12,7 +12,7 @@ export default function MatchingAppliList(props) {
   // 신청자 정보 받아오기
   const getApplilist = () => {
     axios
-      .get(`match/join/${pk}`, {
+      .get(`/api/match/join/${pk}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -41,6 +41,7 @@ export default function MatchingAppliList(props) {
                   pk={pk}
                   content={applilist[i].content}
                   userId={applilist[i].userId}
+                  refresh={getApplilist}
                 />
               </span>
             </div>

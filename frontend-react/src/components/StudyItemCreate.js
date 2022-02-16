@@ -35,11 +35,13 @@ export default function StudyItemCreate(props) {
       content,
     };
 
-    if (title === '' || content === '') {
-      console.log('제목과 내용을 입력해주세요!');
+    if (title === '') {
+      alert('제목을 입력해주세요.');
+    } else if (content === '') {
+      alert('내용을 입력해주세요.');
     } else {
       axios
-        .post(`/study/${studyId}`, body, {
+        .post(`/api/study/${studyId}`, body, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },

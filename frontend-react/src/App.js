@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import Join from './views/Join';
 import Login from './views/Login';
@@ -11,10 +12,23 @@ import StudyList from './views/StudyList';
 import Main from './views/Main';
 import Alert from './websocket/Alert';
 import { onSilentRefresh } from './utils/Login';
+import { logout } from './redux/userSlice';
 
 function App() {
+  // 로그인 만료시간
+  const LOGIN_EXPIRE_TIME = 10 * 60 * 1000;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLogin = useSelector((state) => state.user.isLogin);
+  const loginTime = useSelector((state) => state.user.loginTime);
+
   useEffect(() => {
-    onSilentRefresh();
+    const now = new Date().getTime();
+    if (isLogin && now - loginTime >= LOGIN_EXPIRE_TIME) {
+      dispatch(logout());
+      navigate('/login');
+    }
+    if (isLogin && now - loginTime <= LOGIN_EXPIRE_TIME) onSilentRefresh();
   }, []);
 
   return (

@@ -9,15 +9,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListItemIcon,
-  Checkbox,
-  IconButton,
 } from '@mui/material';
-import CommentIcon from '@mui/icons-material/Comment';
 import ContentEditor from './ContentEditor';
 
 export default function StudyItemUpdate({ articleId, refresh }) {
@@ -28,10 +20,6 @@ export default function StudyItemUpdate({ articleId, refresh }) {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [종목기본정보, setBasicInfo] = useState('');
-  const [투자아이디어, setIdea] = useState('');
-  const [주요제품_서비스, setService] = useState('');
-  const [경쟁사, setcompetition] = useState('');
 
   const [item, setItem] = useState('');
 
@@ -42,15 +30,13 @@ export default function StudyItemUpdate({ articleId, refresh }) {
     else didMount.current = true;
   }, [item]);
 
-  const [itemChecked, setItemChecked] = useState([false, false, false, false]);
-
   const setText = (val) => {
     setContent(val);
   };
 
   const modalOpen = () => {
     axios
-      .get(`/study/${studyId}/${articleId}`, {
+      .get(`/api/study/${studyId}/${articleId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -67,38 +53,6 @@ export default function StudyItemUpdate({ articleId, refresh }) {
   const handleTitle = (e) => {
     setTitle(e.target.value);
   };
-  const handleBasicInfo = (e) => {
-    setBasicInfo(e.target.value);
-  };
-  const handleIdea = (e) => {
-    setIdea(e.target.value);
-  };
-  const handleService = (e) => {
-    setService(e.target.value);
-  };
-  const handleCompetition = (e) => {
-    setcompetition(e.target.value);
-  };
-  const handleToggle = (value) => () => {
-    const newChecked = [...itemChecked];
-    newChecked[value] = !itemChecked[value];
-    setItemChecked(newChecked);
-  };
-
-  // input form 양식
-  const itemLabel = [
-    '종목 기본정보',
-    '투자 아이디어',
-    '주요제품/서비스',
-    '경쟁사',
-  ];
-  const itemRows = [3, 2, 2, 2];
-  const itemInput = [
-    handleBasicInfo,
-    handleIdea,
-    handleService,
-    handleCompetition,
-  ];
 
   // 작성 버튼 클릭
   const updateArticle = () => {
@@ -106,15 +60,10 @@ export default function StudyItemUpdate({ articleId, refresh }) {
       title,
       content,
       loginUserId: yourId,
-      // 종목기본정보,
-      // 투자아이디어,
-      // 주요제품_서비스,
-      // 경쟁사,
     };
-    console.log(종목기본정보, 투자아이디어, 주요제품_서비스, 경쟁사);
 
     axios
-      .put(`/study/${studyId}/${articleId}`, [], {
+      .put(`/api/study/${studyId}/${articleId}`, [], {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -166,65 +115,6 @@ export default function StudyItemUpdate({ articleId, refresh }) {
             onChange={handleTitle}
           />
           <ContentEditor setText={setText} initialValue={item.content} />
-
-          {/* ------------------체크박스------------------ */}
-          <List
-            sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}
-          >
-            {[0, 1, 2, 3].map((value) => {
-              const labelId = `checkbox-list-label-${value}`;
-
-              return (
-                <ListItem
-                  key={value}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="comments">
-                      <CommentIcon />
-                    </IconButton>
-                  }
-                  disablePadding
-                >
-                  <ListItemButton
-                    role={undefined}
-                    onClick={handleToggle(value)}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={itemChecked[value]}
-                        disableRipple
-                        inputProps={{ 'aria-labelledby': labelId }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      id={labelId}
-                      primary={`${itemLabel[value]}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-
-          {/* -------체크박스 상태에 따라 보여지는 인풋 form------- */}
-          {[0, 1, 2, 3].map(
-            (index) =>
-              itemChecked[index] && (
-                <TextField
-                  // autoFocus
-                  key={index}
-                  margin="dense"
-                  label={itemLabel[index]}
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                  multiline
-                  rows={itemRows[index]}
-                  onChange={itemInput[index]}
-                />
-              )
-          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={updateArticle}>완료</Button>

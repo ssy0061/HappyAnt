@@ -32,7 +32,7 @@ export default function BtnEntrust(props) {
   // 해당 스터디의 멤버 조회
   const member = () => {
     axios
-      .get(`/study/${studyId}/member`, {
+      .get(`/api/study/${studyId}/member`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -59,7 +59,7 @@ export default function BtnEntrust(props) {
     console.log('entrust');
     axios
       .post(
-        `/study/${studyId}/member/${selected}/leader?loginUserId=${Info.userId}`,
+        `/api/study/${studyId}/member/${selected}/leader?loginUserId=${Info.userId}`,
         [],
         {
           headers: {
@@ -82,7 +82,7 @@ export default function BtnEntrust(props) {
     console.log('onclick');
     axios
       .delete(
-        `/study/${studyId}/member/${selected}?loginUserId=${Info.userId}`,
+        `/api/study/${studyId}/member/${selected}?loginUserId=${Info.userId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

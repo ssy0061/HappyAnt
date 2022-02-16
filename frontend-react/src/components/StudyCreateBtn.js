@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Button,
 } from '@mui/material';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import axios from 'axios';
@@ -29,7 +30,7 @@ export default function StudyCreateBtn() {
       name,
     };
     axios
-      .post('/study', body, {
+      .post('/api/study', body, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -74,9 +75,14 @@ export default function StudyCreateBtn() {
 
   return (
     <div>
-      <button type="submit" onClick={() => setOpen(true)}>
-        스터디 생성하기
-      </button>
+      <Button
+        style={{ marginTop: '10px' }}
+        variant="contained"
+        onClick={() => setOpen(true)}
+        size="small"
+      >
+        스터디 생성
+      </Button>
       <Dialog open={open}>
         <DialogTitle style={DialogTitleDesign}>
           <LocalLibraryIcon sx={{ fontSize: 25 }} style={DialogTitleIcon} />
