@@ -133,7 +133,7 @@ export default function Login() {
     position: 'absolute',
     left: '100px',
     top: '250px',
-    // color: 'white',
+    color: 'white',
     width: '800px',
     height: '500px',
     backgroundImage: `url(${backgroundImg})`,
