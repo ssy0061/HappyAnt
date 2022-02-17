@@ -80,7 +80,6 @@ export default function Study() {
 
   const sectionDiv = {
     width: '75%',
-    // backgroundColor: 'green',
     float: 'left',
     margin: '.5rem',
     marginRight: '2rem',

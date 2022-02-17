@@ -44,7 +44,10 @@ export default function StudyDelete(props) {
         console.log(res, '탈퇴');
         navigate('/profile');
       })
-      .catch(alert('멤버가 있는 상태에선 폐쇄할 수 없어요.'));
+      .catch((err) => {
+        alert('멤버가 있는 상태에선 폐쇄할 수 없어요.');
+        console.log(err);
+      });
   };
 
   return (
