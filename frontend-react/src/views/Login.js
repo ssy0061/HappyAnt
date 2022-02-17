@@ -9,6 +9,7 @@ import { login, setAlertLength } from '../redux/userSlice';
 
 import Kakao from '../components/Kakao';
 import { onLoginSuccess } from '../utils/Login';
+import backgroundImg from '../image/login4.jpg';
 
 export default function Login() {
   const [inputId, setInputId] = useState('');
@@ -131,19 +132,15 @@ export default function Login() {
     fontSize: '80px',
     position: 'absolute',
     left: '100px',
-    top: '300px',
+    top: '250px',
     color: 'white',
     width: '800px',
     height: '500px',
-    background: 'url(../image/login.png)',
+    backgroundImage: `url(${backgroundImg})`,
   };
 
   const SNS = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    marginLeft: '45px',
-    marginTop: '10px',
+    paddingTop: '8px',
   };
   // ---------------------------- render--------------------------------
   return (

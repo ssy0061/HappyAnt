@@ -25,8 +25,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import Kakao from '../components/Kakao';
-
 import Guideline from '../components/Guideline';
 import { login } from '../redux/userSlice';
 import { onLoginSuccess } from '../utils/Login';
@@ -305,9 +303,6 @@ function Join() {
                   가입하기
                 </Button>
               )}
-              <div style={{ marginLeft: '95px' }}>
-                <Kakao />
-              </div>
             </Box>
           </Box>
         </Container>
