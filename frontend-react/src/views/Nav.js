@@ -79,15 +79,16 @@ function nav() {
             가입 스터디 ▲
           </Button>
         )}
-        <div className="studyList">
-          {openList &&
-            studyList.map((item) => (
-              <>
+        {openList && (
+          <div className="studyList">
+            {studyList.map((item) => (
+              <div>
                 <a href={`/study/${item.studyId}`}>{item.studyName}</a>
                 <hr />
-              </>
+              </div>
             ))}
-        </div>
+          </div>
+        )}
       </div>
       {/* 중앙 */}
       <div className="item itemCenter">

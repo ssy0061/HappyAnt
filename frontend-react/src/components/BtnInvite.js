@@ -71,6 +71,9 @@ export default function BtnInvite(props) {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          width: '400px',
+        }}
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">

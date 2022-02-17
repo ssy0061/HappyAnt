@@ -13,8 +13,7 @@ function Match() {
     }
   }, []);
   return (
-    <div>
-      <h1>Match</h1>
+    <div style={{ marginTop: '15vh' }}>
       <MatchList />
     </div>
   );
