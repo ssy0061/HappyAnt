@@ -15,6 +15,7 @@ function nav() {
   const loginPage = useSelector((state) => state.user.isLogin);
   const yourId = useSelector((state) => state.user.userInfo.userId);
   const email = useSelector((state) => state.user.userInfo.email);
+  const yourName = useSelector((state) => state.user.userInfo.userName);
   const [openList, setOpenList] = useState(false);
   const [studyList, setStudyList] = useState([]);
 
@@ -140,7 +141,7 @@ function nav() {
                 marginRight: '10px',
               }}
             >
-              <a href="/profile">김준하</a>
+              <a href="/profile">{yourName}</a>
             </div>
             <AlertList />
             <div

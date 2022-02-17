@@ -73,7 +73,7 @@ export default function AlertList() {
       .catch((err) => console.log(err));
   };
 
-  const studyAccept = (studyId) => {
+  const studyAccept = (studyId, alertId) => {
     axios
       .post(`/api/study/${studyId}/member/${yourId}`, [], {
         headers: {
@@ -81,7 +81,8 @@ export default function AlertList() {
         },
       })
       .then(() => {
-        deleteAlert(studyId);
+        deleteAlert(alertId);
+        getAlert();
         alert('스터디에 가입되었어요!');
       });
   };
@@ -142,7 +143,7 @@ export default function AlertList() {
                     <div>
                       <button
                         key={`accept${item.alertId}`}
-                        onClick={() => studyAccept(item.studyId)}
+                        onClick={() => studyAccept(item.studyId, item.alertId)}
                         type="submit"
                       >
                         수락

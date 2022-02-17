@@ -83,7 +83,7 @@ a {
 }
 
 .studyList {
-  width: 108px;
+  width: auto;
   position: fixed;
   top: 94px;
   left: 30px;
