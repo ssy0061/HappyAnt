@@ -138,6 +138,13 @@ export default function Login() {
     background: 'url(../image/login.png)',
   };
 
+  const SNS = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px',
+    marginLeft: '45px',
+    marginTop: '10px',
+  };
   // ---------------------------- render--------------------------------
   return (
     <div style={background}>
@@ -195,7 +202,7 @@ export default function Login() {
             </Button>
             {/* 모달창 open -> 가입 이메일 입력 -> [추가항목 보임] 비밀번호 찾기 질문 입력/확인 -> 비밀번호 변경 완료 확인 및 재로그인 하라고 알려줌  */}
           </div>
-          <div>
+          <div style={SNS}>
             <Google />
             <Kakao />
           </div>

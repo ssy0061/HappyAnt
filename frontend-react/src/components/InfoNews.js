@@ -215,31 +215,58 @@ function InfoNews({ newsData, nameData }) {
         <br />
         <br />
         {allNews &&
-          allNews.map((item) => (
-            <div key={item.url} className="newsTd">
-              <img className="newsImg" src={item.img} alt="주요뉴스" />
+          allNews.map((item) => {
+            if (item.img) {
+              return (
+                <div key={item.url} className="newsTd">
+                  <img className="newsImg" src={item.img} alt="주요뉴스" />
 
-              <a
-                target="_blank"
-                className="newsA"
-                href={item.url}
-                rel="noreferrer"
-              >
-                <h4 className="newsH2">{item.articleSubject}</h4>
-              </a>
+                  <a
+                    target="_blank"
+                    className="newsA"
+                    href={item.url}
+                    rel="noreferrer"
+                  >
+                    <h4 className="newsH2">{item.articleSubject}</h4>
+                  </a>
 
-              <p>
+                  <p>
+                    <a
+                      target="_blank"
+                      className="newsA"
+                      href={item.url}
+                      rel="noreferrer"
+                    >
+                      {item.articleSummary}
+                    </a>
+                  </p>
+                </div>
+              );
+            }
+            return (
+              <div key={item.url} className="newsTd">
                 <a
                   target="_blank"
                   className="newsA"
                   href={item.url}
                   rel="noreferrer"
                 >
-                  {item.articleSummary}
+                  <h4 className="newsH2">{item.articleSubject}</h4>
                 </a>
-              </p>
-            </div>
-          ))}
+
+                <p>
+                  <a
+                    target="_blank"
+                    className="newsA"
+                    href={item.url}
+                    rel="noreferrer"
+                  >
+                    {item.articleSummary}
+                  </a>
+                </p>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
