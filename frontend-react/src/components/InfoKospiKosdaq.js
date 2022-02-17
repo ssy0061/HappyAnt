@@ -26,7 +26,7 @@ function InfoKospiKosdaq({ ontr, Infoname }) {
       }}
     >
       <h2>{Infoname} TOP 50</h2>
-      <div style={{ overflowY: 'auto', height: '300px' }}>
+      <div style={{ overflowY: 'auto', height: '500px' }}>
         <table className="Infotable">
           <tbody>
             {data.map((item) => (

@@ -174,7 +174,7 @@ function Join() {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: '140px' }}>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
