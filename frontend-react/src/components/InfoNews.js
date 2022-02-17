@@ -6,7 +6,7 @@ function InfoNews({ newsData, nameData }) {
   const [cutNews, setCutNews] = useState();
   const [todayKos, setTodayKos] = useState();
   const [toggle, setToggle] = useState('1');
-  const [newsState, setNewsState] = useState(true);
+  const [newsState, setNewsState] = useState(false);
   useEffect(() => {
     axios
       .get('/api/finance/news')
@@ -15,6 +15,9 @@ function InfoNews({ newsData, nameData }) {
         // console.log(res.data.length);
         setCutNews(res.data.slice(0, 5));
         setAllNews(res.data);
+        if (res.data.length > 5) {
+          setNewsState(true);
+        }
       })
       .catch((err) => console.log(err));
 
