@@ -7,6 +7,7 @@ import { logout } from '../redux/userSlice';
 import StudyCreateBtn from '../components/StudyCreateBtn';
 import AlertList from '../components/AlertList';
 import '../css/Nav.css';
+import antLogo from '../image/miniAnt.png';
 
 function nav() {
   // 로그인 상태 체크
@@ -90,7 +91,10 @@ function nav() {
       </div>
       {/* 중앙 */}
       <div className="item itemCenter">
-        <h2>Happy Ant</h2>
+        <div>
+          <img src={antLogo} alt="miniAnt" width="60px" height="40px" />
+          <span>Happy Ant</span>
+        </div>
         <ul className="linkContainer">
           <NavLink
             style={{ marginLeft: '25px' }}

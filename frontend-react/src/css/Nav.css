@@ -31,10 +31,17 @@
   width: 60%;
   text-align: center;
 }
-.itemCenter > h2 {
+.itemCenter > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  margin-top: 17px;
+}
+.itemCenter > div > span {
   font-size: 27px;
+  font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 24px;
 }
 
 .itemRight {
@@ -53,6 +60,7 @@
   display: flex;
   justify-content: center;
   margin: 0px;
+  margin-top: 25px;
   height: 24px;
 }
 

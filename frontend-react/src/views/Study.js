@@ -79,7 +79,7 @@ export default function Study() {
   };
 
   const sectionDiv = {
-    width: '75%',
+    width: '90%',
     float: 'left',
     margin: '.5rem',
     marginRight: '2rem',
@@ -107,7 +107,7 @@ export default function Study() {
         <AddIcon />
       </Fab>
       <aside className="shadow" style={asideDiv}>
-        <p>aside content1</p>
+        <h1>{studyInfo.studyName}</h1>
         <MatchItemCreate />
 
         {/* 리더에게만 위임/추방 보여주기 */}
@@ -129,7 +129,6 @@ export default function Study() {
         ) : null}
       </aside>
       <section style={sectionDiv}>
-        <h1 style={{ marginLeft: '22vh' }}>{studyInfo.studyName}</h1>
         <StudyList studyId={studyId} refresh={refresh} />
         {open3 && <StudyItemCreate handleClickClose={handleClickClose3} />}
       </section>

@@ -9,6 +9,7 @@ import StudyItemDelete from '../components/StudyItemDelete';
 import StudyItemUpdate from '../components/StudyItemUpdate';
 import '../css/StudyList.css';
 import ContentViewer from '../components/ContentViewer';
+import StudyStockDetail from '../components/StudyStockDetail';
 
 function StudyList(props) {
   // 나중에 구현 할때 스터디 목록에서 클릭할때 인자 넘겨주고 studyId에 넣기
@@ -131,7 +132,7 @@ function StudyList(props) {
     }
   }, [inView]);
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <div
         style={{
           display: 'flex',
@@ -151,31 +152,56 @@ function StudyList(props) {
         {filterList.map((item) => (
           <div className="studyDiv" key={item.articleId}>
             <div>
-              <h1 style={{ marginBottom: '7px' }}>{item.title}</h1>
-              <div className="underTitle">
+              <div style={{ margin: '20px', marginBottom: '0px' }}>
+                <h1 style={{ marginBottom: '7px', color: 'rgb(23, 5, 121)' }}>
+                  {item.title}
+                </h1>
+                {item.stockName && (
+                  <span className="stockName">{item.stockName} · </span>
+                )}
                 <span className="name">{item.writerName}</span>
+              </div>
+
+              <div className="underTitle">
                 <p className="date">{`${item.createDate.slice(
                   0,
                   10
                 )} ${item.createDate.slice(11)}`}</p>
+                {yourId === item.writerId && (
+                  <div className="studyItemView">
+                    <StudyItemUpdate
+                      articleId={item.articleId}
+                      refresh={getStudyArticleList}
+                    />
+                    <StudyItemDelete
+                      articleId={item.articleId}
+                      refresh={getStudyArticleList}
+                    />
+                  </div>
+                )}
               </div>
-              <ContentViewer initialValue={item.content} />
-            </div>
-            {yourId === item.writerId && (
-              <div className="cmt">
-                <StudyItemUpdate
-                  articleId={item.articleId}
-                  refresh={getStudyArticleList}
-                />
-                <StudyItemDelete
-                  articleId={item.articleId}
-                  refresh={getStudyArticleList}
-                />
+              {/* 스톡 아이템칸 */}
+              {item.stockName && (
+                <div className="studyItemView stockDetailBack">
+                  <div className="studyItemStock">
+                    <p>{item.stockName}</p>
+                    <span>주가 : </span>
+                    <span>{item.stockPrice}</span>
+                    <p>{item.createDate.slice(0, 10)}기준</p>
+                  </div>
+                  <hr />
+                  <div className="studyEditorView">
+                    <StudyStockDetail stockCode={item.stockCode} />
+                  </div>
+                </div>
+              )}
+              <div style={{ margin: '20px' }}>
+                <ContentViewer initialValue={item.content} />
+                <div>
+                  <hr />
+                  <StudyCommentList articleId={item.articleId} />
+                </div>
               </div>
-            )}
-            <div>
-              <hr />
-              <StudyCommentList articleId={item.articleId} />
             </div>
           </div>
         ))}
