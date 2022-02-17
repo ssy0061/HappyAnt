@@ -166,7 +166,7 @@ public class MatchService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다.");
     	} 
 
-		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getStudy().getId()).isPresent()) {
+		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, article.getMatchStudy().getId()).isPresent()) {
 			throw new ResponseStatusException(
     				HttpStatus.BAD_REQUEST, "스터디 멤버는 신청할 수 없습니다.",
     				new IllegalArgumentException());
@@ -229,7 +229,7 @@ public class MatchService {
 
 
 		// 스터디에 멤버 추가
-		Study study = article.getStudy();
+		Study study = article.getMatchStudy();
 
 		if (studyJoinRepo.findByJoinMemberIdAndJoinStudyId(joinUserId, study.getId()).isPresent()) {
     		throw new ResponseStatusException(
