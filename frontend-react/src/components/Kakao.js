@@ -139,11 +139,17 @@ function KakaoLogin() {
   return (
     <div>
       {/* eslint-disable jsx-a11y/anchor-is-valid */}
-      <a id="custom-login-btn" onClick={loginWithKakao} href="#">
+      <a
+        id="custom-login-btn"
+        style={{ marginLeft: '0' }}
+        onClick={loginWithKakao}
+        href="#"
+      >
         <img
-          src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
-          width="182"
-          height="45"
+          src="https://developers.kakao.com/tool/resource/static/img/button/login/full/ko/kakao_login_medium_wide.png"
+          width="270"
+          // height="45"
+
           alt="카카오"
         />
       </a>
