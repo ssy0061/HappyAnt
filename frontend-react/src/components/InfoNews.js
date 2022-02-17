@@ -11,8 +11,6 @@ function InfoNews({ newsData, nameData }) {
     axios
       .get('/api/finance/news')
       .then((res) => {
-        console.log(res);
-        // console.log(res.data.length);
         setCutNews(res.data.slice(0, 5));
         setAllNews(res.data);
         if (res.data.length > 5) {
