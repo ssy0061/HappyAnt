@@ -20,8 +20,9 @@ function Info() {
       .catch((err) => console.log(err));
   };
 
-  const getData = (data) => {
-    setCode(data);
+  const getData = (dataCode, dataName) => {
+    setCode(dataCode);
+    setName(dataName);
   };
 
   const getNews = (data) => {
