@@ -12,7 +12,7 @@
 }
 
 .Infotd {
-  /* word-break: break-all; */
+  word-break: break-all;
   padding: 1rem 1rem;
   border-bottom: 1px solid #eeeeee;
 }
@@ -34,7 +34,7 @@
 .newsDiv {
   display: flex;
   width: 1080px;
-  justify-content: space-evenly;
+  justify-content: space-around;
   border: 1px solid #c8c8c8;
   margin: auto;
   border-radius: 10px;
