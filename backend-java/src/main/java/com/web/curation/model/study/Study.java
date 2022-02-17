@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.dto.study.StudyResponse;
 import com.web.curation.model.account.MyUser;
@@ -55,6 +56,10 @@ public class Study {
 	@OneToMany(mappedBy="study", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<StudyArticle> studyArticles = new ArrayList<StudyArticle>();
+	
+	@OneToMany(mappedBy="matchStudy", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	private List<MatchArticle> matchArticles = new ArrayList<MatchArticle>();
 	
 	@Column
 	private String name;

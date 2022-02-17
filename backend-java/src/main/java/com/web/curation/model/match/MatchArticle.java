@@ -72,31 +72,30 @@ public class MatchArticle {
 	@JsonManagedReference
     private List<MatchJoin> matchJoinUsers = new ArrayList<MatchJoin>();
 	
-	// 단방향
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "study_id",
 				referencedColumnName = "id")
 	@JsonIgnore
-	private Study study;
+	private Study matchStudy;
 	
 
 	public MatchArticle() {
 		
 	}
 	
-	public MatchArticle(String title, String content, Boolean state, MyUser writer, String writerName, Study study) {
+	public MatchArticle(String title, String content, Boolean state, MyUser writer, String writerName, Study matchStudy) {
 		super();
 		this.title = title;
 		this.content = content;
 		this.state = state;
 		this.writer = writer;
 		this.writerName = writerName;
-		this.study = study;
+		this.matchStudy = matchStudy;
 	}
 
 	public MatchArticleResponse toResponse() {
 		return new MatchArticleResponse(id, title, content, writer.getId(), writer.getName(), createDate, updateDate, state,
-				study.getId(), study.getName(), study.getInterest());
+				matchStudy.getId(), matchStudy.getName(), matchStudy.getInterest());
 	}
 	
 }
