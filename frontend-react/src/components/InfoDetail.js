@@ -43,31 +43,33 @@ function InfoDetail({ detailData, getNews }) {
 
   return (
     <div style={{ margin: 'auto' }} className="InfoBack">
-      <h2>{data.stockName}</h2>
-      <p>{data.time}</p>
-      <button onClick={onDay} type="button">
-        1일
-      </button>
-      <button onClick={onWeek} type="button">
-        1주일
-      </button>
-      <button onClick={onMonth3} type="button">
-        3개월
-      </button>
-      <button onClick={onYear} type="button">
-        1년
-      </button>
-      <button onClick={onYear3} type="button">
-        3년
-      </button>
-      <button onClick={onYear5} type="button">
-        5년
-      </button>
-      <button onClick={onYear10} type="button">
-        10년
-      </button>
+      <div style={{ marginLeft: '20px' }}>
+        <h2>{data.stockName}</h2>
+        <p>{data.time}</p>
+        <button onClick={onDay} type="button">
+          1일
+        </button>
+        <button onClick={onWeek} type="button">
+          1주일
+        </button>
+        <button onClick={onMonth3} type="button">
+          3개월
+        </button>
+        <button onClick={onYear} type="button">
+          1년
+        </button>
+        <button onClick={onYear3} type="button">
+          3년
+        </button>
+        <button onClick={onYear5} type="button">
+          5년
+        </button>
+        <button onClick={onYear10} type="button">
+          10년
+        </button>
+      </div>
       <div
-        style={{ display: 'flex', marginBottom: '20px', marginLeft: '10px' }}
+        style={{ display: 'flex', marginBottom: '20px', marginLeft: '20px' }}
       >
         {chart === '1' && <img src={data.dayChartUrl} alt="1일" />}
         {chart === '2' && <img src={data.weekChartUrl} alt="1주일" />}

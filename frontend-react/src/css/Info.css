@@ -3,6 +3,7 @@
   /* width: 70%; */
   /* text-align: left; */
   letter-spacing: 1px;
+  /* border: 1px solid black; */
 }
 
 .Infotr:hover {
@@ -11,7 +12,7 @@
 }
 
 .Infotd {
-  /* word-break: break-all; */
+  word-break: break-all;
   padding: 1rem 1rem;
   border-bottom: 1px solid #eeeeee;
 }
@@ -25,6 +26,56 @@
 }
 
 .InfoBack {
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
   border-radius: 10px;
+  border: 1px solid #c8c8c8;
+}
+
+.newsDiv {
+  display: flex;
+  width: 1080px;
+  justify-content: space-around;
+  border: 1px solid #c8c8c8;
+  margin: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.newsMain {
+  width: 50%;
+  margin: 0px;
+}
+
+.newsH2 {
+  display: inline;
+}
+
+.newsImg {
+  float: left;
+}
+
+.newsA {
+  color: black;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.newsToday {
+  display: flex;
+  justify-content: space-between;
+}
+
+.newsTodayImg {
+  width: 400px;
+}
+.newsTodayPlusColor {
+  color: red;
+}
+
+.newsTodayMinusColor {
+  color: blue;
+}
+
+.newsTd {
+  border-bottom: 1px solid #aaaaaa;
 }
