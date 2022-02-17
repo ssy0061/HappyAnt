@@ -42,29 +42,29 @@ function InfoDetail({ detailData, getNews }) {
   };
 
   return (
-    <div style={{ margin: 'auto' }} className="InfoBack">
+    <div style={{ width: '1080px', margin: 'auto' }} className="InfoBack">
       <div style={{ marginLeft: '20px' }}>
         <h2>{data.stockName}</h2>
         <p>{data.time}</p>
-        <button onClick={onDay} type="button">
+        <button onClick={onDay} type="button" className="InfoButton">
           1일
         </button>
-        <button onClick={onWeek} type="button">
+        <button onClick={onWeek} type="button" className="InfoButton">
           1주일
         </button>
-        <button onClick={onMonth3} type="button">
+        <button onClick={onMonth3} type="button" className="InfoButton">
           3개월
         </button>
-        <button onClick={onYear} type="button">
+        <button onClick={onYear} type="button" className="InfoButton">
           1년
         </button>
-        <button onClick={onYear3} type="button">
+        <button onClick={onYear3} type="button" className="InfoButton">
           3년
         </button>
-        <button onClick={onYear5} type="button">
+        <button onClick={onYear5} type="button" className="InfoButton">
           5년
         </button>
-        <button onClick={onYear10} type="button">
+        <button onClick={onYear10} type="button" className="InfoButton">
           10년
         </button>
       </div>
