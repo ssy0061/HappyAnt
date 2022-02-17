@@ -96,7 +96,7 @@ export default function Study() {
 
   return (
     <div className="back">
-      <Chat />
+      <Chat studyName={studyInfo.studyName} />
       <Fab
         color="primary"
         aria-label="add"
