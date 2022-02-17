@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function InfoDetail({ detailData }) {
+function InfoDetail({ detailData, getNews }) {
   const [data, setData] = useState('');
   const [chart, setChart] = useState('1');
 
   useEffect(() => {
     axios
-      .get(`/finance/${detailData}`)
+      .get(`/api/finance/${detailData}`)
       .then((res) => {
         setData(res.data);
         console.log(data);
       })
       .catch((err) => console.log(err));
   }, [detailData]);
+
+  useEffect(() => {
+    getNews(data.newsList);
+  }, [data]);
 
   const onDay = () => {
     setChart('1');

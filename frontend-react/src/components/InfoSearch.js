@@ -10,16 +10,17 @@ function InfoSearch({ getData }) {
   // 검색창에 띄울 종목이름 모두 조회
   useEffect(() => {
     axios
-      .get('/finance')
+      .get('/api/finance')
       .then((res) => {
         setAllData(res.data);
+        console.log(res);
       })
       .catch((err) => console.log(err));
   }, []);
   // 검색한 종목이름으로 코드 조회
   const findSearch = () => {
     axios
-      .get(`/finance/search/{stockname}?stockName=${searchValue}`)
+      .get(`/api/finance/search/{stockname}?stockName=${searchValue}`)
       .then((res) => {
         getData(res.data.stockCode);
       })
@@ -29,7 +30,6 @@ function InfoSearch({ getData }) {
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
       findSearch();
-      // setFindData(e.target.value);
     }
   };
 
@@ -60,7 +60,7 @@ function InfoSearch({ getData }) {
       </div>
       <datalist onChange={handleSearch} id="depList">
         {allData.map((item) => (
-          <option>{item.stockName}</option>
+          <option key={item.stockCode}>{item.stockName}</option>
         ))}
       </datalist>
     </div>
