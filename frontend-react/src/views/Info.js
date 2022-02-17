@@ -41,10 +41,10 @@ function Info() {
         <InfoSearch getData={getData} />
         <InfoDetail detailData={code} getNews={getNews} />
       </div>
-      <div>
+      <div style={{ marginBottom: '20px' }}>
         <InfoNews newsData={news} nameData={name} />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <InfoKospiKosdaq Infoname="kospi" ontr={handletr} />
         <InfoKospiKosdaq Infoname="kosdaq" ontr={handletr} />
       </div>

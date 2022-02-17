@@ -66,7 +66,7 @@ export default function StudyMemberInvite() {
         <DialogTitle>스터디원 초대</DialogTitle>
         <DialogContent>
           <TextField
-            style={{ margin: '10px' }}
+            style={{ margin: '10px', width: '400px' }}
             error={error}
             label="초대할 멤버의 이메일을 써주세요."
             variant="outlined"

@@ -30,10 +30,6 @@ export default function StudyItemUpdate({ articleId, refresh }) {
     else didMount.current = true;
   }, [item]);
 
-  const setText = (val) => {
-    setContent(val);
-  };
-
   const modalOpen = (e) => {
     e.preventDefault();
     axios
@@ -111,7 +107,7 @@ export default function StudyItemUpdate({ articleId, refresh }) {
             defaultValue={item.title}
             onChange={handleTitle}
           />
-          <ContentEditor setText={setText} initialValue={item.content} />
+          <ContentEditor setText={setContent} initialValue={item.content} />
         </DialogContent>
         <DialogActions>
           <Button onClick={updateArticle}>완료</Button>

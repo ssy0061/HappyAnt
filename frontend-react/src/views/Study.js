@@ -10,7 +10,6 @@ import Chat from '../websocket/Chat';
 import StudyList from './StudyList';
 import BtnEntrust from '../components/BtnEntrust';
 import BtnDelete from '../components/BtnDelete';
-import BtnInvite from '../components/BtnInvite';
 import StudyMemberInvite from '../components/StudyMemberInvite';
 import BtnChangeStudyInfo from '../components/BtnChangeStudyInfo';
 import StudyDelete from '../components/StudyDelete';
@@ -116,12 +115,9 @@ export default function Study() {
         ) : null}
         {studyInfo.leaderId === userInfo.userId ? (
           <div>
-            <BtnInvite studyInfo={studyInfo} studyMember={studyMember} />
+            <BtnChangeStudyInfo studyInfo={studyInfo} />
             <StudyMemberInvite />
           </div>
-        ) : null}
-        {studyInfo.leaderId === userInfo.userId ? (
-          <BtnChangeStudyInfo studyInfo={studyInfo} />
         ) : null}
         <BtnDelete studyId={studyId} />
         {studyInfo.leaderId === userInfo.userId ? (

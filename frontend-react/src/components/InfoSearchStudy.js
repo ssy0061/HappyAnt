@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 
-function InfoSearch({ getData }) {
+function InfoSearchStudy({ getData }) {
   const [allData, setAllData] = useState([]);
   // const [findData, setFindData] = useState('');
   const [searchValue, setSearchValue] = useState('');
@@ -58,7 +58,7 @@ function InfoSearch({ getData }) {
           value={searchValue}
           type="button"
         >
-          <SearchIcon style={{ cursor: 'pointer' }} />
+          <AddIcon style={{ cursor: 'pointer' }} />
         </button>
       </div>
       <datalist onChange={handleSearch} id="depList">
@@ -70,4 +70,4 @@ function InfoSearch({ getData }) {
   );
 }
 
-export default InfoSearch;
+export default InfoSearchStudy;
