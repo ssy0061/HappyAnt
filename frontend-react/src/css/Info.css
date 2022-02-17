@@ -30,3 +30,52 @@
   border-radius: 10px;
   border: 1px solid #c8c8c8;
 }
+
+.newsDiv {
+  display: flex;
+  width: 1080px;
+  justify-content: space-evenly;
+  border: 1px solid #c8c8c8;
+  margin: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.newsMain {
+  width: 50%;
+  margin: 0px;
+}
+
+.newsH2 {
+  display: inline;
+}
+
+.newsImg {
+  float: left;
+}
+
+.newsA {
+  color: black;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.newsToday {
+  display: flex;
+  justify-content: space-between;
+}
+
+.newsTodayImg {
+  width: 400px;
+}
+.newsTodayPlusColor {
+  color: red;
+}
+
+.newsTodayMinusColor {
+  color: blue;
+}
+
+.newsTd {
+  border-bottom: 1px solid #aaaaaa;
+}

@@ -38,67 +38,72 @@ function InfoNews({ newsData, nameData }) {
   };
 
   //  -----------------------------------------------------
-  const newsDiv = {
-    display: 'flex',
-    width: '1080px',
-    justifyContent: 'space-evenly',
-    // backgroundColor: '#eeeeee',
-    border: '1px solid #c8c8c8',
-    margin: 'auto',
-    borderRadius: '10px',
-    marginTop: '10px',
-  };
+  // const newsDiv = {
+  //   display: 'flex',
+  //   width: '1080px',
+  //   justifyContent: 'space-evenly',
+  //   // backgroundColor: '#eeeeee',
+  //   border: '1px solid #c8c8c8',
+  //   margin: 'auto',
+  //   borderRadius: '10px',
+  //   marginTop: '10px',
+  // };
 
-  const newsMain = {
-    width: '50%',
-    margin: '0px',
-  };
-  const newsH2 = {
-    display: 'inline',
-  };
+  // const newsMain = {
+  //   width: '50%',
+  //   margin: '0px',
+  // };
+  // const newsH2 = {
+  //   display: 'inline',
+  // };
 
-  const newsimg = {
-    float: 'left',
-  };
+  // const newsimg = {
+  //   float: 'left',
+  // };
 
-  const newsA = {
-    color: 'black',
-    textDecoration: 'none',
-    marginTop: '10px',
-  };
+  // const newsA = {
+  //   color: 'black',
+  //   textDecoration: 'none',
+  //   marginTop: '10px',
+  // };
 
-  const newsToday = {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-  };
-  const newsTodayImg = {
-    width: '400px',
-  };
+  // const newsToday = {
+  //   display: 'flex',
+  //   justifyContent: 'space-evenly',
+  // };
+  // const newsTodayImg = {
+  //   width: '400px',
+  // };
 
-  const newsTodayPlusColor = {
-    color: 'red',
-  };
-  const newsTodayMinusColor = {
-    color: 'blue',
-  };
+  // const newsTodayPlusColor = {
+  //   color: 'red',
+  // };
+  // const newsTodayMinusColor = {
+  //   color: 'blue',
+  // };
 
-  const newsTd = {
-    borderBottom: '1px solid #aaaaaa',
-  };
+  // const newsTd = {
+  //   borderBottom: '1px solid #aaaaaa',
+  // };
   // -------------------------------------------------
   return (
-    <div style={newsDiv}>
+    <div className="newsDiv">
       <div>
         <br />
 
-        <h2 style={newsH2}>{nameData}</h2>
+        <h2 className="newsH2">{nameData}</h2>
         <span> 의 주요뉴스</span>
         <br />
         <br />
         {newsData &&
           newsData.map((item) => (
             <div key={item.url}>
-              <a target="_blank" style={newsA} href={item.url} rel="noreferrer">
+              <a
+                target="_blank"
+                className="newsA"
+                href={item.url}
+                rel="noreferrer"
+              >
                 {item.articleSummary}
               </a>
             </div>
@@ -117,93 +122,116 @@ function InfoNews({ newsData, nameData }) {
         </button>
         {todayKos && toggle === '1' && todayKos.kospi.dayRange[0] === '+' ? (
           <div>
-            <div style={newsToday}>
+            <div className="newsToday">
               <p>{todayKos.kospi.name}</p>
               <p>{todayKos.kospi.price}</p>
-              <p style={newsTodayPlusColor}>{todayKos.kospi.variablePrice}</p>
-              <p style={newsTodayPlusColor}>{todayKos.kospi.dayRange}</p>
+              <p className="newsTodayPlusColor">
+                {todayKos.kospi.variablePrice}
+              </p>
+              <p className="newsTodayPlusColor">{todayKos.kospi.dayRange}</p>
             </div>
-            <img style={newsTodayImg} src={todayKos.kospi.img} alt="kos" />
+            <img className="newsTodayImg" src={todayKos.kospi.img} alt="kos" />
           </div>
         ) : null}
         {todayKos && toggle === '1' && todayKos.kospi.dayRange[0] === '-' ? (
           <div>
-            <div style={newsToday}>
+            <div className="newsToday">
               <p>{todayKos.kospi.name}</p>
               <p>{todayKos.kospi.price}</p>
-              <p style={newsTodayMinusColor}>{todayKos.kospi.variablePrice}</p>
-              <p style={newsTodayMinusColor}>{todayKos.kospi.dayRange}</p>
+              <p className="newsTodayMinusColor">
+                {todayKos.kospi.variablePrice}
+              </p>
+              <p className="newsTodayMinusColor">{todayKos.kospi.dayRange}</p>
             </div>
-            <img style={newsTodayImg} src={todayKos.kospi.img} alt="kos" />
+            <img className="newsTodayImg" src={todayKos.kospi.img} alt="kos" />
           </div>
         ) : null}
         {todayKos && toggle === '2' && todayKos.kosdaq.dayRange[0] === '+' ? (
           <div>
-            <div style={newsToday}>
+            <div className="newsToday">
               <p>{todayKos.kosdaq.name}</p>
               <p>{todayKos.kosdaq.price}</p>
-              <p style={newsTodayPlusColor}>{todayKos.kosdaq.variablePrice}</p>
-              <p style={newsTodayPlusColor}>{todayKos.kosdaq.dayRange}</p>
+              <p className="newsTodayPlusColor">
+                {todayKos.kosdaq.variablePrice}
+              </p>
+              <p className="newsTodayPlusColor">{todayKos.kosdaq.dayRange}</p>
             </div>
-            <img style={newsTodayImg} src={todayKos.kosdaq.img} alt="kos" />
+            <img className="newsTodayImg" src={todayKos.kosdaq.img} alt="kos" />
           </div>
         ) : null}
         {todayKos && toggle === '2' && todayKos.kosdaq.dayRange[0] === '-' ? (
           <div>
-            <div style={newsToday}>
+            <div className="newsToday">
               <p>{todayKos.kosdaq.name}</p>
               <p>{todayKos.kosdaq.price}</p>
-              <p style={newsTodayMinusColor}>{todayKos.kosdaq.variablePrice}</p>
-              <p style={newsTodayMinusColor}>{todayKos.kosdaq.dayRange}</p>
+              <p className="newsTodayMinusColor">
+                {todayKos.kosdaq.variablePrice}
+              </p>
+              <p className="newsTodayMinusColor">{todayKos.kosdaq.dayRange}</p>
             </div>
-            <img style={newsTodayImg} src={todayKos.kosdaq.img} alt="kos" />
+            <img className="newsTodayImg" src={todayKos.kosdaq.img} alt="kos" />
           </div>
         ) : null}
         {todayKos && toggle === '3' && todayKos.kospi200.dayRange[0] === '+' ? (
           <div>
-            <div style={newsToday}>
+            <div className="newsToday">
               <p>{todayKos.kospi200.name}</p>
               <p>{todayKos.kospi200.price}</p>
-              <p style={newsTodayPlusColor}>
+              <p className="newsTodayPlusColor">
                 {todayKos.kospi200.variablePrice}
               </p>
-              <p style={newsTodayPlusColor}>{todayKos.kospi200.dayRange}</p>
+              <p className="newsTodayPlusColor">{todayKos.kospi200.dayRange}</p>
             </div>
-            <img style={newsTodayImg} src={todayKos.kospi200.img} alt="kos" />
+            <img
+              className="newsTodayImg"
+              src={todayKos.kospi200.img}
+              alt="kos"
+            />
           </div>
         ) : null}
         {todayKos && toggle === '3' && todayKos.kospi200.dayRange[0] === '-' ? (
           <div>
-            <div style={newsToday}>
+            <div className="newsToday">
               <p>{todayKos.kospi200.name}</p>
               <p>{todayKos.kospi200.price}</p>
-              <p style={newsTodayMinusColor}>
+              <p className="newsTodayMinusColor">
                 {todayKos.kospi200.variablePrice}
               </p>
-              <p style={newsTodayMinusColor}>{todayKos.kospi200.dayRange}</p>
+              <p className="newsTodayMinusColor">
+                {todayKos.kospi200.dayRange}
+              </p>
             </div>
-            <img style={newsTodayImg} src={todayKos.kospi200.img} alt="kos" />
+            <img
+              className="newsTodayImg"
+              src={todayKos.kospi200.img}
+              alt="kos"
+            />
           </div>
         ) : null}
       </div>
-      <div style={newsMain}>
+      <div className="newsMain">
         <br />
-        <h3 style={newsH2}>오늘</h3> <span>주요뉴스</span>
+        <h3 className="newsH2">오늘</h3> <span>주요뉴스</span>
         <br />
         <br />
         {allNews &&
           allNews.map((item) => (
-            <div key={item.url} style={newsTd}>
-              <img style={newsimg} src={item.img} alt="주요뉴스" />
+            <div key={item.url} className="newsTd">
+              <img className="newsImg" src={item.img} alt="주요뉴스" />
 
-              <a target="_blank" style={newsA} href={item.url} rel="noreferrer">
-                <h4 style={newsH2}>{item.articleSubject}</h4>
+              <a
+                target="_blank"
+                className="newsA"
+                href={item.url}
+                rel="noreferrer"
+              >
+                <h4 className="newsH2">{item.articleSubject}</h4>
               </a>
 
               <p>
                 <a
                   target="_blank"
-                  style={newsA}
+                  className="newsA"
                   href={item.url}
                   rel="noreferrer"
                 >
