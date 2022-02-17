@@ -12,7 +12,7 @@ export default function Chat() {
   const loginCheck = useSelector((state) => state.user.isLogin);
   const yourId = useSelector((state) => state.user.userInfo.userId);
   const $websocket = useRef(null);
-  const studyId = useParams();
+  const { studyId } = useParams();
 
   const handleClickSendTo = (e) => {
     if (e.key === 'Enter' && content !== '') {
@@ -54,6 +54,7 @@ export default function Chat() {
     border: '1px solid',
     borderRadius: '10px',
     padding: '10px',
+    zIndex: '5',
   };
   const chatItemInvisible = {
     visibility: 'hidden',

@@ -126,40 +126,45 @@ export default function AlertList() {
         {open ? (
           <div style={styles}>
             {alertList.length >= 1 ? (
-              alertList.map((item) => (
-                <div key={`alertItem${item.alertId}`}>
-                  <a style={ItemDesign} href={getLink(item)}>
-                    {item.message}
-                  </a>
-                  <button
-                    key={`delete${item.alertId}`}
-                    onClick={() => deleteAlert(item.alertId)}
-                    type="submit"
-                  >
-                    삭제
-                  </button>
-                  {/* 초대 알람이면 [수락 / 거부] 버튼 표시 */}
-                  {item.type === 'INVITE' && (
-                    <div>
-                      <button
-                        key={`accept${item.alertId}`}
-                        onClick={() => studyAccept(item.studyId, item.alertId)}
-                        type="submit"
-                      >
-                        수락
-                      </button>
-                      <button
-                        key={`reject${item.alertId}`}
-                        onClick={() => studyReject(item.studyId)}
-                        type="submit"
-                      >
-                        거부
-                      </button>
-                    </div>
-                  )}
-                  <hr />
-                </div>
-              ))
+              alertList
+                .slice(0)
+                .reverse()
+                .map((item) => (
+                  <div key={`alertItem${item.alertId}`}>
+                    <a style={ItemDesign} href={getLink(item)}>
+                      {item.message}
+                    </a>
+                    <button
+                      key={`delete${item.alertId}`}
+                      onClick={() => deleteAlert(item.alertId)}
+                      type="submit"
+                    >
+                      삭제
+                    </button>
+                    {/* 초대 알람이면 [수락 / 거부] 버튼 표시 */}
+                    {item.type === 'INVITE' && (
+                      <div>
+                        <button
+                          key={`accept${item.alertId}`}
+                          onClick={() =>
+                            studyAccept(item.studyId, item.alertId)
+                          }
+                          type="submit"
+                        >
+                          수락
+                        </button>
+                        <button
+                          key={`reject${item.alertId}`}
+                          onClick={() => studyReject(item.studyId)}
+                          type="submit"
+                        >
+                          거부
+                        </button>
+                      </div>
+                    )}
+                    <hr />
+                  </div>
+                ))
             ) : (
               <div>아무 소식이 없어요..</div>
             )}
