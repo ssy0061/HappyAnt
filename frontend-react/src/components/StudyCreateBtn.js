@@ -8,6 +8,7 @@ import {
   TextField,
   Button,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import axios from 'axios';
 
@@ -16,6 +17,7 @@ export default function StudyCreateBtn() {
   const [interest, setInterest] = useState('');
   const [name, setName] = useState('');
   const yourId = useSelector((state) => state.user.userInfo.userId);
+  const navigate = useNavigate();
 
   const handleInterest = (e) => {
     setInterest(e.target.value);
@@ -41,9 +43,10 @@ export default function StudyCreateBtn() {
             loginUserId: yourId,
           },
         })
-        .then(() => {
+        .then((res) => {
           alert(`${name}이 만들어졌어요.`);
           setOpen(false);
+          navigate(`/study/${res.data}`);
         })
         .catch(() => {
           alert(`${name}(이)가 만들어지지 않았어요`);
