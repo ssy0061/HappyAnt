@@ -10,7 +10,6 @@ function InfoDetail({ detailData, getNews }) {
       .get(`/api/finance/${detailData}`)
       .then((res) => {
         setData(res.data);
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [detailData]);
