@@ -1,19 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 // import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import SockJsClient from 'react-stomp';
-import { Fab, Input, Box } from '@mui/material';
+import { Fab, Input } from '@mui/material';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import '../css/Chat.css';
 
-export default function Chat() {
+export default function Chat({ studyName }) {
   const [show, setShow] = useState(false);
   const [content, setContent] = useState('');
   const loginCheck = useSelector((state) => state.user.isLogin);
   const yourId = useSelector((state) => state.user.userInfo.userId);
+  const userName = useSelector((state) => state.user.userInfo.userName);
   const $websocket = useRef(null);
+  const scrollRef = useRef(null);
   const { studyId } = useParams();
-
+  const [chatting, setChatting] = useState([]);
   const handleClickSendTo = (e) => {
     if (e.key === 'Enter' && content !== '') {
       setContent('');
@@ -21,19 +24,28 @@ export default function Chat() {
         `/study/${studyId}`,
         JSON.stringify({
           userId: yourId,
+          name: userName,
           content: e.target.value,
         })
       );
     }
   };
+
+  const scrollToBottom = () => {
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatting]);
+
   const handleContent = (e) => {
     setContent(e.target.value);
   };
 
   // 서버로부터 메시지가 왔을 때 실행되는 부분
   const onAlert = (msg) => {
-    console.log('메시지옴');
-    document.getElementById('chatLog').append(`${msg.content}`);
+    setChatting([...chatting, msg]);
   };
 
   // -----------------------------css---------------------------------
@@ -45,8 +57,8 @@ export default function Chat() {
   const chatItemViisible = {
     visibility: 'visible',
     opacity: '90%',
-    width: '300px',
-    height: '400px',
+    width: '350px',
+    height: '480px',
     background: 'white',
     position: 'fixed',
     right: '20px',
@@ -63,12 +75,7 @@ export default function Chat() {
     position: 'fixed',
   };
 
-  const chatLogStyle = {
-    width: '300px',
-    height: '335px',
-  };
-
-  const chatInputStyle = {};
+  const chatInputStyle = { marginTop: '15px' };
 
   return (
     <div>
@@ -84,12 +91,29 @@ export default function Chat() {
             <ChatBubbleOutlineIcon />
           </Fab>
           <div style={show ? chatItemViisible : chatItemInvisible}>
-            <Box id="chatLog" style={chatLogStyle}>
-              <p>study name</p>
-            </Box>
+            <div className="chatTitle">
+              <p>{studyName}</p>
+            </div>
+            <div id="chatLog" className="chatLog">
+              {chatting.map((item) => (
+                <div className="cleanDiv">
+                  {item.userId !== yourId ? (
+                    <div className="cleanDiv">
+                      <p className="yourName">{item.name}</p>
+                      <p className="yourMessage">{item.content}</p>
+                    </div>
+                  ) : (
+                    <div className="cleanDiv myMessageDiv">
+                      <p className="myMessage">{item.content}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div ref={scrollRef} />
+            </div>
             <div style={chatInputStyle}>
               <Input
-                placeholder=""
+                placeholder="채팅을 입력해주세요"
                 size="small"
                 autoFocus
                 fullWidth

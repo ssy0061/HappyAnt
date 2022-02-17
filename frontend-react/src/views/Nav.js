@@ -92,7 +92,7 @@ function nav() {
       {/* 중앙 */}
       <div className="item itemCenter">
         <div>
-          <img src={antLogo} alt="miniAnt" width="60px" height="40px" />
+          <img src={antLogo} alt="miniAnt" width="45px" height="45px" />
           <span>Happy Ant</span>
         </div>
         <ul className="linkContainer">
