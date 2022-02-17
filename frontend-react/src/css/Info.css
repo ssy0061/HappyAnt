@@ -7,6 +7,7 @@
 
 .Infotr:hover {
   background-color: #eeeeee;
+  cursor: pointer;
 }
 
 .Infotd {
