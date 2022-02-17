@@ -79,3 +79,12 @@
 .newsTd {
   border-bottom: 1px solid #aaaaaa;
 }
+
+.InfoButton {
+  background-color: rgb(0, 102, 255, 0.8);
+  color: white;
+  margin-left: 4px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}

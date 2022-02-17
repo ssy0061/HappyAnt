@@ -3,14 +3,17 @@ import React, { useEffect, useState } from 'react';
 
 function InfoNews({ newsData, nameData }) {
   const [allNews, setAllNews] = useState();
-
+  const [cutNews, setCutNews] = useState();
   const [todayKos, setTodayKos] = useState();
   const [toggle, setToggle] = useState('1');
+  const [newsState, setNewsState] = useState(true);
   useEffect(() => {
     axios
       .get('/api/finance/news')
       .then((res) => {
         console.log(res);
+        // console.log(res.data.length);
+        setCutNews(res.data.slice(0, 5));
         setAllNews(res.data);
       })
       .catch((err) => console.log(err));
@@ -18,8 +21,6 @@ function InfoNews({ newsData, nameData }) {
     axios
       .get('/api/finance/today/stock')
       .then((res) => {
-        console.log(res);
-
         setTodayKos(res.data);
       })
       .catch((err) => {
@@ -37,55 +38,11 @@ function InfoNews({ newsData, nameData }) {
     setToggle('3');
   };
 
-  //  -----------------------------------------------------
-  // const newsDiv = {
-  //   display: 'flex',
-  //   width: '1080px',
-  //   justifyContent: 'space-evenly',
-  //   // backgroundColor: '#eeeeee',
-  //   border: '1px solid #c8c8c8',
-  //   margin: 'auto',
-  //   borderRadius: '10px',
-  //   marginTop: '10px',
-  // };
+  const handleNews = () => {
+    setCutNews(allNews);
+    setNewsState(false);
+  };
 
-  // const newsMain = {
-  //   width: '50%',
-  //   margin: '0px',
-  // };
-  // const newsH2 = {
-  //   display: 'inline',
-  // };
-
-  // const newsimg = {
-  //   float: 'left',
-  // };
-
-  // const newsA = {
-  //   color: 'black',
-  //   textDecoration: 'none',
-  //   marginTop: '10px',
-  // };
-
-  // const newsToday = {
-  //   display: 'flex',
-  //   justifyContent: 'space-evenly',
-  // };
-  // const newsTodayImg = {
-  //   width: '400px',
-  // };
-
-  // const newsTodayPlusColor = {
-  //   color: 'red',
-  // };
-  // const newsTodayMinusColor = {
-  //   color: 'blue',
-  // };
-
-  // const newsTd = {
-  //   borderBottom: '1px solid #aaaaaa',
-  // };
-  // -------------------------------------------------
   return (
     <div className="newsDiv">
       <div>
@@ -111,13 +68,13 @@ function InfoNews({ newsData, nameData }) {
         <br />
         <br />
         <h3>오늘의 증시</h3>
-        <button onClick={onKospi} type="button">
+        <button onClick={onKospi} type="button" className="InfoButton">
           코스피
         </button>
-        <button onClick={onKosdaq} type="button">
+        <button onClick={onKosdaq} type="button" className="InfoButton">
           코스닥
         </button>
-        <button onClick={onKospi200} type="button">
+        <button onClick={onKospi200} type="button" className="InfoButton">
           코스피200
         </button>
         {todayKos && toggle === '1' && todayKos.kospi.dayRange[0] === '+' ? (
@@ -214,11 +171,11 @@ function InfoNews({ newsData, nameData }) {
         <h3 className="newsH2">오늘</h3> <span>주요뉴스</span>
         <br />
         <br />
-        {allNews &&
-          allNews.map((item) => {
+        {cutNews &&
+          cutNews.map((item) => {
             if (item.img) {
               return (
-                <div key={item.url} className="newsTd">
+                <div key={item.articleSubject} className="newsTd">
                   <img className="newsImg" src={item.img} alt="주요뉴스" />
 
                   <a
@@ -244,7 +201,7 @@ function InfoNews({ newsData, nameData }) {
               );
             }
             return (
-              <div key={item.url} className="newsTd">
+              <div key={item.articleSubject} className="newsTd">
                 <a
                   target="_blank"
                   className="newsA"
@@ -267,6 +224,16 @@ function InfoNews({ newsData, nameData }) {
               </div>
             );
           })}
+        {newsState && (
+          <button
+            style={{ marginLeft: '450px' }}
+            className="InfoButton"
+            type="button"
+            onClick={handleNews}
+          >
+            더 보기
+          </button>
+        )}
       </div>
     </div>
   );
