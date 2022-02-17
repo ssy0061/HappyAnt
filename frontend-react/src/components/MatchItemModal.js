@@ -89,11 +89,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
   };
 
   // ---------------------------css-------------------------------
-  const tempStyle = {
-    position: 'fixed',
-    right: '20px',
-    bottom: '20px',
-  };
 
   return (
     <div>
@@ -132,9 +127,6 @@ export default function MatchItemModal({ pk, handleClickClose }) {
           )}
           <Button onClick={handleClickClose}>닫기</Button>
         </DialogActions>
-        <button type="submit" style={tempStyle}>
-          aa
-        </button>
       </Dialog>
     </div>
   );

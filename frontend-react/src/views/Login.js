@@ -9,7 +9,7 @@ import { login, setAlertLength } from '../redux/userSlice';
 
 import Kakao from '../components/Kakao';
 import { onLoginSuccess } from '../utils/Login';
-import backgroundImg from '../image/login4.jpg';
+import loginAnt from '../image/login.png';
 
 export default function Login() {
   const [inputId, setInputId] = useState('');
@@ -100,11 +100,11 @@ export default function Login() {
 
   // ----------------------------- css --------------------------------
   const loginPaper = {
-    position: 'relative',
-    left: '55%',
+    position: 'fixed',
+    left: '980px',
     top: '250px',
     width: '400px',
-    height: '500px',
+    height: '540px',
     textAlign: 'center',
     verticalAlign: 'middle',
     borderRadius: '50px',
@@ -130,21 +130,32 @@ export default function Login() {
   const ourName = {
     textAlign: 'center',
     fontSize: '80px',
-    position: 'absolute',
-    left: '100px',
-    top: '250px',
-    color: 'white',
-    width: '800px',
-    height: '500px',
-    backgroundImage: `url(${backgroundImg})`,
+    position: 'fixed',
+    left: '450px',
+    top: '220px',
+    color: 'black',
+    fontWeight: '900',
   };
 
   const SNS = {
     paddingTop: '8px',
   };
+
+  const logo = {
+    position: 'fixed',
+    top: '335px',
+    left: '500px',
+  };
   // ---------------------------- render--------------------------------
   return (
     <div style={background}>
+      <img
+        style={logo}
+        src={loginAnt}
+        alt="loginAnt"
+        width="480px"
+        height="380px"
+      />
       <div style={ourName}>개미키우기</div>
       <Paper elevation={5} style={loginPaper}>
         <div style={innerPaper}>

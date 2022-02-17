@@ -20,9 +20,6 @@ export default function MatchItemUpdate(props) {
   const handleInputTitle = (e) => {
     setInputTitle(e.target.value);
   };
-  const handleInputContent = (e) => {
-    setInputContent(e.target.value);
-  };
 
   const clickSubmit = () => {
     console.log(item.articleId);
@@ -69,10 +66,7 @@ export default function MatchItemUpdate(props) {
           variant="standard"
           onChange={handleInputTitle}
         />
-        <ContentEditor
-          setText={handleInputContent}
-          initialValue={item.content}
-        />
+        <ContentEditor setText={setInputContent} initialValue={item.content} />
         <DialogActions>
           <Button onClick={clickSubmit}>완료✔</Button>
         </DialogActions>

@@ -104,8 +104,11 @@ export default function AlertList() {
     border: '1px solid #010101',
     p: 1,
     backgroundColor: 'white',
-    width: '400px',
+    width: '350px',
+    height: '300px',
     borderRadius: '5px',
+    overflowY: 'auto',
+    padding: '10px',
   };
 
   return (

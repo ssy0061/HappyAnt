@@ -96,13 +96,12 @@ export default function BtnEntrust(props) {
       })
       .catch((err) => console.log(err, '추방 error'));
   };
-  console.log(selected);
 
   return (
     <div>
       <hr />
       {/* 위임,추방 option */}
-      <h4>위임 / 추방 기능</h4>
+      <h4>위임 / 추방</h4>
       <div>
         <select onChange={handleSelect} value={selected}>
           {memberList.map((item) => (
@@ -113,6 +112,7 @@ export default function BtnEntrust(props) {
         </select>
 
         {/* 위임하기 */}
+        <br />
         <button type="submit" onClick={handleOpen}>
           위임하기
         </button>

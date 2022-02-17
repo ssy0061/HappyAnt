@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Wysiwyg } from '@mui/icons-material';
 import ContentEditor from './ContentEditor';
-import InfoSearch from './InfoSearch';
+import InfoSearchStudy from './InfoSearchStudy';
 
 export default function StudyItemCreate(props) {
   const { studyId } = useParams();
@@ -37,7 +37,10 @@ export default function StudyItemCreate(props) {
       .then((res) => {
         setFinanceData(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        alert('종목을 제대로 입력해주세요.');
+      });
   }, [financeCode]);
 
   const onClickCreate = () => {
@@ -121,10 +124,10 @@ export default function StudyItemCreate(props) {
             onChange={handleTitle}
           />
 
-          <InfoSearch getData={setFinanceCode} />
+          <InfoSearchStudy getData={setFinanceCode} />
           {financeData.stockName && (
             <div style={{ margin: '20px', marginBottom: '20px' }}>
-              <span style={{ color: 'blue', fontWeight: '700' }}>
+              <span style={{ color: 'rgb(10, 0, 97)', fontWeight: '700' }}>
                 {' '}
                 · {financeData.stockName}
               </span>

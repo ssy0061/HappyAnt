@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
-
 import MatchListSearch from '../components/MatchListSearch';
 import StudyCommentList from '../components/StudyCommentList';
 import StudyItemDelete from '../components/StudyItemDelete';
@@ -124,11 +123,9 @@ function StudyList(props) {
   const { ref, inView } = useInView({ threshold: 0.5 });
   useEffect(() => {
     if (inView && !thisState) {
-      console.log(filterList);
       const items = articleList.slice(prev, curr);
       setCurr(curr + 5);
       setFilterList(items);
-      console.log(prev, curr);
     }
   }, [inView]);
   return (
@@ -180,24 +177,18 @@ function StudyList(props) {
                   </div>
                 )}
               </div>
-              {/* 스톡 아이템칸 */}
-              {item.stockName && (
-                <div className="studyItemView stockDetailBack">
-                  <div className="studyItemStock">
-                    <p>{item.stockName}</p>
-                    <span>주가 : </span>
-                    <span>{item.stockPrice}</span>
-                    <p>{item.createDate.slice(0, 10)}기준</p>
-                  </div>
-                  <hr />
-                  <div className="studyEditorView">
-                    <StudyStockDetail stockCode={item.stockCode} />
-                  </div>
-                </div>
+              {item.stockCode && (
+                <StudyStockDetail
+                  stockCode={item.stockCode}
+                  stockPrice={item.stockPrice}
+                  date={item.createDate}
+                />
               )}
-              <div style={{ margin: '20px' }}>
-                <ContentViewer initialValue={item.content} />
-                <div>
+              <div>
+                <div style={{ margin: '30px' }}>
+                  <ContentViewer initialValue={item.content} />
+                </div>
+                <div style={{ margin: '20px', marginTop: '50px' }}>
                   <hr />
                   <StudyCommentList articleId={item.articleId} />
                 </div>

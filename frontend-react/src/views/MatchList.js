@@ -181,7 +181,7 @@ function MatchList() {
   return (
     <div className="box">
       <div className="checkbox">
-        <h1>Match</h1>
+        <h2>스터디원을 모아 정보를 공유해보세요!</h2>
         <MatchListCheckbox handleCheckboxFiltering={handleCheckboxFiltering} />
       </div>
       {/* 테이블 */}
@@ -195,26 +195,29 @@ function MatchList() {
           </tr>
         </thead>
         <tbody>
-          {currentPosts.map((item) => (
-            <tr
-              key={item.articleId}
-              className="tr"
-              onClick={() => openMatchModal(item.articleId)}
-            >
-              <td className="td td2">
-                {/* {item.articleId} */}
-                {item.writerName}
-              </td>
-              <td className="td title">{item.title}</td>
-              <td>{item.studyName}</td>
-              {/* <td>{item.studyName}</td> */}
-              {item.state === true ? (
-                <td className="td td2 statusTrue">모집완료</td>
-              ) : (
-                <td className="td td2">모집중</td>
-              )}
-            </tr>
-          ))}
+          {currentPosts
+            .slice(0)
+            .reverse()
+            .map((item) => (
+              <tr
+                key={item.articleId}
+                className="tr"
+                onClick={() => openMatchModal(item.articleId)}
+              >
+                <td className="td td2">
+                  {/* {item.articleId} */}
+                  {item.writerName}
+                </td>
+                <td className="td title">{item.title}</td>
+                <td>{item.studyName}</td>
+                {/* <td>{item.studyName}</td> */}
+                {item.state === true ? (
+                  <td className="td td2 statusTrue">모집완료</td>
+                ) : (
+                  <td className="td td2">모집중</td>
+                )}
+              </tr>
+            ))}
         </tbody>
       </table>
 
