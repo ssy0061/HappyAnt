@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -12,12 +12,14 @@ import {
 } from '@mui/material';
 import { Wysiwyg } from '@mui/icons-material';
 import ContentEditor from './ContentEditor';
-// import InfoSearch from './InfoSearch';
+import InfoSearch from './InfoSearch';
 
 export default function StudyItemCreate(props) {
   const { studyId } = useParams();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [financeCode, setFinanceCode] = useState('');
+  const [financeData, setFinanceData] = useState([]);
 
   const userId = useSelector((state) => state.user.userInfo.userId);
   const { handleClickClose } = props;
@@ -29,11 +31,25 @@ export default function StudyItemCreate(props) {
   //   setContent(e.target.value);
   // };
 
-  // 작성 버튼 클릭
+  useEffect(() => {
+    axios
+      .get(`/api/finance/${financeCode}`)
+      .then((res) => {
+        setFinanceData(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [financeCode]);
+
   const onClickCreate = () => {
+    let temp = '';
+    if (financeData.curPrice) temp = financeData.curPrice.replace(',', '');
+
     const body = {
       title,
       content,
+      stockCode: financeData.code,
+      stockName: financeData.stockName,
+      stockPrice: temp,
     };
 
     if (title === '') {
@@ -41,6 +57,7 @@ export default function StudyItemCreate(props) {
     } else if (content === '') {
       alert('내용을 입력해주세요.');
     } else {
+      console.log(body);
       axios
         .post(`/api/study/${studyId}`, body, {
           headers: {
@@ -103,7 +120,16 @@ export default function StudyItemCreate(props) {
             variant="standard"
             onChange={handleTitle}
           />
-          {/* <InfoSearch /> */}
+
+          <InfoSearch getData={setFinanceCode} />
+          {financeData.stockName && (
+            <div style={{ margin: '20px', marginBottom: '20px' }}>
+              <span style={{ color: 'blue', fontWeight: '700' }}>
+                {' '}
+                · {financeData.stockName}
+              </span>
+            </div>
+          )}
           <ContentEditor setText={setContent} />
           <hr />
         </DialogContent>
