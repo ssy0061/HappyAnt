@@ -12,6 +12,7 @@ import StudyList from './views/StudyList';
 import Main from './views/Main';
 import Alert from './websocket/Alert';
 import Info from './views/Info';
+import Footer from './views/Footer';
 import { onSilentRefresh } from './utils/Login';
 import { logout } from './redux/userSlice';
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/studyList" element={<StudyList />} />
         <Route path="/Info" element={<Info />} />
       </Routes>
+      <Footer />
       <Alert />
     </div>
   );
