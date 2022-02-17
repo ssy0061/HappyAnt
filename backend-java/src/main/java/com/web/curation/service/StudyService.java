@@ -98,7 +98,7 @@ public class StudyService {
     	
     	StudyArticle article = new StudyArticle(study, writer, writer.getName(),
     							form.getTitle(), form.getContent(),
-    							form.getStockName(), form.getStockName(), form.getStockPrice());
+    							form.getStockCode(), form.getStockName(), form.getStockPrice());
     	StudyArticle newArticle = articleRepo.save(article);
     	
     	// 멤버가 있는 스터디의 모든 멤버에게 게시글 작성 알림
