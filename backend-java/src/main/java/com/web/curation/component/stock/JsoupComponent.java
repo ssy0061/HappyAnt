@@ -135,7 +135,7 @@ public class JsoupComponent {
 			}
 						
 			stockInfo.setNewsList(list);
-			
+			 
 			return stockInfo;
 		} catch(IOException ignored) {			
 		}		
