@@ -13,7 +13,6 @@ function InfoSearch({ getData }) {
       .get('/api/finance')
       .then((res) => {
         setAllData(res.data);
-        console.log(res);
       })
       .catch((err) => console.log(err));
   }, []);
