@@ -3,6 +3,7 @@
   /* width: 70%; */
   /* text-align: left; */
   letter-spacing: 1px;
+  /* border: 1px solid black; */
 }
 
 .Infotr:hover {
@@ -25,6 +26,7 @@
 }
 
 .InfoBack {
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
   border-radius: 10px;
+  border: 1px solid #c8c8c8;
 }

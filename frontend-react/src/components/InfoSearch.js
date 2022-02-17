@@ -22,7 +22,7 @@ function InfoSearch({ getData }) {
     axios
       .get(`/api/finance/search/{stockname}?stockName=${searchValue}`)
       .then((res) => {
-        getData(res.data.stockCode);
+        getData(res.data.stockCode, searchValue);
       })
       .catch((err) => console.log(err));
   };

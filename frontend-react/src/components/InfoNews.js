@@ -40,9 +40,10 @@ function InfoNews({ newsData, nameData }) {
   //  -----------------------------------------------------
   const newsDiv = {
     display: 'flex',
-    width: '1060px',
+    width: '1080px',
     justifyContent: 'space-evenly',
-    backgroundColor: '#eeeeee',
+    // backgroundColor: '#eeeeee',
+    border: '1px solid #c8c8c8',
     margin: 'auto',
     borderRadius: '10px',
     marginTop: '10px',
@@ -79,6 +80,10 @@ function InfoNews({ newsData, nameData }) {
   };
   const newsTodayMinusColor = {
     color: 'blue',
+  };
+
+  const newsTd = {
+    borderBottom: '1px solid #aaaaaa',
   };
   // -------------------------------------------------
   return (
@@ -188,7 +193,7 @@ function InfoNews({ newsData, nameData }) {
         <br />
         {allNews &&
           allNews.map((item) => (
-            <div key={item.url}>
+            <div key={item.url} style={newsTd}>
               <img style={newsimg} src={item.img} alt="주요뉴스" />
 
               <a target="_blank" style={newsA} href={item.url} rel="noreferrer">
