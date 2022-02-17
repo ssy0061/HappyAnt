@@ -9,14 +9,12 @@ function InfoKospiKosdaq({ ontr, Infoname }) {
     axios
       .get(`/api/finance/${Infoname}`)
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-  console.log(data);
 
   return (
     <div

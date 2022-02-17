@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import FindPassword from '../components/FindPassword';
 import { login, setAlertLength } from '../redux/userSlice';
-import Google from '../components/Google';
+
 import Kakao from '../components/Kakao';
 import { onLoginSuccess } from '../utils/Login';
 import loginAnt from '../image/login.png';
@@ -138,11 +138,7 @@ export default function Login() {
   };
 
   const SNS = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    marginLeft: '45px',
-    marginTop: '10px',
+    paddingTop: '8px',
   };
 
   const logo = {
@@ -215,7 +211,6 @@ export default function Login() {
             {/* 모달창 open -> 가입 이메일 입력 -> [추가항목 보임] 비밀번호 찾기 질문 입력/확인 -> 비밀번호 변경 완료 확인 및 재로그인 하라고 알려줌  */}
           </div>
           <div style={SNS}>
-            <Google />
             <Kakao />
           </div>
         </div>

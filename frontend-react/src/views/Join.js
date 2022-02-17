@@ -24,8 +24,6 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Google from '../components/Google';
-import Kakao from '../components/Kakao';
 
 import Guideline from '../components/Guideline';
 import { login } from '../redux/userSlice';
@@ -73,7 +71,6 @@ function Join() {
         },
       })
         .then((response) => {
-          console.log(response);
           const params = new URLSearchParams();
           params.append('email', email);
           params.append('password', pwd);
@@ -89,7 +86,7 @@ function Join() {
             .then((ress) => {
               onLoginSuccess(ress);
               localStorage.setItem('refreshToken', ress.data.refreshToken);
-              console.log(ress);
+
               axios
                 .get(`/api/account/{id}?email=${email}`, {
                   headers: { Authorization: `Bearer ${ress.data.accessToken}` },
@@ -108,7 +105,6 @@ function Join() {
         // 회원가입 에러
         .catch((error) => {
           console.log(error);
-          console.log(error.response.status);
 
           if (error.response.status === 409) {
             alert('이미 존재하는 회원 입니다.');
@@ -127,45 +123,38 @@ function Join() {
   // 이메일
   const onEmailHandler = (event) => {
     setEmail(event.target.value);
-    console.log(event.target.value);
   };
 
   // 이름
   const onNameHandler = (event) => {
     setName(event.target.value);
-    console.log(event.target.value);
   };
 
   // 비밀번호
   const onPwdHandler = (event) => {
     setPwd(event.target.value);
-    console.log(event.target.value);
   };
 
   // 비밀번호 확인
   const onConfirmPwdHandler = (event) => {
     setConfirmPwd(event.target.value);
-    console.log(event.target.value);
   };
 
   // 개인정보 수집동의 박스
   const onCheckBox = (event) => {
     setCheckBox(event.target.checked);
-    console.log(event.target.checked);
   };
 
   // 비밀번호 찾기
 
   const handleChange = (event) => {
     setHint(event.target.value);
-    console.log(event.target.value);
   };
 
   // 비밀번호 찾기 힌트답변
 
   const onhintAnswer = (event) => {
     setHintAnswer(event.target.value);
-    console.log(event.target.value);
   };
 
   // 모달
@@ -197,7 +186,7 @@ function Join() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1 }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -314,14 +303,6 @@ function Join() {
                   가입하기
                 </Button>
               )}
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Google />
-                </Grid>
-                <Grid item xs={6}>
-                  <Kakao />
-                </Grid>
-              </Grid>
             </Box>
           </Box>
         </Container>
