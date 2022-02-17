@@ -7,7 +7,7 @@ function InfoKospiKosdaq({ ontr, Infoname }) {
 
   useEffect(() => {
     axios
-      .get(`/finance/${Infoname}`)
+      .get(`/api/finance/${Infoname}`)
       .then((res) => {
         console.log(res.data);
         setData(res.data);
@@ -27,7 +27,10 @@ function InfoKospiKosdaq({ ontr, Infoname }) {
             <tr
               className="Infotr"
               key={item.no}
-              onClick={() => ontr(item.stockName)}
+              onClick={() => {
+                ontr(item.stockName);
+                window.scrollTo(0, 0);
+              }}
             >
               <td className="Infotd">{item.no}</td>
               <td className="Infotd">{item.stockName}</td>
