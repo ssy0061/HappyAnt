@@ -99,7 +99,6 @@ function Join() {
                   enqueueSnackbar(`${response.data.userName}님 안녕하세요!`, {
                     variant: `success`,
                   });
-                  navigate('/profile');
                 });
             })
             .catch((err) => {
