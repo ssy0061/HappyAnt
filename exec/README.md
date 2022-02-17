@@ -10,7 +10,7 @@ sts(Spring Tool Suite 3) Version: 3.9.14.RELEASE
 
 jdk: 13.0.1
 
-lombok
+lombok 설치
 
 
 
@@ -26,7 +26,7 @@ lombok
 
   [소셜 로그인 키 받기](소셜 로그인)
 
-- frontend-react 폴더 안에 넣기
+- frontend-react 폴더 안에 build 폴더가 생김
 
 ```bash
 npm install
