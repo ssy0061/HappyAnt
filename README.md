@@ -32,20 +32,77 @@
   - REST API
   - WebSocket
 * 배포 환경
-  - URL: // 웹 서비스, 랜딩 페이지, 프로젝트 소개 등의 배포 URL 기입
+  - URL: http://i6d207.p.ssafy.io/ 
   - 테스트 계정: // 로그인이 필요한 경우, 사용 가능한 테스트 계정(ID/PW) 기입
 
 <!-- 자유 양식 -->
 
 ## 팀 소개
-* 서상용: 팀장, 배포, 백엔드 개발(기본 CRUD)
-* 김덕규: 백엔드 개발(JWT, 크롤링)
-* 김병준: 프론트엔드 개발 및 UCC 담당
-* 김준하: 프론트엔드 개발
-* 임현모: 프론트엔드 개발
+
+### 프론트엔드
+
+* 김병준: UCC, 기록/정리, Redux
+* 김준하: Redux, CRUD UI, WebSocket
+* 임현모: 주식정보 UI, 뉴스피드, 소셜로그인(카카오)
+
+### 백엔드
+
+* 서상용: 팀장, 배포, 기본 CRUD, WebSocket
+* 김덕규: JWT, 크롤링, 유저 CRUD
 
 <!-- 자유 양식 -->
 
 ## 프로젝트 상세 설명
 
-// 개발 환경, 기술 스택, 시스템 구성도, ERD, 기능 상세 설명 등
+### 개발 환경
+
+- jdk: 13.0.1
+- sts(Spring Tool Suite 3) Version: 3.9.14.RELEASE
+- vscode
+- MySQL 8
+- React 17.0.2, Redux 7.2.6, React-router 6.2.1
+
+### 기술 스택
+
+- React.js, Redux
+- SpringBoot, JPA, jsoup
+- MySQL
+- Websocket
+- Jenkins, Nginx, AWS EC2
+
+### 협업 툴
+
+- Git, Jira, notion
+- MM, Discode
+- 구글문서, figma, erdcloud
+
+
+
+### 프로젝트 구조
+
+![image-20220218094307845](README.assets/image-20220218094307845.png)
+
+### ERD
+
+![image-20220218100856283](README.assets/image-20220218100856283.png)
+
+
+
+### 기능 상세 설명
+
+#### 매칭
+
+- 스터디에서 모집글 작성
+  - 모집글에 신청 -> 승인
+- 스터디에서 이메일 계정으로 초대
+
+#### 스터디
+
+- 주식 종목 첨부
+- 첨부 시점과 현재(크롤링)의 주가를 비교하여 변동금액 계산
+
+#### 주식 검색
+
+- 코스피, 코스닥 기업의 기본 정보 검색
+  - 주가 등 주식 정보
+  - 관련 뉴스
