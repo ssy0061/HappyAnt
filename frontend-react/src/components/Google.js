@@ -19,10 +19,15 @@ function GoogleLoginBtn() {
 
     const pass = response.profileObj.googleId.substr(0, 8);
     console.log(pass);
+
+    const params = new URLSearchParams();
+    params.append('email', response.profileObj.email);
+    params.append('password', `${pass}Zz!`);
+
     // 회원가입
     axios({
       method: 'post',
-      url: '/account/signUp',
+      url: '/api/account/signup',
       data: {
         email: response.profileObj.email,
         name: response.profileObj.name,
@@ -37,17 +42,25 @@ function GoogleLoginBtn() {
         // 로그인
         axios({
           method: 'post',
-          url: '/account/login',
-          data: {
-            email: response.profileObj.email,
-            password: `${pass}Zz!`,
-          },
+          url: '/api/account/login',
+          data: params,
         })
           .then((ress) => {
             console.log(ress);
             dispatch(login(ress.data));
             // localStorage.setItem('jwt', res.data.token);
-            navigate('/profile');
+            localStorage.setItem('accessToken', ress.data.accessToken);
+            localStorage.setItem('refreshToken', ress.data.refreshToken);
+
+            axios({
+              method: 'get',
+              url: `/api/account/{id}?email=${response.profileObj.email}`,
+              headers: {
+                Authorization: `Bearer ${ress.data.accessToken}`,
+              },
+            })
+              .then((getRes) => dispatch(login(getRes.data)))
+              .catch((getErr) => console.log(getErr));
           })
           .catch((err) => {
             console.log(err);
@@ -59,17 +72,27 @@ function GoogleLoginBtn() {
         // 이미 존재하는 회원이라면 로그인 시도
         axios({
           method: 'post',
-          url: '/account/login',
-          data: {
-            email: response.profileObj.email,
-            password: `${pass}Zz!`,
-          },
+          url: '/api/account/login',
+          data: params,
         })
           .then((ress) => {
             console.log(ress);
             dispatch(login(ress.data));
             // localStorage.setItem('jwt', res.data.token);
-            navigate('/profile');
+            localStorage.setItem('accessToken', ress.data.accessToken);
+            localStorage.setItem('refreshToken', ress.data.refreshToken);
+            axios({
+              method: 'get',
+              url: `/api/account/{id}?email=${response.profileObj.email}`,
+              headers: {
+                Authorization: `Bearer ${ress.data.accessToken}`,
+              },
+            })
+              .then((getRes) => {
+                dispatch(login(getRes.data));
+                navigate('/profile');
+              })
+              .catch((getErr) => console.log(getErr));
           })
           .catch((err) => {
             console.log(err);
@@ -84,7 +107,7 @@ function GoogleLoginBtn() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     // 크기
-    width: 400,
+    width: 300,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,

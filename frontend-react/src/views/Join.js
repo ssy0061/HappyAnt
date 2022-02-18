@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 import {
   Modal,
@@ -21,12 +22,12 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import Google from '../components/Google';
-import Kakao from '../components/Kakao';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import Guideline from '../components/Guideline';
 import { login } from '../redux/userSlice';
+import { onLoginSuccess } from '../utils/Login';
 
 const theme = createTheme();
 function Join() {
@@ -39,6 +40,16 @@ function Join() {
   const [hint, setHint] = useState('');
   const [hintAnswer, setHintAnswer] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const isLogin = useSelector((state) => state.user.isLogin);
+
+  React.useEffect(() => {
+    if (isLogin) {
+      navigate('/profile');
+    }
+  }, []);
 
   // 가입하기 버튼 눌렀을때
   const onSubmit = (event) => {
@@ -50,7 +61,7 @@ function Join() {
     } else {
       axios({
         method: 'post',
-        url: '/account/signUp',
+        url: '/api/account/signup',
         data: {
           answer: hintAnswer,
           email,
@@ -60,24 +71,32 @@ function Join() {
         },
       })
         .then((response) => {
-          console.log(response);
-          dispatch(login(response.data));
+          const params = new URLSearchParams();
+          params.append('email', email);
+          params.append('password', pwd);
           // 회원가입 버튼 누르고 정상 응답이 반환되면 모달창(가이드라인) 오픈
           // 모달창에서 프로필 작성하러 가기 누르면 로그인처리 됨과 동시에 프로필로 이동
           setOpen(true);
           // 로그인
           axios({
             method: 'post',
-            url: '/account/login',
-            data: {
-              email,
-              password: pwd,
-            },
+            url: '/api/account/login',
+            data: params,
           })
             .then((ress) => {
-              console.log(ress);
-              dispatch(login(ress.data));
-              // localStorage.setItem('jwt', res.data.token);
+              onLoginSuccess(ress);
+              localStorage.setItem('refreshToken', ress.data.refreshToken);
+
+              axios
+                .get(`/api/account/{id}?email=${email}`, {
+                  headers: { Authorization: `Bearer ${ress.data.accessToken}` },
+                })
+                .then((res) => {
+                  dispatch(login(res.data));
+                  enqueueSnackbar(`${response.data.userName}님 안녕하세요!`, {
+                    variant: `success`,
+                  });
+                });
             })
             .catch((err) => {
               console.log(err);
@@ -86,7 +105,6 @@ function Join() {
         // 회원가입 에러
         .catch((error) => {
           console.log(error);
-          console.log(error.response.status);
 
           if (error.response.status === 409) {
             alert('이미 존재하는 회원 입니다.');
@@ -105,45 +123,38 @@ function Join() {
   // 이메일
   const onEmailHandler = (event) => {
     setEmail(event.target.value);
-    console.log(event.target.value);
   };
 
   // 이름
   const onNameHandler = (event) => {
     setName(event.target.value);
-    console.log(event.target.value);
   };
 
   // 비밀번호
   const onPwdHandler = (event) => {
     setPwd(event.target.value);
-    console.log(event.target.value);
   };
 
   // 비밀번호 확인
   const onConfirmPwdHandler = (event) => {
     setConfirmPwd(event.target.value);
-    console.log(event.target.value);
   };
 
   // 개인정보 수집동의 박스
   const onCheckBox = (event) => {
     setCheckBox(event.target.checked);
-    console.log(event.target.checked);
   };
 
   // 비밀번호 찾기
 
   const handleChange = (event) => {
     setHint(event.target.value);
-    console.log(event.target.value);
   };
 
   // 비밀번호 찾기 힌트답변
 
   const onhintAnswer = (event) => {
     setHintAnswer(event.target.value);
-    console.log(event.target.value);
   };
 
   // 모달
@@ -155,7 +166,7 @@ function Join() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     // 크기
-    width: 400,
+    width: 1200,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -163,7 +174,7 @@ function Join() {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: '140px' }}>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -175,7 +186,7 @@ function Join() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1 }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -292,14 +303,6 @@ function Join() {
                   가입하기
                 </Button>
               )}
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Google />
-                </Grid>
-                <Grid item xs={6}>
-                  <Kakao />
-                </Grid>
-              </Grid>
             </Box>
           </Box>
         </Container>
