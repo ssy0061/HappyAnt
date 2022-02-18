@@ -81,9 +81,12 @@ export default function StudyStockDetail({ stockCode, stockPrice, date }) {
                     className="stockPlus stockSmall stockPercent"
                   >
                     +
-                    {((parseInt(nowPrice.replace(/,/g, ''), 10) - stockPrice) /
-                      stockPrice) *
-                      100}
+                    {Math.round(
+                      ((parseInt(nowPrice.replace(/,/g, ''), 10) - stockPrice) /
+                        stockPrice) *
+                        100 *
+                        100
+                    ) / 100}
                     %
                   </span>
                 </div>
@@ -93,10 +96,12 @@ export default function StudyStockDetail({ stockCode, stockPrice, date }) {
                     style={{ marginLeft: '50px' }}
                     className="stockMinus stockSmall stockPercent"
                   >
-                    -
-                    {((parseInt(nowPrice.replace(/,/g, ''), 10) - stockPrice) /
-                      stockPrice) *
-                      100}
+                    {Math.round(
+                      ((parseInt(nowPrice.replace(/,/g, ''), 10) - stockPrice) /
+                        stockPrice) *
+                        100 *
+                        100
+                    ) / 100}
                     %
                   </span>
                 </div>
@@ -116,7 +121,7 @@ export default function StudyStockDetail({ stockCode, stockPrice, date }) {
                     style={{ marginLeft: '50px' }}
                     className="stockSmall stockMinus"
                   >
-                    -{parseInt(nowPrice.replace(/,/g, ''), 10) - stockPrice}
+                    {parseInt(nowPrice.replace(/,/g, ''), 10) - stockPrice}
                   </span>
                 </div>
               )}
@@ -223,7 +228,6 @@ export default function StudyStockDetail({ stockCode, stockPrice, date }) {
                   </div>
                 ) : (
                   <div>
-                    전일비 :{' '}
                     <span
                       style={{ marginLeft: '50px' }}
                       className="stockSmall stockMinus"

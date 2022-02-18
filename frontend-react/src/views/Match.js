@@ -15,6 +15,7 @@ function Match() {
   return (
     <div style={{ marginTop: '15vh' }}>
       <MatchList />
+      <div style={{ height: '40vh' }} />
     </div>
   );
 }
