@@ -40,4 +40,4 @@ WEb 플랫폼 등록해서 http://localhost:3000 입력
 
 환경변수를 이용할 경우 .Env 파일을 만들어서 아래와 같이 키를 환경변수에 저장해 놓아도 사용 가능
 
-![UntitlEd](README.assets/UntitlEd 15-16451431463011.png)
+![UntitlEd 15-16451431463011](README.assets/UntitlEd 15-16451431463011.png)
