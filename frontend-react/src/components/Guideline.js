@@ -10,7 +10,10 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import logo from '../image/pang.png';
+import logo1 from '../image/1.jpg';
+import logo2 from '../image/2.jpg';
+import logo3 from '../image/3.jpg';
+import logo4 from '../image/4.jpg';
 
 // import logo from '.image/pang.png를 통해 밑의 imgPath: logo를 써서 이미지를 띄울 수 있다.
 // 추후 이용가이드를 이미지 파일로 그려 첨부할 때 import 하고 밑의 imgPath에 기입
@@ -20,19 +23,19 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 const images = [
   {
     label: '이용가이드 1page',
-    imgPath: logo,
+    imgPath: logo1,
   },
   {
     label: '이용가이드 2page',
-    imgPath: logo,
+    imgPath: logo2,
   },
   {
     label: '이용가이드 3page',
-    imgPath: logo,
+    imgPath: logo3,
   },
   {
     label: '이용가이드 4page',
-    imgPath: logo,
+    imgPath: logo4,
   },
 ];
 
@@ -54,7 +57,7 @@ function Guideline() {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+    <Box sx={{ maxWidth: 1100, width: 1100, flexGrow: 1 }}>
       <Paper
         square
         elevation={0}
@@ -80,11 +83,11 @@ function Guideline() {
               <Box
                 component="img"
                 sx={{
-                  height: 255,
+                  height: 750,
                   display: 'block',
-                  maxWidth: 400,
+                  // Width: 1000,
                   overflow: 'hidden',
-                  width: '100%',
+                  width: 1100,
                 }}
                 src={step.imgPath}
                 alt={step.label}

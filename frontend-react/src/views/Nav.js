@@ -63,14 +63,14 @@ function nav() {
     <nav className="container navbar">
       {/* 왼쪽 */}
       <div className="item itemLeft">
-        <StudyCreateBtn />
+        {loginPage && <StudyCreateBtn />}
         {/* 스터디 리스트 */}
-        {!openList && (
+        {!openList && loginPage && (
           <Button variant="contained" size="small" onClick={getStudyList}>
             가입 스터디 ▼
           </Button>
         )}
-        {openList && (
+        {openList && loginPage && (
           <Button
             variant="contained"
             size="small"
