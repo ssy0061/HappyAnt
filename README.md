@@ -33,8 +33,9 @@
   - WebSocket
 * 배포 환경
   - URL: http://i6d207.p.ssafy.io/ 
-  - 테스트 계정: ant@happy.ant
-  - 테스트 계정 비밀번호: ssafy123!
+  - Swagger: http://i6d207.p.ssafy.io/api/swagger-ui.html
+  - 테스트 계정: master@naver.com
+  - 테스트 계정 비밀번호: 1q2w3e4r!Q
 
 <!-- 자유 양식 -->
 
