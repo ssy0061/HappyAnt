@@ -89,8 +89,14 @@ export default function Study() {
 
   const createIconPosition = {
     position: 'fixed',
+    right: '47px',
+    bottom: '50px',
+  };
+  const createIconPosition2 = {
+    position: 'fixed',
     right: '20px',
-    bottom: '20px',
+    bottom: '10px',
+    fontWeight: '900',
   };
 
   return (
@@ -105,10 +111,14 @@ export default function Study() {
       >
         <AddIcon />
       </Fab>
+      <p style={createIconPosition2}>스터디 글쓰기</p>
       <aside className="shadow" style={asideDiv}>
         <h1>{studyInfo.studyName}</h1>
-        <MatchItemCreate />
-
+        {studyInfo.leaderId === userInfo.userId && <MatchItemCreate />}
+        <br />
+        <button type="submit" onClick={handleClickOpen3}>
+          스터디글 작성
+        </button>
         {/* 리더에게만 위임/추방 보여주기 */}
         {studyInfo.leaderId === userInfo.userId ? (
           <BtnEntrust studyId={studyId} />
@@ -128,6 +138,7 @@ export default function Study() {
         <StudyList studyId={studyId} refresh={refresh} />
         {open3 && <StudyItemCreate handleClickClose={handleClickClose3} />}
       </section>
+      <div style={{ height: '95vh' }} />
     </div>
   );
 }
