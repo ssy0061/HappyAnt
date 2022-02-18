@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogActions,
@@ -19,7 +19,7 @@ import {
 // 2단계 : 질문 리스트에서 선택 후 답변 기입 -> 해당 이메일에 기입된 정보가 맞으면 수정페이지로 이동 || 버튼 : prev / next / close
 // 3단계 : 수정페이지에서 새로운 password 및 password_confirm 확인 후 valid하면 해당 유저의 정보수정 (PUT메서드)
 export default function FindPassword(props) {
-  // const open = true;
+  const navigate = useNavigate();
   const [level, setLevel] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,10 +58,15 @@ export default function FindPassword(props) {
       alert('email을 입력해주세요');
     } else {
       axios
-        .get(`account/{id}?email=${email}`)
-        .then(() => {
-          console.log('email 조회 완료');
-          setLevel(level + 1);
+        .get(`/api/account/search?email=${email}`)
+        // .get(`/account/{id}?email=${email}`)
+        .then((res) => {
+          if (res.data !== 'none') {
+            console.log('email 조회 완료');
+            setLevel(level + 1);
+          } else {
+            alert('email을 다시 확인해주세요.');
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -75,12 +80,16 @@ export default function FindPassword(props) {
       question: pwQuestion,
       answer: pwAnswer,
     };
-
+    console.log(body);
     axios
-      .post('/account/find_pw', body)
+      .post('/api/account/find_pw', body)
       .then((res) => {
-        console.log(res);
-        setLevel(level + 1);
+        if (res.data === 'Success') {
+          console.log(res);
+          setLevel(level + 1);
+        } else {
+          alert('오류!');
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -94,17 +103,20 @@ export default function FindPassword(props) {
       console.log('비번 안 맞음');
     } else {
       const body = {
+        email,
+        question: pwQuestion,
+        answer: pwAnswer,
         password,
       };
       // test용
       console.log(body);
       axios
-        .put('/account/find_pw', body)
+        .post('/api/account/find_pw/success', body)
         .then((res) => {
           // 비번 변경 성공 메시지
-          alert('비밀번호 변경이 완료되었습니다.');
+          alert('비밀번호 변경이 완료되었습니다! 다시 로그인해주세요!');
           console.log(res);
-          Navigate('/login');
+          navigate('/login');
         })
         .catch((error) => {
           // 비번 변경 실패 메시지
@@ -113,7 +125,7 @@ export default function FindPassword(props) {
         });
 
       handleClickClose();
-      Navigate('/login');
+      navigate('/login');
     }
   };
 
@@ -187,7 +199,7 @@ export default function FindPassword(props) {
               <TextField
                 autoFocus
                 margin="dense"
-                id="name"
+                id="paswword"
                 label="Password"
                 type="password"
                 fullWidth
@@ -196,7 +208,7 @@ export default function FindPassword(props) {
               />
               <TextField
                 margin="dense"
-                id="name"
+                id="passwordConfirm"
                 label="Password Confirmation"
                 type="password"
                 fullWidth
