@@ -33,7 +33,8 @@
   - WebSocket
 * 배포 환경
   - URL: http://i6d207.p.ssafy.io/ 
-  - 테스트 계정: // 로그인이 필요한 경우, 사용 가능한 테스트 계정(ID/PW) 기입
+  - 테스트 계정: ant@happy.ant
+  - 테스트 계정 비밀번호: ssafy123!
 
 <!-- 자유 양식 -->
 
