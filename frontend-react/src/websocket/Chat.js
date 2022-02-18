@@ -51,8 +51,14 @@ export default function Chat({ studyName }) {
   // -----------------------------css---------------------------------
   const chatIconPosition = {
     position: 'fixed',
-    right: '20px',
-    bottom: '80px',
+    right: '47px',
+    bottom: '140px',
+  };
+  const chatIconPosition2 = {
+    position: 'fixed',
+    right: '54px',
+    bottom: '100px',
+    fontWeight: '700',
   };
   const chatItemViisible = {
     visibility: 'visible',
@@ -62,7 +68,7 @@ export default function Chat({ studyName }) {
     background: 'white',
     position: 'fixed',
     right: '20px',
-    bottom: '130px',
+    bottom: '200px',
     border: '1px solid',
     borderRadius: '10px',
     padding: '10px',
@@ -90,6 +96,7 @@ export default function Chat({ studyName }) {
           >
             <ChatBubbleOutlineIcon />
           </Fab>
+          <p style={chatIconPosition2}>채팅</p>
           <div style={show ? chatItemViisible : chatItemInvisible}>
             <div className="chatTitle">
               <p>{studyName}</p>
